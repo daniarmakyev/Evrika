@@ -1,0 +1,247 @@
+@import "../varibles";
+@import "media-queries";
+@import "flex";
+
+@mixin container-padding() {
+  padding-left: $container;
+  padding-right: $container;
+
+  @include respond-above(xs) {
+    padding-left: $containerXS;
+    padding-right: $containerXS;
+  }
+
+  @include respond-above(sm) {
+    padding-left: $containerSM;
+    padding-right: $containerSM;
+  }
+
+  @include respond-above(md) {
+    padding-left: $containerMD;
+    padding-right: $containerMD;
+  }
+
+  @include respond-above(lg) {
+    padding-left: $containerLG;
+    padding-right: $containerLG;
+  }
+
+  @include respond-above(mac) {
+    padding-left: $containerMAC;
+    padding-right: $containerMAC;
+  }
+
+  @include respond-above(xlg) {
+    padding-left: $containerXLG;
+    padding-right: $containerXLG;
+  }
+
+  @include respond-above(fhd) {
+    padding-left: $containerFHD;
+    padding-right: $containerFHD;
+  }
+
+  @include respond-above(qhd) {
+    padding-left: $containerQHD;
+    padding-right: $containerQHD;
+  }
+}
+
+@mixin container-compensation() {
+  margin-left: -$container;
+  margin-right: -$container;
+
+  @include respond-above(xs) {
+    margin-left: -$containerXS;
+    margin-right: -$containerXS;
+  }
+
+  @include respond-above(sm) {
+    margin-left: -$containerSM;
+    margin-right: -$containerSM;
+  }
+
+  @include respond-above(md) {
+    margin-left: -$containerMD;
+    margin-right: -$containerMD;
+  }
+
+  @include respond-above(lg) {
+    margin-left: -$containerLG;
+    margin-right: -$containerLG;
+  }
+
+  @include respond-above(mac) {
+    margin-left: -$containerMAC;
+    margin-right: -$containerMAC;
+  }
+
+  @include respond-above(xlg) {
+    margin-left: -$containerXLG;
+    margin-right: -$containerXLG;
+  }
+
+  @include respond-above(fhd) {
+    margin-left: -$containerFHD;
+    margin-right: -$containerFHD;
+  }
+
+  @include respond-above(qhd) {
+    margin-left: -$containerQHD;
+    margin-right: -$containerQHD;
+  }
+}
+
+@mixin container-compensation-right() {
+  margin-right: -$container;
+
+  @include respond-above(xs) {
+    margin-right: -$containerXS;
+  }
+
+  @include respond-above(sm) {
+    margin-right: -$containerSM;
+  }
+
+  @include respond-above(md) {
+    margin-right: -$containerMD;
+  }
+
+  @include respond-above(lg) {
+    margin-right: -$containerLG;
+  }
+
+  @include respond-above(mac) {
+    margin-right: -$containerMAC;
+  }
+
+  @include respond-above(xlg) {
+    margin-right: -$containerXLG;
+  }
+
+  @include respond-above(fhd) {
+    margin-right: -$containerFHD;
+  }
+
+  @include respond-above(qhd) {
+    margin-right: -$containerQHD;
+  }
+}
+
+@mixin container-compensation-left() {
+  margin-left: -$container;
+
+  @include respond-above(xs) {
+    margin-left: -$containerXS;
+  }
+
+  @include respond-above(sm) {
+    margin-left: -$containerSM;
+  }
+
+  @include respond-above(md) {
+    margin-left: -$containerMD;
+  }
+
+  @include respond-above(lg) {
+    margin-left: -$containerLG;
+  }
+
+  @include respond-above(mac) {
+    margin-left: -$containerMAC;
+  }
+
+  @include respond-above(xlg) {
+    margin-left: -$containerXLG;
+  }
+
+  @include respond-above(fhd) {
+    margin-left: -$containerFHD;
+  }
+
+  @include respond-above(qhd) {
+    margin-left: -$containerQHD;
+  }
+}
+
+@mixin container-left() {
+  padding-left: $container;
+
+  @include respond-above(xs) {
+    padding-left: $containerXS;
+  }
+
+  @include respond-above(sm) {
+    padding-left: $containerSM;
+  }
+
+  @include respond-above(md) {
+    padding-left: $containerMD;
+  }
+
+  @include respond-above(lg) {
+    padding-left: $containerLG;
+  }
+
+  @include respond-above(mac) {
+    padding-left: $containerMAC;
+  }
+
+  @include respond-above(xlg) {
+    padding-left: $containerXLG;
+  }
+
+  @include respond-above(fhd) {
+    padding-left: $containerFHD;
+  }
+
+  @include respond-above(qhd) {
+    padding-left: $containerQHD;
+  }
+}
+
+@mixin container-right() {
+  padding-right: $container;
+
+  @include respond-above(xs) {
+    padding-right: $containerXS;
+  }
+
+  @include respond-above(sm) {
+    padding-right: $containerSM;
+  }
+
+  @include respond-above(md) {
+    padding-right: $containerMD;
+  }
+
+  @include respond-above(lg) {
+    padding-right: $containerLG;
+  }
+
+  @include respond-above(mac) {
+    padding-right: $containerMAC;
+  }
+
+  @include respond-above(xlg) {
+    padding-right: $containerXLG;
+  }
+
+  @include respond-above(fhd) {
+    padding-right: $containerFHD;
+  }
+
+  @include respond-above(qhd) {
+    padding-right: $containerQHD;
+  }
+}
+
+@mixin clear-container-compensation() {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+@mixin clear-container-padding() {
+  padding-left: 0;
+  padding-right: 0;
+}

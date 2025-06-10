@@ -1,0 +1,198 @@
+@import "varibles";
+@import "mixins";
+@import "default";
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #ffffff;
+  --text: #000000;
+  --accent: #1a73e8;
+  --border: #5850DD;
+  --datepicker-icon-filter: invert(0);
+}
+
+[data-theme='dark'] {
+  --bg: #121212;
+  --text: #ffffff;
+  --accent: #90caf9;
+  --border: #ffffff;
+  --datepicker-icon-filter: invert(1);
+}
+
+html {
+  --header-height: 40px;
+  --header-offset: 40px;
+  --header-compensation: -40px;
+  --container-offset: #{$container};
+  --app-height: 100vh;
+  --app-height: -webkit-fill-available;
+  --section-height: calc(100vh - 40px);
+  background-color: var(--bg);
+
+  @include respond-above(md) {
+    --container-offset: #{$containerMD};
+  }
+
+  @include respond-above(mac) {
+    --header-height: 80px;
+    --header-offset: 80px;
+    --header-compensation: -60px;
+    --container-offset: #{$containerMAC};
+    --app-height: 100dvh;
+    --section-height: calc(100vh - 80px);
+  }
+
+  @include respond-above(xlg) {
+    --header-height: 63.6px;
+    --header-offset: 63.6px;
+    --header-compensation: -63.6px;
+    --section-height: calc(100vh - 63.6px);
+    --container-offset: #{$containerXLG};
+  }
+  @include respond-above(xlg) {
+    --header-height: 63.6px;
+    --header-offset: 63.6px;
+    --header-compensation: -63.6px;
+    --section-height: calc(100vh - 63.6px);
+    --container-offset: #{$containerXLG};
+  }
+  @include respond-above(fhd) {
+    --header-height: 67.2px;
+    --header-offset: 67.2px;
+    --header-compensation: -67.2px;
+    --section-height: calc(100vh - 67.2px);
+    --container-offset: #{$containerFHD};
+  }
+
+  @include respond-above(fhd-plus) {
+    --header-height: 72px;
+    --header-offset: 72px;
+    --header-compensation: -72px;
+    --container-offset: #{$containerFHD};
+    --section-height: calc(100vh - 72px);
+  }
+
+  @include respond-above(qhd) {
+    --header-height: 78px;
+    --header-offset: 78px;
+    --header-compensation: -78px;
+    --container-offset: #{$containerQHD};
+    --section-height: calc(100vh - 78px);
+  }
+}
+
+.typingBureau {
+  display: none;
+}
+
+.textTypingVisible {
+  width: 100%;
+  margin: 0 auto;
+}
+
+@include respond-above(md) {
+  .typingBureau {
+    display: flex;
+  }
+  .projectsPageTyping {
+    display: none;
+  }
+}
+
+section {
+  max-width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 400;
+}
+
+body {
+  font-family: 'CodecPro_Light';
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background: var(--bg);
+  color: var(--text);
+  position: relative;
+
+  &::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+    display: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+}
+
+main {
+  // max-width: 750px;
+  position: relative;
+  display: flex !important;
+  flex-direction: column;
+  flex: 1 0 auto;
+  z-index: 1;
+  pointer-events: auto;
+  padding-top: 40px;
+  padding: 40px 20px 0;
+  margin: 0 auto;
+
+  @include respond-above(lg) {
+    padding: 0;
+    padding-top: 40px;
+    max-width: 750px;
+  }
+}
+
+.App {
+  min-height: 79vh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  text-decoration: none;
+  color: $defaultLinkColor;
+  line-height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+::selection {
+  color: $selectionTextColor;
+  text-shadow: none;
+}
+
+.no-pointer {
+  pointer-events: none;
+}
+
+.no-scroll {
+  overflow: hidden;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
