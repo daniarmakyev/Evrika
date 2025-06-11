@@ -169,14 +169,14 @@ main {
 
 a {
   text-decoration: none;
-  color: $defaultLinkColor;
+  // color: $defaultLinkColor;
   line-height: 100%;
   padding: 0;
   margin: 0;
 }
 
 ::selection {
-  color: $selectionTextColor;
+  // color: $selectionTextColor;
   text-shadow: none;
 }
 
