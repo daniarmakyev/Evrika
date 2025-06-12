@@ -1,27 +1,7 @@
 @import "../../../styles/varibles.scss";
 @import "../../../styles/mixins/";
 
-.wrapper {
-  background: conic-gradient(
-    from 180deg at 50% 50%,
-    rgb(231, 203, 234) 0%,
-    rgb(183, 182, 226) 25%,
-    rgb(197, 196, 255) 45%,
-    rgb(197, 196, 255) 55%,
-    rgb(251, 218, 244) 65%,
-    rgb(243, 198, 223) 80%,
-    rgb(231, 203, 234) 100%
-  );
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  height: 100%;
-  width: 100%;
-  position: relative;
-  overflow-y: auto;
-  padding: 40px 20px;
-  box-sizing: border-box;
+.overlay {
   &__title {
     font-size: 36px;
     font-weight: 800;

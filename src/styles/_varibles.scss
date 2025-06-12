@@ -8,10 +8,10 @@ $secondary: #805dca;
 $warning: #e2a03f;
 $info: #2196f3;
 $dark: #3b3f5c;
-$primary: #8399FF;
+$primary: #8399ff;
 $placeholder: #6b7280;
 $black-ligth: #e3e4eb;
-$white-ligth: #E0E6ED;
+$white-ligth: #e0e6ed;
 $white-dark: #1b2e4b;
 $success-ligth: #ddf5f0;
 $danger-ligth: #fff5f5;
@@ -23,6 +23,16 @@ $info-ligth: #e7f7ff;
 $dark-ligth: #eaeaec;
 $primary-ligth: #eaf1ff;
 $White-ligth: #888ea8;
+$bg-gradient: conic-gradient(
+  from 180deg at 50% 50%,
+  rgb(231, 203, 234) 0%,
+  rgb(183, 182, 226) 25%,
+  rgb(197, 196, 255) 45%,
+  rgb(197, 196, 255) 55%,
+  rgb(251, 218, 244) 65%,
+  rgb(243, 198, 223) 80%,
+  rgb(231, 203, 234) 100%
+);
 
 // Container
 $container: 20px;
