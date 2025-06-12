@@ -16,9 +16,12 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  width: 100vw;
-  padding: 20px;
+  height: 100%;
+  width: 100%;
+  position: relative;
   overflow-y: auto;
+  padding: 40px 20px;
+  box-sizing: border-box;
   &__title {
     font-size: 36px;
     font-weight: 800;
@@ -38,8 +41,8 @@
     max-width: 440px;
     width: 100%;
     gap: 16px;
-    margin-top: 8%;
-    padding: 20px;
+    padding-top: 15%;
+    padding-bottom: 10%;
   }
   &__form {
     width: 100%;
@@ -47,5 +50,23 @@
     flex-direction: column;
     gap: 20px;
     margin-top: 40px;
+  }
+
+  &__registration {
+    color: $black-dark;
+    font-size: 14px;
+    margin-top: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    a {
+      color: $primary;
+      text-decoration: none;
+      font-weight: 600;
+      margin-left: 4px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }

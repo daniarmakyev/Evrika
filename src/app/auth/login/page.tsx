@@ -4,21 +4,19 @@ import Image from "next/image";
 import Overlay from "@components/Ui/Overlay";
 import styles from "./styles.module.scss";
 import FormButton from "@components/Ui/FormButton";
+import Link from "next/link";
 
-const Login = () => {
+const Login: React.FC = () => {
   return (
     <div className={styles.wrapper}>
       <Overlay
         style={{
-          minHeight: "fit-content",
-          height:"90vh",
-          maxHeight: "900px",
-          maxWidth: "1440px",
-          width: "90vw",
-          flexDirection: "column",
-          justifyContent: "flex-start",
-          alignItems: "flex-start",
-          margin: "auto auto",
+          paddingTop:"10px",
+          paddingBottom:"30px",
+          height: "100%",
+          width: "100%",
+          maxHeight: "640px",
+          maxWidth: "840px",
         }}
       >
         <div className={styles.wrapper__innerOverlay}>
@@ -63,8 +61,13 @@ const Login = () => {
               }
               fullWidth
             />
-            <FormButton type="submit">Войти</FormButton>
+            <FormButton type="submit" style={{ marginTop: "20px" }}>
+              Войти
+            </FormButton>
           </form>
+          <span className={styles.wrapper__registration}>
+            У вас нет аккаунта? <Link href="/auth/registration">Регистрация</Link>
+          </span>
         </div>
       </Overlay>
     </div>
