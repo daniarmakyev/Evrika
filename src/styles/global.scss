@@ -1,24 +1,31 @@
 @import "varibles";
 @import "mixins";
 @import "default";
+@import "varibles";
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 :root {
-  --bg: #ffffff;
-  --text: #000000;
-  --accent: #1a73e8;
-  --border: #5850DD;
+  --primary: #{$primary};
+  --black-dark: #{$black-dark};
   --datepicker-icon-filter: invert(0);
+  --White-ligth: #{$White-ligth};
+  --white-ligth: #{$white-ligth};
+  --white-dark: #{$white-dark};
+  --black-ligth: #{$black-ligth};
+  --success: #{$success};
+  --danger: #{$danger};
+  --secondary: #{$secondary};
+  --warning: #{$warning};
+  --White: #{$White};
 }
 
 [data-theme='dark'] {
-  --bg: #121212;
-  --text: #ffffff;
-  --accent: #90caf9;
-  --border: #ffffff;
+
   --datepicker-icon-filter: invert(1);
 }
 
@@ -52,6 +59,7 @@ html {
     --section-height: calc(100vh - 63.6px);
     --container-offset: #{$containerXLG};
   }
+
   @include respond-above(xlg) {
     --header-height: 63.6px;
     --header-offset: 63.6px;
@@ -59,6 +67,7 @@ html {
     --section-height: calc(100vh - 63.6px);
     --container-offset: #{$containerXLG};
   }
+
   @include respond-above(fhd) {
     --header-height: 67.2px;
     --header-offset: 67.2px;
@@ -97,6 +106,7 @@ html {
   .typingBureau {
     display: flex;
   }
+
   .projectsPageTyping {
     display: none;
   }
