@@ -1,0 +1,13 @@
+<svg width="17.959167" height="17.998047" viewBox="0 0 17.9592 17.998" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
+	<defs>
+		<clipPath>
+			<rect rx="0.000000" width="16.959183" height="16.998039" transform="translate(0.500000 0.500000)" fill="white" fillOpacity="0"/>
+		</clipPath>
+	</defs>
+	<g>
+		<ellipse  cx="8.979584" cy="4.499512" rx="2.993197" ry="2.999673" fill="#888EA8" fillOpacity="1.000000"/>
+		<g opacity="0.500000">
+			<path  d="M14.96 13.12C14.96 14.98 14.96 16.49 8.97 16.49C2.99 16.49 2.99 14.98 2.99 13.12C2.99 11.25 5.67 9.74 8.97 9.74C12.28 9.74 14.96 11.25 14.96 13.12Z" fill="#888EA8" fillOpacity="1.000000" fillRule="nonzero"/>
+		</g>
+	</g>
+</svg>
