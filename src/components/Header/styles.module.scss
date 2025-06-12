@@ -3,7 +3,89 @@
 
 .header {
   width: 100%;
-  height: auto;
+  height: 60px;
   position: fixed;
   top: 0;
+  background: rgb(255, 255, 255, 0.6);
+  z-index: 10;
+
+  &__container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 $containerMAC;
+  }
+
+  &__logo {
+    width: auto;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+    }
+  }
+
+  &__menu {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    ul {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      li {
+        font-size: 18px;
+        line-height: 100%;
+        color: $primary;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        margin-right: 15px;
+
+        &:hover {
+          color: $dark;
+        }
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+  }
+
+  &__profile {
+    width: 36px;
+    height: 36px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgb(131, 153, 255, 0.4);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    padding: 9px;
+    z-index: 9;
+
+    &:hover {
+      background: rgb(131, 153, 255, 0.6);
+    }
+
+    svg {
+      width: auto;
+      height: auto;
+    }
+  }
 }
