@@ -1,7 +1,8 @@
-import React, { InputHTMLAttributes, forwardRef } from "react";
+import React, { ChangeEvent, forwardRef, InputHTMLAttributes } from "react";
 import styles from "./styles.module.scss";
 
-interface InputFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'style'> {
+interface InputFieldProps
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "style"> {
   label?: string;
   error?: string;
   fullWidth?: boolean;
@@ -17,32 +18,65 @@ interface InputFieldProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 's
   id?: string;
   type?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
-  ({ 
-    label, 
-    error, 
-    fullWidth = false, 
-    style = {}, 
-    placeholder,
-    leftIcon,
-    ...props 
-  }, ref) => {
+  (
+    {
+      label,
+      error,
+      fullWidth = false,
+      style = {},
+      placeholder,
+      leftIcon,
+      readOnly,
+      maxLength,
+      minLength,
+      disabled,
+      required,
+      name,
+      id,
+      type,
+      value,
+      onChange,
+      onBlur,
+      onFocus,
+      ...rest
+    },
+    ref
+  ) => {
     return (
-      <div className={`${styles.inputWrapper} ${fullWidth ? styles.fullWidth : ""}`}>
+      <div
+        className={`${styles.inputWrapper} ${
+          fullWidth ? styles.fullWidth : ""
+        }`}
+      >
         {label && <label className={styles.label}>{label}</label>}
         <div className={styles.inputContainer}>
           {leftIcon && <div className={styles.leftIcon}>{leftIcon}</div>}
           <input
-            style={style}
             ref={ref}
-            className={`${styles.input} ${error ? styles.error : ""} ${leftIcon ? styles.withLeftIcon : ""}`}
+            style={style}
+            className={`${styles.input} ${error ? styles.error : ""} ${
+              leftIcon ? styles.withLeftIcon : ""
+            }`}
             placeholder={placeholder}
-            {...props}
+            readOnly={readOnly}
+            maxLength={maxLength}
+            minLength={minLength}
+            disabled={disabled}
+            required={required}
+            name={name}
+            id={id}
+            type={type}
+            value={value}
+            onChange={onChange}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            {...rest}
           />
         </div>
         {error && <span className={styles.errorMessage}>{error}</span>}

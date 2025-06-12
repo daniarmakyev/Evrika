@@ -3,28 +3,32 @@ import React from "react";
 import Image from "next/image";
 import Overlay from "@components/Ui/Overlay";
 import styles from "./styles.module.scss";
+import FormButton from "@components/Ui/FormButton";
 
-const page = () => {
+const Login = () => {
   return (
     <div className={styles.wrapper}>
       <Overlay
         style={{
-          maxWidth: "840px",
-          height: "80vh",
+          minHeight: "fit-content",
+          height:"90vh",
           maxHeight: "900px",
+          maxWidth: "1440px",
+          width: "90vw",
           flexDirection: "column",
           justifyContent: "flex-start",
           alignItems: "flex-start",
+          margin: "auto auto",
         }}
       >
-        <div className={styles.innerOverlay}>
+        <div className={styles.wrapper__innerOverlay}>
           <div>
-            <h2 className={styles.title}>Вход</h2>
-            <p className={styles.description}>
+            <h2 className={styles.wrapper__title}>Вход</h2>
+            <p className={styles.wrapper__description}>
               Введите почту и пароль для входа
             </p>
           </div>
-          <form className={styles.form}>
+          <form className={styles.wrapper__form}>
             <InputField
               placeholder="почта"
               label="Вход"
@@ -59,7 +63,7 @@ const page = () => {
               }
               fullWidth
             />
-            <button>Войти</button>
+            <FormButton type="submit">Войти</FormButton>
           </form>
         </div>
       </Overlay>
@@ -67,4 +71,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Login;
