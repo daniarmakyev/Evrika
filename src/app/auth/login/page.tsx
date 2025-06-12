@@ -43,7 +43,7 @@ const Login: React.FC = () => {
       >
         <div className={styles.wrapper__innerOverlay}>
           <div>
-            <h2 className={styles.wrapper__title}>Вход</h2>
+            <h1 className={styles.wrapper__title}>ВХОД</h1>
             <p className={styles.wrapper__description}>
               Введите почту и пароль для входа
             </p>
@@ -51,7 +51,7 @@ const Login: React.FC = () => {
           <form className={styles.wrapper__form} onSubmit={handleSubmit(onSubmit)}>
             <InputField
               placeholder="почта"
-              label="Вход"
+              label="Почта"
               {...register("email", {
                 required: "Почта обязательна",
                 pattern: {
@@ -99,11 +99,11 @@ const Login: React.FC = () => {
               fullWidth
             />
             <FormButton type="submit" style={{ marginTop: "30px" }}>
-              Войти
+              ВОЙТИ
             </FormButton>
           </form>
           <span className={styles.wrapper__registration}>
-            У вас нет аккаунта? <Link href="/auth/registration">Регистрация</Link>
+            У вас нет аккаунта? <Link href="/auth/registration">РЕГИСТРАЦИЯ</Link>
           </span>
         </div>
       </Overlay>

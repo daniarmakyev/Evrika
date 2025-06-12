@@ -4,18 +4,19 @@
 .popup {
   width: fit-content;
   height: auto;
-  transform: translateY(-200px);
+  top: 50px;
   position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease-in-out;
   pointer-events: none;
+  opacity: 0;
+  z-index: 9999;
 
   &.header__popup_isOpen {
-    transform: translateY(115px);
     pointer-events: auto;
-    z-index: 10;
+    opacity: 1;
   }
 
   ul {
@@ -27,9 +28,9 @@
     justify-content: center;
     background: rgb(131, 153, 255);
     border-radius: 10px;
-    padding: 0 10px 0 10px;
+    padding: 0 15px;
 
-    li {
+    li, a {
       width: 100%;
       font-size: 18px;
       line-height: 100%;

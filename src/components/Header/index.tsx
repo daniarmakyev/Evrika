@@ -1,6 +1,7 @@
 'use client';
 
 import React from "react";
+import Link from "next/link";
 import PopupHeader from "@components/Ui/Popup";
 import Logo from "@icons/logo.svg";
 import Profile from "@icons/user-profile.svg";
@@ -10,22 +11,27 @@ const menu = [
   {
     id: 1,
     name: "Главная",
+    link: "/",
   },
   {
     id: 2,
     name: "Расписание",
+    link: "#",
   },
   {
     id: 3,
     name: "О школе",
+    link: "#",
   },
   {
     id: 4,
     name: "Цены",
+    link: "#",
   },
   {
     id: 5,
     name: "Контакты",
+    link: "#",
   },
 ];
 
@@ -56,7 +62,11 @@ const Header = ({}) => {
         <div className={styles.header__menu}>
           <ul>
             {menu.map((item) => (
-              <li key={item.id}>{item.name}</li>
+              <li key={item.id}>
+                <Link href={item.link}>
+                  {item.name}
+                </Link>
+              </li>
             ))}
           </ul>
         </div>
