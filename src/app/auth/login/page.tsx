@@ -34,10 +34,9 @@ const Login: React.FC = () => {
     <Overlay
       style={{
         padding: "10px 20px 30px 20px",
-        maxHeight: "640px",
         maxWidth: "840px",
         marginTop: "var(--header-height)",
-        minHeight: "calc(100vh - var(--header-height))",
+        maxHeight: "640px",
       }}
     >
       <div className={styles.overlay__innerOverlay}>
