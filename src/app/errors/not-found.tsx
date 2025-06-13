@@ -11,7 +11,7 @@ export default function NotFound() {
         style={{
           maxWidth: "750px",
           width: "100%",
-          padding: "20px 20px",
+          padding: "40px 20px",
           gap: "20px",
           marginTop: "var(--header-height)",
         }}
