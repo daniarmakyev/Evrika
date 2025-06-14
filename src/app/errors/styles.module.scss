@@ -6,36 +6,14 @@
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  padding: 40px 20px;
+  padding: 60px 20px 30px 20px;
   box-sizing: border-box;
-}
-
-.innerOverlay {
-  text-align: center;
-
-  h1 {
-    font-size: 120px;
-    font-weight: 700;
-    color: $black-dark;
-    opacity: 0.8;
-  }
-
-  h2 {
-    font-size: 36px;
-    font-weight: 700;
-    margin: 20px 0;
-  }
-
-  img {
-    max-width: 440px;
-    max-height: 330px;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
-
   .link {
-    padding: 12px 24px;
+    padding: 10px 17px;
+    max-width: 125px;
+    height: 36px;
+    width: 100%;
+    font-size: 16px;
     background-color: $primary;
     color: white;
     border-radius: 8px;
@@ -47,6 +25,46 @@
     }
   }
 }
+
+.innerOverlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+  h1 {
+    font-size: 150px;
+    font-weight: 800;
+    color: $black-dark;
+    opacity: 0.8;
+    height: fit-content;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+  }
+
+  h2 {
+    font-size: 36px;
+    font-weight: 800;
+  }
+
+  img {
+    max-width: 440px;
+    max-height: 330px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+}
+
+
 .error {
   display: flex;
   flex-direction: column;

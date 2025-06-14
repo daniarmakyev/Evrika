@@ -10,10 +10,8 @@ export default function NotFound() {
       <Overlay
         style={{
           maxWidth: "750px",
-          width: "100%",
-          padding: "40px 20px",
+          padding: "60px 20px",
           gap: "20px",
-          marginTop: "var(--header-height)",
         }}
       >
         <div className={styles.innerOverlay}>
@@ -25,10 +23,12 @@ export default function NotFound() {
             height={600}
             priority
           />
-          <h2>Такой страницы нет</h2>
-          <Link href="/" className={styles.link}>
-            На главную
-          </Link>
+          <div className={styles.innerOverlay__text}>
+            <h2>Такой страницы нет</h2>
+            <Link href="/" className={styles.link}>
+              На главную
+            </Link>
+          </div>
         </div>
       </Overlay>
     </ErrorLayout>

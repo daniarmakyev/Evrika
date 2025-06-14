@@ -1,32 +1,18 @@
 @import "../../../styles/varibles.scss";
 
 .button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border: none;
-    outline: none;
-    padding: 12px 24px;
-    font-size: 14px;
-    background: $primary;
-    color: $White;
-    box-shadow: 0px 4px 4px 0px #E7CBE9;
-  
-    &:hover {
-      box-shadow: 0px 6px 6px 0px #E7CBE9;
-    }
-  
-    &:active {
-      box-shadow: 0px 2px 2px 0px #E7CBE9;
-    }
-  
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
+  justify-content: center;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 12px 24px;
+  font-size: 14px;
+  background: $primary;
+  color: $White;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
 }
