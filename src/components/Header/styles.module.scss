@@ -84,12 +84,32 @@
     z-index: 9;
 
     &:hover {
-      background: $White;
+      background: $white-ligth;
     }
 
     svg {
       width: auto;
       height: auto;
+    }
+  }
+
+  &__login {
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    a {
+      font-size: 18px;
+      line-height: 100%;
+      color: $White;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+
+      &:hover {
+        color: $dark;
+      }
     }
   }
 }

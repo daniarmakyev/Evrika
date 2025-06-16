@@ -8,25 +8,25 @@ interface PopupHeaderProps {
 }
 
 const profile = [
-  {
-    id: 1,
-    name: "Профиль",
-    link: "/",
-  },
-  {
-    id: 2,
-    name: "Оценки",
-    link: "#"
-  },
-  {
-    id: 3,
-    name: "Расписание",
-    link: "#"
-  },
+  // {
+  //   id: 1,
+  //   name: "Профиль",
+  //   link: "/",
+  // },
+  // {
+  //   id: 2,
+  //   name: "Оценки",
+  //   link: "#"
+  // },
+  // {
+  //   id: 3,
+  //   name: "Расписание",
+  //   link: "#"
+  // },
   {
     id: 4,
-    name: "Выход",
-    link: "#",
+    name: "Войти",
+    link: "/auth/login",
   },
 ];
 

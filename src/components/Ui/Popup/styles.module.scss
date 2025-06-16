@@ -4,43 +4,46 @@
 .popup {
   width: fit-content;
   height: auto;
+  height: 0;
   top: 50px;
   position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease-in-out;
+  background: $White;
+  border-radius: 10px;
   pointer-events: none;
-  opacity: 0;
+  overflow: hidden;
+  border: 0px solid $dark;
   z-index: 9999;
 
   &.header__popup_isOpen {
     pointer-events: auto;
-    opacity: 1;
+    height: 42px;
+    border: 1px solid $dark;
   }
 
   ul {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    background: rgb(131, 153, 255);
-    border-radius: 10px;
     padding: 0 15px;
 
     li, a {
       width: 100%;
       font-size: 18px;
       line-height: 100%;
-      color: $White;
+      color: $primary;
       cursor: pointer;
       transition: all 0.3s ease-in-out;
       padding: 12px 0;
 
       &:hover {
-        color: $dark;
+        color: #A8B8FF;
       }
     }
   }
