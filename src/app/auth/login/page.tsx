@@ -1,11 +1,9 @@
 "use client";
 import InputField from "@components/Fields/InputField";
 import React from "react";
-import Image from "next/image";
 import Overlay from "@components/Ui/Overlay";
 import styles from "./styles.module.scss";
 import FormButton from "@components/Ui/FormButton";
-import Link from "next/link";
 import { useForm } from "react-hook-form";
 import UserIcon from "../../../../public/assets/icons/user.svg";
 import LockPasswordIcon from "../../../../public/assets/icons/lock-password.svg";
@@ -33,10 +31,9 @@ const Login: React.FC = () => {
   return (
     <Overlay
       style={{
-        padding: "10px 20px 30px 20px",
-        maxWidth: "840px",
+        maxWidth: "830px",
+        height: "630px",
         marginTop: "var(--header-height)",
-        maxHeight: "640px",
       }}
     >
       <div className={styles.overlay__innerOverlay}>
@@ -79,13 +76,8 @@ const Login: React.FC = () => {
             leftIcon={<LockPasswordIcon />}
             fullWidth
           />
-          <FormButton type="submit" style={{ marginTop: "30px" }}>
-            ВОЙТИ
-          </FormButton>
+          <FormButton type="submit">ВОЙТИ</FormButton>
         </form>
-        <span className={styles.overlay__registration}>
-          У вас нет аккаунта? <Link href="/auth/registration">РЕГИСТРАЦИЯ</Link>
-        </span>
       </div>
     </Overlay>
   );

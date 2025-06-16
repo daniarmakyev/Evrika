@@ -6,7 +6,7 @@
   height: 60px;
   position: fixed;
   top: 0;
-  background: rgb(255, 255, 255, 0.6);
+  background: $primary;
   z-index: 99999;
 
   &__container {
@@ -49,13 +49,13 @@
       li {
         font-size: 18px;
         line-height: 100%;
-        color: $primary;
         cursor: pointer;
         transition: all 0.3s ease-in-out;
         margin-right: 15px;
 
         a {
           transition: all 0.3s ease-in-out;
+          color: $White;
 
           &:hover {
             color: $dark;
@@ -76,7 +76,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgb(131, 153, 255, 0.4);
+    background: $White;
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
@@ -84,7 +84,7 @@
     z-index: 9;
 
     &:hover {
-      background: rgb(131, 153, 255, 0.6);
+      background: $White;
     }
 
     svg {

@@ -8,10 +8,8 @@ import ErrorLayout from "./layout";
 
 export default function GlobalError({
   error,
-  reset,
 }: {
   error: Error;
-  reset: () => void;
 }) {
   useEffect(() => {
     console.error("500 error:", error);

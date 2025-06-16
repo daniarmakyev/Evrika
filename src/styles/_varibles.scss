@@ -23,15 +23,12 @@ $info-ligth: #e7f7ff;
 $dark-ligth: #eaeaec;
 $primary-ligth: #eaf1ff;
 $White-ligth: #888ea8;
-$bg-gradient: conic-gradient(
-  from 180deg at 50% 50%,
-  rgb(231, 203, 234) 0%,
-  rgb(183, 182, 226) 25%,
-  rgb(197, 196, 255) 45%,
-  rgb(197, 196, 255) 55%,
-  rgb(251, 218, 244) 65%,
-  rgb(243, 198, 223) 80%,
-  rgb(231, 203, 234) 100%
+$bg-gradient: linear-gradient(
+  180deg,
+  rgb(131, 153, 255),
+  rgb(131, 153, 255), 20%,
+  rgb(168, 184, 255) 53.472%,
+  rgb(252, 252, 252) 106.944%
 );
 
 // Container

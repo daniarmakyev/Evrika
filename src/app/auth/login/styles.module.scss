@@ -2,50 +2,33 @@
 @import "../../../styles/mixins/";
 
 .overlay {
-  &__title {
-    font-size: 36px;
-    font-weight: 800;
-    color: $primary;
-  }
-  &__description {
-    font-size: 16px;
-    font-weight: 700;
-    color: $White-ligth;
-  }
   &__innerOverlay {
+    max-width: 440px;
+    height: 100%;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    margin: 0 auto;
     justify-content: center;
-    max-width: 440px;
-    width: 100%;
-    gap: 16px;
-    padding-top: 15%;
-    padding-bottom: 10%;
+    align-items: flex-start;
+    gap: 40px;
+  }
+  &__title {
+    color: $primary;
+    font-size: 36px;
+    font-weight: 800;
+  }
+  &__description {
+    color: $White-ligth;
+    font-size: 16px;
+    font-weight: 700;
   }
   &__form {
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin-top: 40px;
-  }
-
-  &__registration {
-    color: $black-dark;
-    font-size: 14px;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    a {
-      color: $primary;
-      text-decoration: none;
-      font-weight: 600;
-      margin-left: 4px;
-
-      &:hover {
-        text-decoration: underline;
-      }
+    gap: 20px;
+    button {
+      margin-top: 20px;
     }
   }
 }
