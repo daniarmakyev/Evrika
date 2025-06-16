@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import ErrorLayout from "./layout";
 import Overlay from "@components/Ui/Overlay";
 import styles from "./styles.module.scss";
-import ErrorLayout from "./layout";
 
 export default function NotFound() {
   return (
@@ -10,8 +10,7 @@ export default function NotFound() {
       <Overlay
         style={{
           maxWidth: "750px",
-          padding: "60px 20px",
-          gap: "20px",
+          padding: "60px 0px",
         }}
       >
         <div className={styles.innerOverlay}>

@@ -1,6 +1,4 @@
 // Basic colors
-$bg-ligth: #fafbfa;
-$bg-colors: #000000;
 $black-dark: #0e1726;
 $success: #00ab55;
 $danger: #e7515a;
@@ -9,7 +7,6 @@ $warning: #e2a03f;
 $info: #2196f3;
 $dark: #3b3f5c;
 $primary: #8399ff;
-$primary-button: #6782FF;
 $placeholder: #6b7280;
 $black-ligth: #e3e4eb;
 $white-ligth: #e0e6ed;
@@ -26,13 +23,6 @@ $info-ligth: #e7f7ff;
 $dark-ligth: #eaeaec;
 $primary-ligth: #eaf1ff;
 $White-ligth: #888ea8;
-$bg-gradient: linear-gradient(
-  180deg,
-  rgb(131, 153, 255),
-  rgb(131, 153, 255), 20%,
-  rgb(168, 184, 255) 53.472%,
-  rgb(252, 252, 252) 106.944%
-);
 
 // Container
 $container: 20px;
@@ -52,3 +42,18 @@ $containerQHD: 50px;
 // $defaultLinkColor: $black;
 // $activeLinkColor: $black;
 // $backgroundColor: $white;
+
+
+//Buttons color
+$primary-button: #6782FF;
+
+//Background colors
+$bg-ligth: #fafbfa;
+$bg-colors: #000000;
+$bg-gradient: linear-gradient(
+  180deg,
+  rgb(131, 153, 255),
+  rgb(131, 153, 255), 20%,
+  rgb(168, 184, 255) 53.472%,
+  rgb(252, 252, 252) 106.944%
+);
