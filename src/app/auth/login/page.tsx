@@ -1,12 +1,14 @@
 "use client";
-import InputField from "@components/Fields/InputField";
+
 import React from "react";
-import Overlay from "@components/Ui/Overlay";
-import styles from "./styles.module.scss";
-import FormButton from "@components/Ui/FormButton";
 import { useForm } from "react-hook-form";
+import InputField from "@components/Fields/InputField";
+import Overlay from "@components/Ui/Overlay";
+import FormButton from "@components/Ui/FormButton";
 import UserIcon from "../../../../public/assets/icons/user.svg";
 import LockPasswordIcon from "../../../../public/assets/icons/lock-password.svg";
+import styles from "./styles.module.scss";
+
 interface LoginFormData {
   email: string;
   password: string;
@@ -33,7 +35,6 @@ const Login: React.FC = () => {
       style={{
         maxWidth: "830px",
         height: "630px",
-        marginTop: "var(--header-height)",
       }}
     >
       <div className={styles.overlay__innerOverlay}>
