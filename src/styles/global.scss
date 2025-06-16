@@ -29,7 +29,7 @@
 }
 
 html {
-  --header-height: 40px;
+  --header-height: 60px;
   --header-offset: 40px;
   --header-compensation: -40px;
   --container-offset: #{$container};
@@ -133,7 +133,8 @@ body {
   font-size: 16px;
   font-weight: 400;
   font-style: normal;
-  background: var(--bg);
+  // background: var(--bg);
+  background: $White;
   color: var(--text);
   position: relative;
 
