@@ -7,7 +7,7 @@
   position: fixed;
   top: 30%;
   right: -52px;
-  background: $primary;
+  background: $primary-button;
   border-radius: 10px;
   border: 1px solid #A8B8FF;
   cursor: pointer;
@@ -17,12 +17,7 @@
   z-index: 999999;
 
   &:hover {
-    background: #A8B8FF;
-    border: 1px solid $primary;
-
-    span {
-      color: $dark;
-    }
+    background: $primary;
   }
 
   span {
