@@ -3,7 +3,114 @@
 
 .footer {
   width: 100%;
-  // height: 100%;
-  height: 120px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: $primary;
+
+  &__container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 40px 0;
+
+    a, p {
+      font-weight: bold;
+      font-size: 16px;
+      line-height: 100%;
+      color: $White;
+    }
+
+    a {
+      transition: all .3s ease-in-out;
+
+      &:hover {
+        color: $steel-blue;
+      }
+    }
+  }
+
+  &__info {
+    width: 45%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  &__social {
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+  }
+
+  &__icon {
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    a {
+      background: $primary-button;
+      border-radius: 50%;
+      padding: 8px;
+
+      &:hover {
+        background: $steel-blue;
+      }
+    }
+
+    svg {
+      width: 17px;
+      height: 17px;
+      display: flex;
+    }
+  }
+
+  &__company {
+    width: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    a, p {
+      margin-bottom: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  &__menu {
+    width: 65%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    a {
+      margin-bottom: 20px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
 }

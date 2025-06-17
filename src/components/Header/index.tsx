@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import classNames from "classnames";
 // import PopupHeader from "@components/Ui/Popup";
 import Logo from "@icons/logo.svg";
 // import Profile from "@icons/user-profile.svg";
@@ -44,7 +45,7 @@ const Header = ({}) => {
   // }, []);
 
   return (
-    <header className={styles.header}>
+    <header className={classNames(styles.header, "container")}>
       <div className={styles.header__container}>
         <div className={styles.header__logo}>
           <Link href="/">
