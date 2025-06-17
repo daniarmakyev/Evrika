@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from 'next/font/local';
+import AsideButton from "@components/AsideButton";
 import "../styles/global.scss";
 
 const nunitoSans = localFont({
@@ -32,6 +33,7 @@ export default function RootLayout({
     <html lang="ru" className={nunitoSans.variable}>
       <body>
         {children}
+        <AsideButton />
       </body>
     </html>
   );

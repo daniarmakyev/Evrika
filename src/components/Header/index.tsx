@@ -11,7 +11,7 @@ import styles from "./styles.module.scss";
 const menu = [
   {
     id: 1,
-    name: "О школе",
+    name: "Главная",
     link: "/",
   },
   {
@@ -22,7 +22,7 @@ const menu = [
   {
     id: 3,
     name: "Контакты",
-    link: "#",
+    link: "/contacts",
   },
 ];
 

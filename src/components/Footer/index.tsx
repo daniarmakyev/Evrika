@@ -20,7 +20,7 @@ const social = [
 
 const menu = [
   {
-    name: "О школе",
+    name: "Главная",
     link: "/",
   },
   {
@@ -29,7 +29,7 @@ const menu = [
   },
   {
     name: "Контакты",
-    link: "/",
+    link: "/contacts",
   },
 ];
 
