@@ -3,6 +3,7 @@ import AsideButton from "@components/AsideButton";
 import Footer from "@components/Footer";
 import QuoteSection from "@components/QuoteSection";
 import InGroupSection from "@components/InGroupSection";
+import CoursesSection from "@components/CoursesSection";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <AsideButton />
         <QuoteSection />
         <InGroupSection />
+        <CoursesSection />
       </main>
       <Footer />
     </>

@@ -1,4 +1,3 @@
-import React from "react";
 import Image from "next/image";
 import classNames from "classnames";
 import InfoSection from "@components/InfoSection";
@@ -22,7 +21,7 @@ const cards = [
   },
   {
     title: "Материалы под ваши интересы",
-    description: "С доступом 24/7 к учебным материалам и интерактивным чатам для самообучения.",
+    description: "Подборка контента, сформированная с учётом ваших интересов и предпочтений.",
     img: "/assets/icons/icon-4.svg",
   },
   {
@@ -40,11 +39,11 @@ const InGroupSection = ({}) => {
           title="Это работает в группе"
           description="В “Эврике”, не вы подстраиваетесь под образовательную программу, а она - под Вас. Вот благодаря чему это происходит:"
         />
-        <div className={styles.group__cardsWrapper}>
+        <div className={styles.group__cards}>
           {cards.map((card, index) => (
-            <div key={index} className={classNames(styles.group__card, {
-              [styles.group__card_grow1]: cards.length % 3 === 1 && index === cards.length - 1,
-              [styles.group__card_grow2]: cards.length % 3 === 2 && (index === cards.length - 2 || index === cards.length - 1),
+            <div key={index} className={classNames(styles.group__wrapper, {
+              [styles.group__wrapper_grow1]: cards.length % 3 === 1 && index === cards.length - 1,
+              [styles.group__wrapper_grow2]: cards.length % 3 === 2 && (index === cards.length - 2 || index === cards.length - 1),
             })}>
               <Image
                 width={100}
@@ -52,10 +51,10 @@ const InGroupSection = ({}) => {
                 src={card.img}
                 alt={card.title}
               />
-              <div className={styles.group__card__title}>
+              <div className={styles.group__wrappew__title}>
                 <h3>{card.title}</h3>
               </div>
-              <div className={styles.group__card__description}>
+              <div className={styles.group__wrapper__description}>
                 <p>{card.description}</p>
               </div>
             </div>
