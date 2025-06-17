@@ -1,0 +1,115 @@
+@import "../../styles/varibles";
+@import "../../styles/mixins/";
+
+.signup {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 50px;
+  }
+
+  &__info {
+    width: 70%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+
+  &__title {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 40px;
+
+    h3 {
+      width: 60%;
+      font-weight: bold;
+      font-size: 36px;
+      line-height: 100%;
+      color: $black;
+    }
+  }
+
+  &__description {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    p {
+      width: 50%;
+      font-size: 18px;
+      line-height: 140%;
+      color: $placeholder;
+    }
+  }
+
+  &__form {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    button {
+      width: auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $primary-button;
+      border-radius: 10px;
+      transition: all .3s ease-in-out;
+      cursor: pointer;
+      padding: 14px 30px;
+
+      &:hover {
+        background: $primary;
+      }
+
+      span {
+        font-size: 16px;
+        line-height: 100%;
+        color: $White;
+      }
+    }
+  }
+
+  &__wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 30px;
+
+    input {
+      box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    }
+
+    label {
+      color: $black;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 'use client';
 
+import Link from "next/link";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
@@ -8,7 +9,6 @@ import Calendar from "@icons/calendar.svg";
 import Hours from "@icons/hours.svg";
 import Place from "@icons/place.svg";
 import styles from "./styles.module.scss";
-import Link from "next/link";
 
 dayjs.locale("ru");
 

@@ -4,6 +4,7 @@ import Footer from "@components/Footer";
 import QuoteSection from "@components/QuoteSection";
 import InGroupSection from "@components/InGroupSection";
 import CoursesSection from "@components/CoursesSection";
+import SignupSection from "@components/SignupSection/indext";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         <QuoteSection />
         <InGroupSection />
         <CoursesSection />
+        <SignupSection />
       </main>
       <Footer />
     </>

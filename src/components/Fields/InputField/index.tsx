@@ -54,10 +54,11 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           fullWidth ? styles.fullWidth : ""
         }`}
       >
-        {label && <label className={styles.label}>{label}</label>}
+        {label && <label htmlFor={id} className={styles.label}>{label}</label>}
         <div className={styles.inputContainer}>
           {leftIcon && <div className={styles.leftIcon}>{leftIcon}</div>}
           <input
+            id={id}
             ref={ref}
             style={style}
             className={`${styles.input} ${error ? styles.error : ""} ${
@@ -70,7 +71,6 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             disabled={disabled}
             required={required}
             name={name}
-            id={id}
             type={type}
             value={value}
             onChange={onChange}
