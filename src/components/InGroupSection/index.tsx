@@ -51,7 +51,7 @@ const InGroupSection = ({}) => {
                 src={card.img}
                 alt={card.title}
               />
-              <div className={styles.group__wrappew__title}>
+              <div className={styles.group__wrapper__title}>
                 <h3>{card.title}</h3>
               </div>
               <div className={styles.group__wrapper__description}>

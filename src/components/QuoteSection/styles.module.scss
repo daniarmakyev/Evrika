@@ -9,7 +9,6 @@
   justify-content: center;
   background: $bg-gradient-secondary;
   margin-top: 60px;
-  // margin-top: var(--header-height);
 
   &__container {
     width: 100%;
@@ -42,7 +41,7 @@
     margin-bottom: 20px;
 
     h1 {
-      width: 85%;
+      width: 70%;
       font-size: 40px;
       line-height: 100%;
     }
@@ -55,7 +54,7 @@
     margin-bottom: 20px;
 
     p {
-      width: 60%;
+      width: 50%;
       font-size: 16px;
       line-height: 140%;
     }

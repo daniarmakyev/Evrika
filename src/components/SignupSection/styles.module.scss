@@ -21,7 +21,7 @@
   }
 
   &__info {
-    width: 70%;
+    width: 60%;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -39,7 +39,7 @@
     margin-bottom: 40px;
 
     h3 {
-      width: 60%;
+      width: 65%;
       font-weight: bold;
       font-size: 36px;
       line-height: 100%;
@@ -56,7 +56,7 @@
     justify-content: flex-start;
 
     p {
-      width: 50%;
+      width: 58%;
       font-size: 18px;
       line-height: 140%;
       color: $placeholder;
@@ -64,7 +64,7 @@
   }
 
   &__form {
-    width: 30%;
+    width: 40%;
     height: 100%;
     display: flex;
     flex-direction: column;
