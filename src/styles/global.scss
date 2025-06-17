@@ -117,6 +117,7 @@ section {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  margin-bottom: 100px;
 }
 
 h1,
@@ -205,4 +206,8 @@ a {
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.container {
+  padding: 0 50px;
 }
