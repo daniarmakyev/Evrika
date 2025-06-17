@@ -57,7 +57,7 @@
           color: $White;
 
           &:hover {
-            text-decoration: underline;
+            color: $steel-blue;
           }
         }
 
@@ -107,7 +107,7 @@
       cursor: pointer;
 
       &:hover {
-        text-decoration: underline;
+        color: $steel-blue;
       }
     }
   }
