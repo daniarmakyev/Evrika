@@ -165,6 +165,10 @@ main {
   padding: 40px 20px 0;
   margin: 0 auto;
 
+  @include respond-above(md) {
+    padding: 0;
+  }
+
   @include respond-above(lg) {
     padding: 0;
     // padding-top: 40px;
@@ -210,4 +214,29 @@ a {
 
 .container {
   padding: 0 50px;
+
+  @include respond-above(mac) {
+    padding: 0 50px;
+  }
+
+  @include respond-above(xlg) {
+    padding: 0;
+    max-width: 1440px;
+  }
+
+  @include respond-above(fhd) {
+    max-width: 1600px;
+  }
+
+  @include respond-above(fhd-plus) {
+    max-width: 1920px;
+  }
+
+  @include respond-above(qhd) {
+    max-width: 2340px;
+  }
+
+  @include respond-above(uhd) {
+    max-width: 2560px;
+  }
 }

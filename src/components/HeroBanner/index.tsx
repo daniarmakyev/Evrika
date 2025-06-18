@@ -1,9 +1,10 @@
 'use client';
 
 import Image from "next/image";
+import classNames from "classnames";
 import styles from "./styles.module.scss";
 
-const QuoteSection = ({}) => {
+const HeroBanner = ({}) => {
   const scrollToSignup = () => {
     const section = document.getElementById("signup");
     if (section) {
@@ -13,7 +14,7 @@ const QuoteSection = ({}) => {
 
   return (
     <section className={styles.quote}>
-      <div className={styles.quote__container}>
+      <div className={classNames(styles.quote__container, "container")}>
         <div className={styles.quote__info}>
           <div className={styles.quote__title}>
             <h1>От первых слов - к свободной речи</h1>
@@ -42,4 +43,4 @@ const QuoteSection = ({}) => {
   )
 };
 
-export default QuoteSection;
+export default HeroBanner;

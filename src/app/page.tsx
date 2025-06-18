@@ -1,6 +1,6 @@
 import Header from "@components/Header";
 import Footer from "@components/Footer";
-import QuoteSection from "@components/QuoteSection";
+import HeroBanner from "@components/HeroBanner";
 import InGroupSection from "@components/InGroupSection";
 import CoursesSection from "@components/CoursesSection";
 import SignupSection from "@components/SignupSection/indext";
@@ -10,7 +10,7 @@ export default function Home() {
     <>
       <Header />
       <main className="App">
-        <QuoteSection />
+        <HeroBanner />
         <InGroupSection />
         <CoursesSection />
         <SignupSection />
