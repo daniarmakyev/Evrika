@@ -4,7 +4,7 @@ import styles from "./styles.module.scss";
 
 interface Inormation {
   title: string;
-  description: string;
+  description?: string;
   all_see?: string;
   link?: string;
 }
