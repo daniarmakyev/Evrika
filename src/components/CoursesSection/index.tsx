@@ -4,7 +4,7 @@ import Link from "next/link";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
-import InfoSection from "@components/InfoSection";
+import SectionInfo from "@components/SectionInfo";
 import Calendar from "@icons/calendar.svg";
 import Hours from "@icons/hours.svg";
 import Place from "@icons/place.svg";
@@ -47,7 +47,7 @@ const CoursesSection = ({}) => {
   return (
     <section className={classNames(styles.courses, "container")}>
       <div className={styles.courses__container}>
-        <InfoSection
+        <SectionInfo
           title="Ближайшие курсы"
           description="Если вы еще новичок, советуем поступать на ближайший курс, чтобы не терять время"
           all_see="Смотреть все курсы"
