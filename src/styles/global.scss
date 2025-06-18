@@ -213,7 +213,15 @@ a {
 }
 
 .container {
-  padding: 0 50px;
+  padding: 0 20px;
+
+  @include respond-above(md) {
+    padding: 0 34px;
+  }
+  
+  @include respond-above(lg) {
+    padding: 0 42px;
+  }
 
   @include respond-above(mac) {
     padding: 0 50px;
@@ -237,6 +245,6 @@ a {
   }
 
   @include respond-above(uhd) {
-    max-width: 2560px;
+    max-width: 3000px;
   }
 }

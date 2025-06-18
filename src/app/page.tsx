@@ -1,7 +1,7 @@
 import Header from "@components/Header";
 import Footer from "@components/Footer";
 import HeroBanner from "@components/HeroBanner";
-import InGroupSection from "@components/InGroupSection";
+import GroupSection from "@components/GroupSection";
 import CoursesSection from "@components/CoursesSection";
 import SignupSection from "@components/SignupSection/indext";
 
@@ -11,7 +11,7 @@ export default function Home() {
       <Header />
       <main className="App">
         <HeroBanner />
-        <InGroupSection />
+        <GroupSection />
         <CoursesSection />
         <SignupSection />
       </main>

@@ -31,7 +31,7 @@ const cards = [
   },
 ];
 
-const InGroupSection = ({}) => {
+const GroupSection = ({}) => {
   return (
     <section className={classNames(styles.group, "container")}>
       <div className={styles.group__container}>
@@ -65,4 +65,4 @@ const InGroupSection = ({}) => {
   )
 };
 
-export default InGroupSection;
+export default GroupSection;
