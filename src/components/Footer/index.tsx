@@ -35,8 +35,8 @@ const menu = [
 
 const Footer = ({}) => {
   return (
-    <footer className={classNames(styles.footer, "container")}>
-      <div className={styles.footer__container}>
+    <footer className={styles.footer}>
+      <div className={classNames(styles.footer__container, "container")}>
         <div className={styles.footer__info}>
           <div className={styles.footer__social}>
             {social.map((item, index) => (
