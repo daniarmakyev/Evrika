@@ -9,6 +9,7 @@
   justify-content: center;
   background: $bg-gradient-secondary;
   margin-top: 60px;
+  margin-bottom: 0;
 
   &__container {
     width: 100%;
@@ -16,7 +17,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 50px 0;
+    padding: 50px 0 100px 0;
   }
 
   &__text {
@@ -56,7 +57,7 @@
       font-weight: bold;
       font-size: 24px;
       line-height: 140%;
-      color: $placeholder;
+      color: $steel-blue;
     }
   }
 
@@ -86,20 +87,21 @@
       font-weight: bold;
       font-size: 24px;
       line-height: 100%;
-      color: $placeholder;
+      color: $White;
       margin-bottom: 10px;
     }
 
     p {
+      width: 70%;
       font-weight: bold;
-      font-size: 40px;
+      font-size: 32px;
       line-height: 100%;
       color: $steel-blue;
     }
 
     a {
       font-weight: bold;
-      font-size: 40px;
+      font-size: 32px;
       line-height: 100%;
       color: $steel-blue;
       transition: all .3s ease-in-out;
