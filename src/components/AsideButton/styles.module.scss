@@ -27,3 +27,111 @@
     transition: all .3s ease-in-out;
   }
 }
+
+@include respond-above(md) {
+  .asideBtn {
+    width: auto;
+    height: auto;
+    position: fixed;
+    top: 30%;
+    right: -35px;
+    background: $primary-button;
+    border-radius: 10px;
+    border: 0.68px solid #A8B8FF;
+    cursor: pointer;
+    transform: rotate(270deg);
+    transition: all .3s ease-in-out;
+    padding: 10px 20px;
+    z-index: 999999;
+  
+    &:hover {
+      background: $primary;
+    }
+  
+    span {
+      font-size: 11px;
+      line-height: 100%;
+      color: $White;
+      transition: all .3s ease-in-out;
+    }
+  }
+}
+
+@include respond-above(lg) {
+  .asideBtn {
+    right: -43px;
+    padding: 12px 25px;
+  
+    span {
+      font-size: 13px;
+    }
+  }
+}
+
+@include respond-above(mac) {
+  .asideBtn {
+    right: -52px;
+    padding: 14px 30px;
+  
+    span {
+      font-size: 16px;
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .asideBtn {
+    right: -58px;
+    padding: 16px 33px;
+  
+    span {
+      font-size: 18px;
+    }
+  }
+}
+
+@include respond-above(fhd) {
+  .asideBtn {
+    right: -69px;
+    padding: 19px 40px;
+  
+    span {
+      font-size: 21px;
+    }
+  }
+}
+
+@include respond-above(fhd-plus) {
+  .asideBtn {
+    right: -73px;
+    border-radius: 20px;
+    padding: 20px 42px;
+  
+    span {
+      font-size: 22px;
+    }
+  }
+}
+
+@include respond-above(qhd) {
+  .asideBtn {
+    right: -81px;
+    padding: 22px 47px;
+  
+    span {
+      font-size: 25px;
+    }
+  }
+}
+
+@include respond-above(uhd) {
+  .asideBtn {
+    right: -122px;
+    border-radius: 30px;
+    padding: 33px 71px;
+  
+    span {
+      font-size: 38px;
+    }
+  }
+}

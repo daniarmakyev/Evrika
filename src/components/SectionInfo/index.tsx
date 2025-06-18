@@ -4,12 +4,12 @@ import styles from "./styles.module.scss";
 
 interface Inormation {
   title: string;
-  description: string;
+  description?: string;
   all_see?: string;
   link?: string;
 }
 
-const InfoSection: React.FC<Inormation> = ({title, description, all_see, link}) => {
+const SectionInfo: React.FC<Inormation> = ({title, description, all_see, link}) => {
   return (
     <div className={styles.info}>
       <div className={styles.info__title}>
@@ -31,4 +31,4 @@ const InfoSection: React.FC<Inormation> = ({title, description, all_see, link}) 
   );
 };
 
-export default InfoSection;
+export default SectionInfo;

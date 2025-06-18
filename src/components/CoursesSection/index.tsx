@@ -4,7 +4,7 @@ import Link from "next/link";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import "dayjs/locale/ru";
-import InfoSection from "@components/InfoSection";
+import SectionInfo from "@components/SectionInfo";
 import Calendar from "@icons/calendar.svg";
 import Hours from "@icons/hours.svg";
 import Place from "@icons/place.svg";
@@ -47,7 +47,7 @@ const CoursesSection = ({}) => {
   return (
     <section className={classNames(styles.courses, "container")}>
       <div className={styles.courses__container}>
-        <InfoSection
+        <SectionInfo
           title="Ближайшие курсы"
           description="Если вы еще новичок, советуем поступать на ближайший курс, чтобы не терять время"
           all_see="Смотреть все курсы"
@@ -122,58 +122,6 @@ const CoursesSection = ({}) => {
               </div>
             )
           })}
-          {/* {coursesCards.map((card, index) => (
-            <div key={index} className={styles.courses__wrapper}>
-              <div className={styles.courses__title}>
-                <h3>{card.title}</h3>
-              </div>
-              <div className={classNames(styles.courses__description, {
-                [styles.courses__description_isDetails]: card.detail,
-              })}>
-                <p>{card.description}</p>
-              </div>
-              {card.detail && (
-                <div className={styles.courses__details}>
-                  <div className={styles.courses__infoBlock}>
-                    <div className={styles.courses__detail}>
-                      <Calendar />
-                      <div className={styles.courses__info}>
-                        <span>Запуск курса</span>
-                        <p>{dayjs(card.detail.start_course).format("DD MMMM YYYY")}</p>
-                      </div>
-                    </div>
-                    <div className={styles.courses__detail}>
-                      <Hours />
-                      <div className={styles.courses__info}>
-                        <span>Длительность</span>
-                        <p>{dayjs(card.detail.duration).diff(card.detail.start_course, "month")} месяцев</p>
-                      </div>
-                    </div>
-                    <div className={styles.courses__detail}>
-                      <Place />
-                      <div className={styles.courses__info}>
-                        <span>Свободных мест</span>
-                        <p>{card.detail.places} мест</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className={styles.courses__active}>
-                    <button onClick={scrollToSignup}>
-                      <span>{card.detail.btn.name}</span>
-                    </button>
-                    <Link href={card.link} className={styles.courses__more}>
-                      <span>{card.more}</span>
-                    </Link>
-                  </div>
-                </div>
-              )}
-              {!card.detail && card.more && (
-                <Link href={card.link} className={styles.courses__more}>
-                  <span>{card.more}</span>
-                </Link>
-              )}
-            </div>
-          ))} */}
         </div>
       </div>
     </section>

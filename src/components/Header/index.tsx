@@ -45,8 +45,8 @@ const Header = ({}) => {
   // }, []);
 
   return (
-    <header className={classNames(styles.header, "container")}>
-      <div className={styles.header__container}>
+    <header className={styles.header}>
+      <div className={classNames(styles.header__container, "container")}>
         <div className={styles.header__logo}>
           <Link href="/">
             <Logo />

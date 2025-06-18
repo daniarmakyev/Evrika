@@ -1,6 +1,6 @@
 import Image from "next/image";
 import classNames from "classnames";
-import InfoSection from "@components/InfoSection";
+import SectionInfo from "@components/SectionInfo";
 import styles from "./styles.module.scss";
 
 const cards = [
@@ -31,11 +31,11 @@ const cards = [
   },
 ];
 
-const InGroupSection = ({}) => {
+const GroupSection = ({}) => {
   return (
     <section className={classNames(styles.group, "container")}>
       <div className={styles.group__container}>
-        <InfoSection
+        <SectionInfo
           title="Это работает в группе"
           description="В “Эврике”, не вы подстраиваетесь под образовательную программу, а она - под Вас. Вот благодаря чему это происходит:"
         />
@@ -65,4 +65,4 @@ const InGroupSection = ({}) => {
   )
 };
 
-export default InGroupSection;
+export default GroupSection;
