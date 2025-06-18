@@ -1,0 +1,39 @@
+@import "../../../styles/varibles.scss";
+@import "../../../styles/mixins/";
+
+.overlay {
+  &__innerOverlay {
+    max-width: 440px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 40px;
+    margin: 0 auto;
+  }
+
+  &__title {
+    font-weight: 800;
+    font-size: 36px;
+    color: $primary;
+  }
+
+  &__description {
+    font-weight: 700;
+    font-size: 16px;
+    color: $White-ligth;
+  }
+
+  &__form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    
+    button {
+      background: $primary-button;
+      margin-top: 20px;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+@import "../../../styles/varibles.scss";
+
+.button {
+  justify-content: center;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  padding: 12px 24px;
+  font-size: 14px;
+  background: $primary;
+  color: $White;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}

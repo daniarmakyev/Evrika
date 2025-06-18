@@ -2,28 +2,34 @@
 @import "mixins";
 @import "default";
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
 :root {
-  --bg: #ffffff;
-  --text: #000000;
-  --accent: #1a73e8;
-  --border: #5850DD;
+  --primary: #{$primary};
+  --black-dark: #{$black-dark};
   --datepicker-icon-filter: invert(0);
+  --White-ligth: #{$White-ligth};
+  --white-ligth: #{$white-ligth};
+  --white-dark: #{$white-dark};
+  --black-ligth: #{$black-ligth};
+  --success: #{$success};
+  --danger: #{$danger};
+  --secondary: #{$secondary};
+  --warning: #{$warning};
+  --White: #{$White};
 }
 
 [data-theme='dark'] {
-  --bg: #121212;
-  --text: #ffffff;
-  --accent: #90caf9;
-  --border: #ffffff;
+
   --datepicker-icon-filter: invert(1);
 }
 
 html {
-  --header-height: 40px;
+  --header-height: 60px;
   --header-offset: 40px;
   --header-compensation: -40px;
   --container-offset: #{$container};
@@ -52,6 +58,7 @@ html {
     --section-height: calc(100vh - 63.6px);
     --container-offset: #{$containerXLG};
   }
+
   @include respond-above(xlg) {
     --header-height: 63.6px;
     --header-offset: 63.6px;
@@ -59,6 +66,7 @@ html {
     --section-height: calc(100vh - 63.6px);
     --container-offset: #{$containerXLG};
   }
+
   @include respond-above(fhd) {
     --header-height: 67.2px;
     --header-offset: 67.2px;
@@ -97,6 +105,7 @@ html {
   .typingBureau {
     display: flex;
   }
+
   .projectsPageTyping {
     display: none;
   }
@@ -108,6 +117,7 @@ section {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
+  margin-bottom: 100px;
 }
 
 h1,
@@ -120,11 +130,12 @@ h6 {
 }
 
 body {
-  font-family: 'CodecPro_Light';
+  font-family: var(--font-nunito-sans), sans-serif;
   font-size: 16px;
-  font-weight: normal;
+  font-weight: 400;
   font-style: normal;
-  background: var(--bg);
+  // background: var(--bg);
+  background: $White;
   color: var(--text);
   position: relative;
 
@@ -169,14 +180,14 @@ main {
 
 a {
   text-decoration: none;
-  color: $defaultLinkColor;
+  color: $primary;
   line-height: 100%;
   padding: 0;
   margin: 0;
 }
 
 ::selection {
-  color: $selectionTextColor;
+  // color: $selectionTextColor;
   text-shadow: none;
 }
 
@@ -195,4 +206,8 @@ a {
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.container {
+  padding: 0 50px;
 }

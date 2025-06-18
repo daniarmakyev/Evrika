@@ -1,6 +1,4 @@
 // Basic colors
-$bg-ligth: #fafbfa;
-$bg-colors: #000000;
 $black-dark: #0e1726;
 $success: #00ab55;
 $danger: #e7515a;
@@ -8,23 +6,23 @@ $secondary: #805dca;
 $warning: #e2a03f;
 $info: #2196f3;
 $dark: #3b3f5c;
-$primary: #8399FF;
+$primary: #8399ff;
 $placeholder: #6b7280;
 $black-ligth: #e3e4eb;
-$white-ligth-dark: #e0e6ed;
-$white-ligth:"#E0E6ED";
+$white-ligth: #e0e6ed;
+$white-dark: #1b2e4b;
 $success-ligth: #ddf5f0;
 $danger-ligth: #fff5f5;
-$white-dark: "#ffffff";
-$steel-blue: "#506690";
+$White: #ffffff;
+$black: #252525;
+$steel-blue: #506690;
+$shadow-ligth: #dbdbdb;
 $secondary-ligth: #ebe4f7;
 $warning-ligth: #fff9ed;
 $info-ligth: #e7f7ff;
 $dark-ligth: #eaeaec;
 $primary-ligth: #eaf1ff;
-$White-ligth-dark: #888ea8;
-$border-dark: #1b2e4b;
-$bg-dark:"#060818";
+$White-ligth: #888ea8;
 
 // Container
 $container: 20px;
@@ -37,10 +35,31 @@ $containerXLG: 50px;
 $containerFHD: 50px;
 $containerQHD: 50px;
 
-// Named colors
-$defaultTextColor: $black;
-$highlightTextColor: $black;
-$selectionTextColor: $black;
-$defaultLinkColor: $black;
-$activeLinkColor: $black;
-$backgroundColor: $white;
+// // Named colors
+// $defaultTextColor: $black;
+// $highlightTextColor: $black;
+// $selectionTextColor: $black;
+// $defaultLinkColor: $black;
+// $activeLinkColor: $black;
+// $backgroundColor: $white;
+
+
+//Buttons color
+$primary-button: #6782FF;
+
+//Background colors
+$bg-ligth: #fafbfa;
+$bg-colors: #000000;
+$bg-gradient: linear-gradient(
+  180deg,
+  rgb(131, 153, 255),
+  rgb(131, 153, 255), 20%,
+  rgb(168, 184, 255) 53.472%,
+  rgb(252, 252, 252) 106.944%
+);
+$bg-gradient-secondary: linear-gradient(
+  180deg,
+  rgb(131, 153, 255) 0%,
+  rgb(168, 184, 255) 45%,
+  rgb(255, 255, 255) 90%
+);

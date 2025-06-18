@@ -1,0 +1,9 @@
+@import "../../styles/_varibles.scss";
+.wrapper {
+  background: $bg-gradient;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 40px 20px;
+}

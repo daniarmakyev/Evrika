@@ -1,0 +1,50 @@
+@import "../../../styles//varibles";
+@import "../../../styles/mixins/";
+
+.popup {
+  width: fit-content;
+  height: auto;
+  height: 0;
+  top: 50px;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease-in-out;
+  background: $White;
+  border-radius: 10px;
+  pointer-events: none;
+  overflow: hidden;
+  border: 0px solid $dark;
+  z-index: 9999;
+
+  &.header__popup_isOpen {
+    pointer-events: auto;
+    height: 42px;
+    border: 1px solid $dark;
+  }
+
+  ul {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 15px;
+
+    li, a {
+      width: 100%;
+      font-size: 18px;
+      line-height: 100%;
+      color: $primary;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      padding: 12px 0;
+
+      &:hover {
+        color: #A8B8FF;
+      }
+    }
+  }
+}
