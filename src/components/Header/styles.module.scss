@@ -4,6 +4,9 @@
 .header {
   width: 100%;
   height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: fixed;
   top: 0;
   background: $primary;
@@ -108,6 +111,358 @@
 
       &:hover {
         color: $steel-blue;
+      }
+    }
+  }
+}
+
+@include respond-above(md) {
+  .header {
+    width: 100%;
+    height: 41px;
+    position: fixed;
+    top: 0;
+    background: $primary;
+    z-index: 99999;
+  
+    &__container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  
+    &__logo {
+      width: auto;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      svg {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+      }
+    }
+  
+    &__menu {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      ul {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+  
+        li {
+          font-size: 12px;
+          line-height: 100%;
+          cursor: pointer;
+          transition: all 0.3s ease-in-out;
+          margin-right: 10px;
+  
+          a {
+            transition: all 0.3s ease-in-out;
+            color: $White;
+  
+            &:hover {
+              color: $steel-blue;
+            }
+          }
+  
+          &:last-child {
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  
+    &__profile {
+      width: 24px;
+      height: 24px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $White;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      padding: 6px;
+      z-index: 9;
+  
+      &:hover {
+        background: $white-ligth;
+      }
+  
+      svg {
+        width: auto;
+        height: auto;
+      }
+    }
+  
+    &__login {
+      width: auto;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  
+      a {
+        font-size: 12px;
+        line-height: 100%;
+        color: $White;
+        transition: all 0.3s ease-in-out;
+        cursor: pointer;
+  
+        &:hover {
+          color: $steel-blue;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(lg) {
+  .header {
+    height: 50px;
+  
+    &__logo {
+      svg {
+        width: 30px;
+        height: 30px;
+      }
+    }
+  
+    &__menu {
+      ul {
+        li {
+          font-size: 15px;
+          margin-right: 13px;
+        }
+      }
+    }
+  
+    &__profile {
+      width: 30px;
+      height: 30px;
+      padding: 8px;
+    }
+  
+    &__login {
+      a {
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+@include respond-above(mac) {
+  .header {
+    height: 60px;
+  
+    &__logo {
+      svg {
+        width: 36px;
+        height: 36px;
+      }
+    }
+  
+    &__menu {
+      ul {
+        li {
+          font-size: 18px;
+          margin-right: 15px;
+        }
+      }
+    }
+  
+    &__profile {
+      width: 36px;
+      height: 36px;
+      padding: 9px;
+    }
+  
+    &__login {
+      a {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .header {
+    height: 67px;
+  
+    &__logo {
+      svg {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  
+    &__menu {
+      ul {
+        li {
+          font-size: 20px;
+          margin-right: 17px;
+        }
+      }
+    }
+  
+    &__profile {
+      width: 40px;
+      height: 40px;
+      padding: 10px;
+    }
+  
+    &__login {
+      a {
+        font-size: 20px;
+      }
+    }
+  }
+}
+
+@include respond-above(fhd) {
+  .header {
+    height: 80px;
+  
+    &__logo {
+      svg {
+        width: 48px;
+        height: 48px;
+      }
+    }
+  
+    &__menu {
+      ul {
+        li {
+          font-size: 24px;
+          margin-right: 20px;
+        }
+      }
+    }
+  
+    &__profile {
+      width: 48px;
+      height: 48px;
+      padding: 12px;
+    }
+  
+    &__login {
+      a {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+@include respond-above(fhd-plus) {
+  .header {
+    height: 84px;
+  
+    &__logo {
+      svg {
+        width: 50px;
+        height: 50px;
+      }
+    }
+  
+    &__menu {
+      ul {
+        li {
+          font-size: 25px;
+          margin-right: 21px;
+        }
+      }
+    }
+  
+    &__profile {
+      width: 50px;
+      height: 50px;
+      padding: 13px;
+    }
+  
+    &__login {
+      a {
+        font-size: 25px;
+      }
+    }
+  }
+}
+
+@include respond-above(qhd) {
+  .header {
+    height: 93px;
+  
+    &__logo {
+      svg {
+        width: 56px;
+        height: 56px;
+      }
+    }
+  
+    &__menu {
+      ul {
+        li {
+          font-size: 28px;
+          margin-right: 23px;
+        }
+      }
+    }
+  
+    &__profile {
+      width: 56px;
+      height: 56px;
+      padding: 14px;
+    }
+  
+    &__login {
+      a {
+        font-size: 28px;
+      }
+    }
+  }
+}
+
+@include respond-above(uhd) {
+  .header {
+    height: 141px;
+  
+    &__logo {
+      svg {
+        width: 85px;
+        height: 85px;
+      }
+    }
+  
+    &__menu {
+      ul {
+        li {
+          font-size: 42px;
+          margin-right: 35px;
+        }
+      }
+    }
+  
+    &__profile {
+      width: 85px;
+      height: 85px;
+      padding: 21px;
+    }
+  
+    &__login {
+      a {
+        font-size: 42px;
       }
     }
   }
