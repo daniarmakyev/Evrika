@@ -20,8 +20,8 @@ const contacts = [
 
 const ContactsSection = ({}) => {
   return (
-    <section className={classNames(styles.contacts, "container")}>
-      <div className={styles.contacts__container}>
+    <section className={styles.contacts}>
+      <div className={classNames(styles.contacts__container, "container")}>
         <div className={styles.contacts__text}>
           <div className={styles.contacts__title}>
             <h1>Контакты</h1>
