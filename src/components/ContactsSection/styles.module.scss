@@ -9,7 +9,6 @@
   justify-content: center;
   background: $bg-gradient-secondary;
   margin-top: 60px;
-  margin-bottom: 0;
 
   &__container {
     width: 100%;
@@ -17,7 +16,8 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 50px 0 100px 0;
+    padding-top: 50px;
+    padding-bottom: 100px;
   }
 
   &__text {
@@ -108,6 +108,413 @@
 
       &:hover {
         color: $primary;
+      }
+    }
+  }
+}
+
+@include respond-above(md) {
+  .contacts {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: $bg-gradient-secondary;
+    margin-top: 41px;
+  
+    &__container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding-top: 34px;
+      padding-bottom: 68px;
+    }
+  
+    &__text {
+      width: 60%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+  
+    &__title {
+      width: auto;
+      height: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      margin-bottom: 14px;
+  
+      h1 {
+        font-weight: bold;
+        font-size: 34px;
+        line-height: 100%;
+        color: $White;
+      }
+    }
+  
+    &__description {
+      width: auto;
+      height: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+  
+      p {
+        width: 45%;
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 140%;
+        color: $steel-blue;
+      }
+    }
+  
+    &__infoBlock {
+      width: 40%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+  
+    &__info {
+      width: auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+      margin-bottom: 14px;
+  
+      &:last-child {
+        margin-bottom: 0;
+      }
+  
+      span {
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 100%;
+        color: $White;
+        margin-bottom: 7px;
+      }
+  
+      p {
+        width: 70%;
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 100%;
+        color: $steel-blue;
+      }
+  
+      a {
+        font-weight: bold;
+        font-size: 22px;
+        line-height: 100%;
+        color: $steel-blue;
+        transition: all .3s ease-in-out;
+  
+        &:hover {
+          color: $primary;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(lg) {
+  .contacts {
+    margin-top: 50px;
+  
+    &__container {
+      padding-top: 42px;
+      padding-bottom: 83px;
+    }
+  
+    &__title {
+      margin-bottom: 17px;
+  
+      h1 {
+        font-size: 42px;
+      }
+    }
+  
+    &__description {
+      p {
+        font-size: 20px;
+      }
+    }
+  
+    &__info {
+      margin-bottom: 20px;
+  
+      span {
+        font-size: 20px;
+        margin-bottom: 8px;
+      }
+  
+      p {
+        font-size: 27px;
+      }
+  
+      a {
+        font-size: 27px;
+      }
+    }
+  }
+}
+
+@include respond-above(mac) {
+  .contacts {
+    margin-top: 60px;
+  
+    &__container {
+      padding-top: 50px;
+      padding-bottom: 100px;
+    }
+  
+    &__title {
+      margin-bottom: 20px;
+  
+      h1 {
+        font-size: 50px;
+      }
+    }
+  
+    &__description {
+      p {
+        font-size: 24px;
+      }
+    }
+  
+    &__info {
+      margin-bottom: 20px;
+  
+      span {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+  
+      p {
+        font-size: 32px;
+      }
+  
+      a {
+        font-size: 32px;
+      }
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .contacts {
+    margin-top: 67px;
+  
+    &__container {
+      padding-top: 56px;
+      padding-bottom: 111px;
+    }
+  
+    &__title {
+      margin-bottom: 22px;
+  
+      h1 {
+        font-size: 56px;
+      }
+    }
+  
+    &__description {
+      p {
+        font-size: 27px;
+      }
+    }
+  
+    &__info {
+      margin-bottom: 22px;
+  
+      span {
+        font-size: 27px;
+        margin-bottom: 11px;
+      }
+  
+      p {
+        font-size: 36px;
+      }
+  
+      a {
+        font-size: 36px;
+      }
+    }
+  }
+}
+
+@include respond-above(fhd) {
+  .contacts {
+    margin-top: 80px;
+  
+    &__container {
+      padding-top: 67px;
+      padding-bottom: 133px;
+    }
+  
+    &__title {
+      margin-bottom: 27px;
+  
+      h1 {
+        font-size: 67px;
+      }
+    }
+  
+    &__description {
+      p {
+        font-size: 32px;
+      }
+    }
+  
+    &__info {
+      margin-bottom: 27px;
+  
+      span {
+        font-size: 32px;
+        margin-bottom: 13px;
+      }
+  
+      p {
+        font-size: 43px;
+      }
+  
+      a {
+        font-size: 43px;
+      }
+    }
+  }
+}
+@include respond-above(fhd-plus) {
+  .contacts {
+    margin-top: 84px;
+  
+    &__container {
+      padding-top: 70px;
+      padding-bottom: 140px;
+    }
+  
+    &__title {
+      margin-bottom: 28px;
+  
+      h1 {
+        font-size: 70px;
+      }
+    }
+  
+    &__description {
+      p {
+        font-size: 34px;
+      }
+    }
+  
+    &__info {
+      margin-bottom: 28px;
+  
+      span {
+        font-size: 34px;
+        margin-bottom: 14px;
+      }
+  
+      p {
+        font-size: 45px;
+      }
+  
+      a {
+        font-size: 45px;
+      }
+    }
+  }
+}
+
+@include respond-above(qhd) {
+  .contacts {
+    margin-top: 93px;
+  
+    &__container {
+      padding-top: 78px;
+      padding-bottom: 155px;
+    }
+  
+    &__title {
+      margin-bottom: 31px;
+  
+      h1 {
+        font-size: 78px;
+      }
+    }
+  
+    &__description {
+      p {
+        font-size: 37px;
+      }
+    }
+  
+    &__info {
+      margin-bottom: 31px;
+  
+      span {
+        font-size: 37px;
+        margin-bottom: 16px;
+      }
+  
+      p {
+        font-size: 50px;
+      }
+  
+      a {
+        font-size: 50px;
+      }
+    }
+  }
+}
+
+@include respond-above(uhd) {
+  .contacts {
+    margin-top: 141px;
+  
+    &__container {
+      padding-top: 118px;
+      padding-bottom: 235px;
+    }
+  
+    &__title {
+      margin-bottom: 47px;
+  
+      h1 {
+        font-size: 118px;
+      }
+    }
+  
+    &__description {
+      p {
+        font-size: 56px;
+      }
+    }
+  
+    &__info {
+      margin-bottom: 47px;
+  
+      span {
+        font-size: 56px;
+        margin-bottom: 23px;
+      }
+  
+      p {
+        font-size: 75px;
+      }
+  
+      a {
+        font-size: 75px;
       }
     }
   }
