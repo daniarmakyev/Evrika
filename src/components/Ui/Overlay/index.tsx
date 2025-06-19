@@ -7,13 +7,16 @@ interface OverlayProps {
   className?: string;
 }
 
-const Overlay = ({
+const Overlay: React.FC<OverlayProps> = ({
   children,
-  style,
-  className="",
-}: OverlayProps) => {
+  style = {},
+  className = "",
+}) => {
   return (
-    <div className={`${styles.overlay} ${className}`}>
+    <div 
+      className={`${styles.overlay} ${className}`} 
+      style={style}
+    >
       {children}
     </div>
   );
