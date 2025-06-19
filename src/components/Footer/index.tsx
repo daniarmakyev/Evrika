@@ -25,7 +25,7 @@ const menu = [
   },
   {
     name: "Курсы",
-    link: "/",
+    link: "/courses",
   },
   {
     name: "Контакты",
