@@ -17,7 +17,7 @@ const menu = [
   {
     id: 2,
     name: "Курсы",
-    link: "#",
+    link: "/courses",
   },
   {
     id: 3,

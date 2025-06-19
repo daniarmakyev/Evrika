@@ -1,10 +1,24 @@
 'use client';
 
+import React from "react";
 import Image from "next/image";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 
-const HeroBanner = ({}) => {
+interface HeroBannerData {
+  title: string;
+  description: string;
+  image: {
+    url: string;
+    name: string;
+  };
+}
+
+interface HeroBannerProps {
+  data: HeroBannerData;
+}
+
+const HeroBanner: React.FC<HeroBannerProps> = ({ data }) => {
   const scrollToSignup = () => {
     const section = document.getElementById("signup");
     if (section) {
@@ -17,10 +31,10 @@ const HeroBanner = ({}) => {
       <div className={classNames(styles.quote__container, "container")}>
         <div className={styles.quote__info}>
           <div className={styles.quote__title}>
-            <h1>От первых слов - к свободной речи</h1>
+            <h1>{data.title}</h1>
           </div>
           <div className={styles.quote__description}>
-            <p>Запишись на пробный урок - шаг к свободному общению!</p>
+            <p>{data.description}</p>
           </div>
           <div className={styles.quote__btn}>
             <button onClick={scrollToSignup}>
@@ -30,8 +44,8 @@ const HeroBanner = ({}) => {
         </div>
         <div className={styles.quote__image}>
           <Image
-            src="/assets/images/quote.png"
-            alt="image quote"
+            src={data.image.url}
+            alt={data.image.name}
             width={600}
             height={600}
             priority
