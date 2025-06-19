@@ -1,48 +1,26 @@
+'use client';
+
+import React from "react";
 import Image from "next/image";
 import classNames from "classnames";
 import SectionInfo from "@components/SectionInfo";
 import styles from "./styles.module.scss";
 
-const imgCards = [
-  {
-    name: "Святослав",
-    position: "Ассистент преподавателя",
-    description: "Выпускник  Эврика",
-    image: {
-      url: "/assets/images/instructor-1.jpg",
-      name: "instructor-1.jpg",
-    }
-  },
-  {
-    name: "Светлана",
-    position: "Ассистент преподавателя",
-    description: "Выпускник  Эврика",
-    image: {
-      url: "/assets/images/instructor-2.jpg",
-      name: "instructor-2.jpg",
-    }
-  },
-  {
-    name: "Эмили",
-    position: "Преподаватель английского",
-    description: "Опыт обучения 8 лет",
-    image: {
-      url: "/assets/images/instructor-3.jpg",
-      name: "instructor-3.jpg",
-    }
-  },
-  {
-    name: "Тайсон",
-    position: "Преподаватель французского",
-    description: "Опыт обучения 10 лет",
-    image: {
-      url: "/assets/images/instructor-4.jpg",
-      name: "instructor-4.jpg",
-    }
-  },
-];
+interface InstructorsData {
+  name: string;
+  position: string;
+  description: string;
+  image: {
+    url: string;
+    name: string;
+  };
+}
 
-const InstructorsSection = ({}) => {
+interface InstructorsProps {
+  data: InstructorsData[];
+}
+
+const InstructorsSection: React.FC<InstructorsProps> = ({ data }) => {
   return (
     <section className={classNames(styles.instructors, "container")}>
       <div className={styles.instructors__container}>
@@ -51,7 +29,7 @@ const InstructorsSection = ({}) => {
           description="Все наши преподаватели когда-то закончили курсы нашей школы, а старшие преподаватели работают в международных компаниях или преподают за рубежом."
         />
         <div className={styles.instructors__cards}>
-          {imgCards.map((item, index) => (
+          {data.map((item, index) => (
             <div key={index} className={styles.instructors__wrapper}>
               <div className={styles.instructors__image}>
                 <Image
