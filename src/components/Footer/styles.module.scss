@@ -15,7 +15,8 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding: 40px 0;
+    padding-top: 40px;
+    padding-bottom: 40px;
 
     a, p {
       font-weight: bold;
@@ -130,7 +131,8 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      padding: 27px 0;
+      padding-top: 27px;
+      padding-bottom: 27px;
   
       a, p {
         font-weight: bold;
@@ -234,7 +236,8 @@
 @include respond-above(lg) {
   .footer {
     &__container {
-      padding: 33px 0;
+      padding-top: 33px;
+      padding-bottom: 33px;
   
       a, p {
         font-size: 13px;
@@ -275,7 +278,8 @@
 @include respond-above(mac) {
   .footer {
     &__container {
-      padding: 40px 0;
+      padding-top: 40px;
+      padding-bottom: 40px;
   
       a, p {
         font-size: 16px;
@@ -316,7 +320,8 @@
 @include respond-above(xlg) {
   .footer {
     &__container {
-      padding: 44px 0;
+      padding-top: 44px;
+      padding-bottom: 44px;
   
       a, p {
         font-size: 18px;
@@ -357,7 +362,8 @@
 @include respond-above(fdh) {
   .footer {
     &__container {
-      padding: 53px 0;
+      padding-top: 53px;
+      padding-bottom: 53px;
   
       a, p {
         font-size: 21px;
@@ -398,7 +404,8 @@
 @include respond-above(fhd-plus) {
   .footer {
     &__container {
-      padding: 56px 0;
+      padding-top: 56px;
+      padding-bottom: 56px;
   
       a, p {
         font-size: 22px;
@@ -439,7 +446,8 @@
 @include respond-above(qhd) {
   .footer {
     &__container {
-      padding: 62px 0;
+      padding-top: 62px;
+      padding-bottom: 62px;
   
       a, p {
         font-size: 25px;
@@ -480,7 +488,8 @@
 @include respond-above(uhd) {
   .footer {
     &__container {
-      padding: 94px 0;
+      padding-top: 94px;
+      padding-bottom: 94px;
   
       a, p {
         font-size: 38px;
