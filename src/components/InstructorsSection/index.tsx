@@ -18,15 +18,17 @@ interface InstructorsData {
 
 interface InstructorsProps {
   data: InstructorsData[];
+  title: string;
+  description: string;
 }
 
-const InstructorsSection: React.FC<InstructorsProps> = ({ data }) => {
+const InstructorsSection: React.FC<InstructorsProps> = ({ data, title, description }) => {
   return (
     <section className={classNames(styles.instructors, "container")}>
       <div className={styles.instructors__container}>
         <SectionInfo
-          title="Преподаватели"
-          description="Все наши преподаватели когда-то закончили курсы нашей школы, а старшие преподаватели работают в международных компаниях или преподают за рубежом."
+          title={title}
+          description={description}
         />
         <div className={styles.instructors__cards}>
           {data.map((item, index) => (

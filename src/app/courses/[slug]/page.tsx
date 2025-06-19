@@ -62,7 +62,11 @@ const DetailCourses = ({}) => {
         <HeroBanner data={detailCoursesPageBanner} />
         <StartCoursesSection title="Курс стартует:" description="27 мая 2025" />
         <SuitableCoursesSection />
-        <InstructorsSection data={imgCards} />
+        <InstructorsSection
+          data={imgCards}
+          title="Преподаватели"
+          description="Наши преподаватели — опытные специалисты, а старшие — с международным опытом работы и преподавания."
+        />
         <SignupSection />
       </main>
       <Footer />

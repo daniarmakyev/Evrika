@@ -60,7 +60,11 @@ const Courses = ({}) => {
       <main className="App">
         <HeroBanner data={coursesPageBanner} />
         <CoursesSection />
-        <InstructorsSection data={imgCards} />
+        <InstructorsSection
+          data={imgCards}
+          title="Преподаватели"
+          description="Все наши преподаватели когда-то закончили курсы нашей школы, а старшие преподаватели работают в международных компаниях или преподают за рубежом."
+        />
         <SignupSection />
       </main>
       <Footer />
