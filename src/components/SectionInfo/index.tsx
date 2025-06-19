@@ -1,4 +1,5 @@
 import React from "react";
+import classNames from "classnames";
 import Link from "next/link";
 import styles from "./styles.module.scss";
 
@@ -7,11 +8,14 @@ interface Inormation {
   description?: string;
   all_see?: string;
   link?: string;
+  isPagination?: boolean;
 }
 
-const SectionInfo: React.FC<Inormation> = ({title, description, all_see, link}) => {
+const SectionInfo: React.FC<Inormation> = ({title, description, all_see, link, isPagination}) => {
   return (
-    <div className={styles.info}>
+    <div className={classNames(styles.info, {
+      [styles.info_isPagination]: isPagination,
+    })}>
       <div className={styles.info__title}>
         <h3>{title}</h3>
       </div>

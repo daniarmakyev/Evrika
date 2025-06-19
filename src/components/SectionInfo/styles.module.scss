@@ -10,6 +10,10 @@
   justify-content: center;
   margin-bottom: 40px;
 
+  &_isPagination {
+    margin-bottom: 0 !important;
+  }
+
   &__title {
     width: 100%;
     height: 100%;

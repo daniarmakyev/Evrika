@@ -2,7 +2,7 @@ import Header from "@components/Header";
 import Footer from "@components/Footer";
 import HeroBanner from "@components/HeroBanner";
 import GroupSection from "@components/GroupSection";
-import CoursesSection from "@components/CoursesSection";
+import ComingCoursesSection from "@components/ComingCoursesSection";
 import SignupSection from "@components/SignupSection/indext";
 
 const homePageBanner = {
@@ -21,7 +21,7 @@ export default function Home() {
       <main className="App">
         <HeroBanner data={homePageBanner} />
         <GroupSection />
-        <CoursesSection />
+        <ComingCoursesSection />
         <SignupSection />
       </main>
       <Footer />

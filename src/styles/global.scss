@@ -92,25 +92,6 @@ html {
   }
 }
 
-.typingBureau {
-  display: none;
-}
-
-.textTypingVisible {
-  width: 100%;
-  margin: 0 auto;
-}
-
-@include respond-above(md) {
-  .typingBureau {
-    display: flex;
-  }
-
-  .projectsPageTyping {
-    display: none;
-  }
-}
-
 section {
   max-width: 100%;
   width: 100%;
