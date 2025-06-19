@@ -4,10 +4,13 @@ import styles from "./styles.module.scss";
 
 const AsideButton = ({}) => {
   const scrollToSignup = () => {
-    const section = document.getElementById("signup");
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
+    setTimeout(() => {
+      const section = document.getElementById("signup");
+      if (section) {
+        const offset = section.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: offset, behavior: "smooth" });
+      }
+    }, 0);
   };
 
   return (
