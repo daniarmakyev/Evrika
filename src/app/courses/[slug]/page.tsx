@@ -1,15 +1,17 @@
 import Header from "@components/Header";
 import HeroBanner from "@components/HeroBanner";
-import CoursesSection from "@components/CoursesSection";
+import StartCoursesSection from "@components/StartCoursesSection";
+import SuitableCoursesSection from "@components/SuitableCoursesSection";
 import InstructorsSection from "@components/InstructorsSection";
 import SignupSection from "@components/SignupSection/indext";
 import Footer from "@components/Footer";
+import WhatKnowSection from "@components/WhatKnowSection";
 
-const coursesPageBanner = {
-  title: "Наши языковые курсы",
+const detailCoursesPageBanner = {
+  title: "Курс английского языка",
   description: "Курсы для всех уровней — от А1 до С1.",
   image: {
-    url: "/assets/images/courses-page.png",
+    url: "/assets/images/detail-courses-page.png",
     name: "courses-page.png",
   },
 };
@@ -53,17 +55,19 @@ const imgCards = [
   },
 ];
 
-const Courses = ({}) => {
+const DetailCourses = ({}) => {
   return (
     <>
       <Header />
       <main className="App">
-        <HeroBanner data={coursesPageBanner} />
-        <CoursesSection />
+        <HeroBanner data={detailCoursesPageBanner} />
+        <StartCoursesSection title="Курс стартует:" description="27 мая 2025" />
+        <SuitableCoursesSection />
+        <WhatKnowSection />
         <InstructorsSection
           data={imgCards}
           title="Преподаватели"
-          description="Все наши преподаватели когда-то закончили курсы нашей школы, а старшие преподаватели работают в международных компаниях или преподают за рубежом."
+          description="Наши преподаватели — опытные специалисты, а старшие — с международным опытом работы и преподавания."
         />
         <SignupSection />
       </main>
@@ -72,4 +76,4 @@ const Courses = ({}) => {
   );
 };
 
-export default Courses;
+export default DetailCourses;
