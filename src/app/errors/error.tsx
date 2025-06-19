@@ -17,7 +17,7 @@ export default function GlobalError({
 
   return (
     <ErrorLayout>
-      <div className={`${styles.innerOverlay} ${styles.error}`}>
+      <div className={styles.wrapper__serverError}>
         <Image
           src="/assets/images/500dog.png"
           alt="image 500 error"
@@ -25,7 +25,7 @@ export default function GlobalError({
           height={800}
           priority
         />
-        <h2>Внутренняя ошибка сервера!</h2>
+        <h2 className={styles.title}>Внутренняя ошибка сервера!</h2>
         <Link href="/" className={styles.link}>
           На главную
         </Link>

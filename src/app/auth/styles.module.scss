@@ -1,9 +1,11 @@
 @import "../../styles/_varibles.scss";
+@import "../../styles/mixins/";
+
 .wrapper {
   background: $bg-gradient;
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 40px 20px;
+  padding: 70px 20px 40px 20px;
 }
