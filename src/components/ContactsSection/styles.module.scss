@@ -372,6 +372,7 @@
   
     &__description {
       p {
+        width: 50%;
         font-size: 32px;
       }
     }
@@ -385,6 +386,7 @@
       }
   
       p {
+        width: 75%;
         font-size: 43px;
       }
   
@@ -394,6 +396,7 @@
     }
   }
 }
+
 @include respond-above(fhd-plus) {
   .contacts {
     margin-top: 84px;
@@ -413,6 +416,7 @@
   
     &__description {
       p {
+        width: 45%;
         font-size: 34px;
       }
     }
