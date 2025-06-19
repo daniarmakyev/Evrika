@@ -20,8 +20,11 @@ const nunitoSans = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Reviro",
-  description: "Reviro - your task management solution",
+  title: "Эврика",
+  description: "Иностранная школа с уклоном на обучение различных языков мира.",
+  icons: {
+    icon: "/favicon.ico",
+  }
 };
 
 export default function RootLayout({
