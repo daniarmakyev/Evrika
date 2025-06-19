@@ -1,0 +1,45 @@
+@import "../../styles/varibles";
+@import "../../styles/mixins/";
+
+.start {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+
+  h4, span {
+    font-weight: bold;
+    line-height: 100%;
+    color: $black;
+  }
+
+  &__title {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+
+    span {
+      font-size: 24px;
+    }
+  }
+
+  &__description {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    h4 {
+      font-size: 48px;
+      color: $primary;
+    }
+  }
+}
