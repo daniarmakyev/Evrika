@@ -3,6 +3,7 @@ import HeroBanner from "@components/HeroBanner";
 import Footer from "@components/Footer";
 import SignupSection from "@components/SignupSection/indext";
 import CoursesSection from "@components/CoursesSection";
+import InstructorsSection from "@components/InstructorsSection";
 
 const coursesPageBanner = {
   title: "Наши языковые курсы",
@@ -20,6 +21,7 @@ const Courses = ({}) => {
       <main className="App">
         <HeroBanner data={coursesPageBanner} />
         <CoursesSection />
+        <InstructorsSection />
         <SignupSection />
       </main>
       <Footer />
