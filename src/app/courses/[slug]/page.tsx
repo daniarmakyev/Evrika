@@ -5,6 +5,7 @@ import SuitableCoursesSection from "@components/SuitableCoursesSection";
 import InstructorsSection from "@components/InstructorsSection";
 import SignupSection from "@components/SignupSection/indext";
 import Footer from "@components/Footer";
+import WhatKnowSection from "@components/WhatKnowSection";
 
 const detailCoursesPageBanner = {
   title: "Курс английского языка",
@@ -62,6 +63,7 @@ const DetailCourses = ({}) => {
         <HeroBanner data={detailCoursesPageBanner} />
         <StartCoursesSection title="Курс стартует:" description="27 мая 2025" />
         <SuitableCoursesSection />
+        <WhatKnowSection />
         <InstructorsSection
           data={imgCards}
           title="Преподаватели"
