@@ -18,8 +18,9 @@ const Login: React.FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<LoginFormData>({
+    mode: "all",
     defaultValues: {
       email: "",
       password: "",
@@ -74,7 +75,9 @@ const Login: React.FC = () => {
               fullWidth
             />
           </div>
-          <FormButton type="submit">ВОЙТИ</FormButton>
+          <FormButton type="submit" disabled={!isValid} fullWidth>
+            ВОЙТИ
+          </FormButton>
         </form>
       </div>
     </Overlay>
