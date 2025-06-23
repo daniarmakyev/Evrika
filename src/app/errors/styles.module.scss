@@ -1,4 +1,5 @@
 @import "../../styles/_varibles.scss";
+@import "../../styles/mixins/media-queries";
 
 .wrapper {
   background: $bg-gradient;
@@ -7,12 +8,77 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 60px 20px 30px 20px;
-  .link {
-    max-width: 125px;
-    width: 100%;
+  padding: var(--header-height) 16px 20px 16px;
+
+  &__notFound {
+    max-width: 750px;
+    max-height: 750px;
+    padding: 60px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &__innerOverlay {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      text-align: center;
+
+      &__errorCode {
+        font-size: 80px;
+        font-weight: 800;
+        color: $black-dark;
+        opacity: 0.8;
+        height: fit-content;
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+      }
+
+      &__text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 18px;
+      }
+
+      img {
+        max-width: 280px;
+        max-height: 210px;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+
+  &__serverError {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    max-width: 100vw;
+    text-align: center;
     height: 100%;
-    font-size: 16px;
+    margin-top: 16px;
+
+    img {
+      max-width: 320px;
+      max-height: 320px;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .link {
+    font-size: 14px;
     background-color: $primary-button;
     color: $White;
     border-radius: 4px;
@@ -21,7 +87,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 12px 17px;
+    padding: 10px 14px;
 
     &:hover {
       opacity: 0.9;
@@ -29,59 +95,339 @@
   }
 }
 
-.innerOverlay {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 40px;
-  text-align: center;
-  h1 {
-    font-size: 150px;
-    font-weight: 800;
-    color: $black-dark;
-    opacity: 0.8;
-    height: fit-content;
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-  }
+@include respond-above(xs) {
+  .wrapper {
+    padding: var(--header-height) 20px 25px 20px;
 
-  h2 {
-    font-size: 36px;
-    font-weight: 800;
-  }
+    &__notFound {
+      padding: 120px 50px;
 
-  img {
-    max-width: 440px;
-    max-height: 330px;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-  }
+      &__innerOverlay {
+        gap: 30px;
 
-  &__text {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 28px;
+        &__errorCode {
+          font-size: 100px;
+        }
+
+        &__text {
+          gap: 22px;
+        }
+
+        img {
+          max-width: 350px;
+          max-height: 262px;
+        }
+      }
+    }
+    .title {
+      font-size: 30px;
+    }
+
+    .link {
+      max-width: 150px;
+      font-size: 16px;
+      padding: 12px 17px;
+    }
+
+    &__serverError {
+      margin-top: 20px;
+
+      img {
+        max-width: 400px;
+        max-height: 400px;
+      }
+    }
   }
 }
 
+@include respond-above(sm) {
+  .wrapper {
+    padding: var(--header-height) 24px 30px 24px;
 
-.error {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  max-width: 100vw;
-  text-align: center;
-  height: 100%;
-  margin-top: 20px;
-  img {
-    max-width: 600px;
-    max-height: 600px;
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    &__notFound {
+      max-width: 750px;
+      max-height: 750px;
+      padding: 150px 62px;
+
+      &__innerOverlay {
+        gap: 36px;
+
+        &__errorCode {
+          font-size: 120px;
+        }
+
+        &__text {
+          gap: 26px;
+        }
+
+        img {
+          max-width: 420px;
+          max-height: 315px;
+        }
+      }
+    }
+
+    .title {
+      font-size: 36px;
+    }
+
+    .link {
+      max-width: 180px;
+      font-size: 18px;
+      padding: 14px 20px;
+      border-radius: 5px;
+    }
+
+    &__serverError {
+      margin-top: 24px;
+
+      img {
+        max-width: 480px;
+        max-height: 480px;
+      }
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .wrapper {
+    padding: var(--header-height) 27px 33px 27px;
+
+    &__notFound {
+      max-width: 833px;
+      max-height: 833px;
+      padding: 167px 69px;
+
+      &__innerOverlay {
+        gap: 40px;
+
+        &__errorCode {
+          font-size: 133px;
+        }
+
+        &__text {
+          gap: 29px;
+        }
+
+        img {
+          max-width: 466px;
+          max-height: 350px;
+        }
+      }
+    }
+    .title {
+      font-size: 40px;
+    }
+    .link {
+      max-width: 200px;
+      font-size: 20px;
+      padding: 16px 22px;
+      border-radius: 6px;
+    }
+
+    &__serverError {
+      margin-top: 27px;
+
+      img {
+        max-width: 533px;
+        max-height: 533px;
+      }
+    }
+  }
+}
+
+@include respond-above(fhd) {
+  .wrapper {
+    padding: var(--header-height) 30px 37px 30px;
+
+    &__notFound {
+      max-width: 941px;
+      max-height: 941px;
+      padding: 188px 78px;
+
+      &__innerOverlay {
+        gap: 45px;
+
+        &__errorCode {
+          font-size: 150px;
+        }
+
+        &__text {
+          gap: 33px;
+        }
+
+        img {
+          max-width: 526px;
+          max-height: 395px;
+        }
+      }
+    }
+
+    .title {
+      font-size: 45px;
+    }
+
+    .link {
+      max-width: 226px;
+      font-size: 22px;
+      padding: 18px 25px;
+      border-radius: 7px;
+    }
+
+    &__serverError {
+      margin-top: 30px;
+
+      img {
+        max-width: 602px;
+        max-height: 602px;
+      }
+    }
+  }
+}
+
+@include respond-above(fhd-plus) {
+  .wrapper {
+    padding: var(--header-height) 38px 47px 38px;
+
+    &__notFound {
+      max-width: 1205px;
+      max-height: 1205px;
+      padding: 241px 100px;
+
+      &__innerOverlay {
+        gap: 58px;
+
+        &__errorCode {
+          font-size: 192px;
+        }
+
+        &__text {
+          gap: 42px;
+        }
+
+        img {
+          max-width: 673px;
+          max-height: 506px;
+        }
+      }
+    }
+
+    .title {
+      font-size: 58px;
+    }
+
+    .link {
+      max-width: 289px;
+      font-size: 28px;
+      padding: 23px 32px;
+      border-radius: 9px;
+    }
+
+    &__serverError {
+      margin-top: 38px;
+
+      img {
+        max-width: 771px;
+        max-height: 771px;
+      }
+    }
+  }
+}
+
+@include respond-above(qhd) {
+  .wrapper {
+    padding: var(--header-height) 41px 51px 41px;
+
+    &__notFound {
+      max-width: 1314px;
+      max-height: 1314px;
+      padding: 263px 109px;
+
+      &__innerOverlay {
+        gap: 63px;
+
+        &__errorCode {
+          font-size: 209px;
+        }
+
+        &__text {
+          gap: 46px;
+
+          &__title {
+            font-size: 63px;
+          }
+        }
+
+        img {
+          max-width: 734px;
+          max-height: 552px;
+        }
+      }
+    }
+
+    .link {
+      max-width: 315px;
+      font-size: 31px;
+      padding: 25px 35px;
+      border-radius: 10px;
+    }
+
+    &__serverError {
+      margin-top: 41px;
+
+      img {
+        max-width: 840px;
+        max-height: 840px;
+      }
+    }
+  }
+}
+
+@include respond-above(uhd) {
+  .wrapper {
+    padding: var(--header-height) 54px 67px 54px;
+
+    &__notFound {
+      max-width: 1735px;
+      max-height: 1735px;
+      padding: 347px 144px;
+
+      &__innerOverlay {
+        gap: 83px;
+
+        &__errorCode {
+          font-size: 276px;
+        }
+
+        &__text {
+          gap: 61px;
+
+          &__title {
+            font-size: 83px;
+          }
+        }
+
+        img {
+          max-width: 969px;
+          max-height: 729px;
+        }
+      }
+    }
+
+    .link {
+      max-width: 416px;
+      font-size: 41px;
+      padding: 33px 46px;
+      border-radius: 13px;
+    }
+
+    &__serverError {
+      margin-top: 54px;
+
+      img {
+        max-width: 1109px;
+        max-height: 1109px;
+      }
+    }
   }
 }

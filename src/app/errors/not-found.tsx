@@ -7,14 +7,11 @@ import styles from "./styles.module.scss";
 export default function NotFound() {
   return (
     <ErrorLayout>
-      <Overlay
-        style={{
-          maxWidth: "750px",
-          padding: "60px 0px",
-        }}
-      >
-        <div className={styles.innerOverlay}>
-          <h1>404</h1>
+      <Overlay className={styles.wrapper__notFound}>
+        <div className={styles.wrapper__notFound__innerOverlay}>
+          <h1 className={styles.wrapper__notFound__innerOverlay__errorCode}>
+            404
+          </h1>
           <Image
             src="/assets/images/404cat.png"
             alt="not-found"
@@ -22,8 +19,8 @@ export default function NotFound() {
             height={600}
             priority
           />
-          <div className={styles.innerOverlay__text}>
-            <h2>Такой страницы нет</h2>
+          <div className={styles.wrapper__notFound__innerOverlay__text}>
+            <h2 className={styles.title}>Такой страницы нет</h2>
             <Link href="/" className={styles.link}>
               На главную
             </Link>
