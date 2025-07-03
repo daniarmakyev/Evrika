@@ -1,10 +1,18 @@
 'use client';
 
 import React from "react";
+import { useModal } from "@context/ModalContext";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 
-type Lesson = { time: string; subject: string; teacher: string };
+type Lesson = { 
+  time: string;
+  subject: string;
+  lvl: string;
+  teacher: string;
+  description: string;
+  sub_description: string;
+};
 
 const daysOfWeek = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"] as const;
 type DayOfWeek = typeof daysOfWeek[number];
@@ -13,41 +21,59 @@ const scheduleData: Record<DayOfWeek, Lesson[]> = {
   Пн: [
     {
       time: "10:00 - 11:00",
-      subject: "Английский язык B1",
+      subject: "Английский язык",
+      lvl: "B1",
       teacher: "Асанов А.А.",
+      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
+      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
     },
     {
       time: "11:00 - 12:00",
-      subject: "Французский язык B1",
+      subject: "Французский язык",
+      lvl: "B1",
       teacher: "Иванова Е.П.",
+      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
+      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
     },
   ],
   Вт: [
     {
       time: "10:00 - 11:00",
-      subject: "Кыргызский язык A1",
+      subject: "Кыргызский язык",
+      lvl: "A1",
       teacher: "Султанова Л.Т.",
+      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
+      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
     },
   ],
   Ср: [
     {
       time: "14:00 - 15:00",
-      subject: "Немецкий язык A1",
+      subject: "Немецкий язык",
+      lvl: "A1",
       teacher: "Султанова Л.Т.",
+      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
+      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
     },
   ],
   Чт: [
     {
       time: "12:00 - 13:00",
-      subject: "Японский язык A1",
+      subject: "Японский язык",
+      lvl: "A1",
       teacher: "Султанова Л.Т.",
+      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
+      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
     },
   ],
   Пт: [
     {
       time: "16:00 - 17:00",
-      subject: "Китайский язык A1",
+      subject: "Китайский язык",
+      lvl: "A1",
       teacher: "Султанова Л.Т.",
+      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
+      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
     },
   ],
   Сб: [],
@@ -78,6 +104,7 @@ const getColorClassBySubject = (subject: string) => {
 };
 
 const SheduleSection = ({}) => {
+  const { openModal } = useModal();
   const [activeDay, setActiveDay] = React.useState<DayOfWeek>("Пн");
 
   return (
@@ -119,8 +146,12 @@ const SheduleSection = ({}) => {
                   [styles.schedule__cards_hide]: lessons.length === 0
                 })}>
                   {lessons.length > 0
-                    ? lessons.map((lesson, i) => (
-                        <div key={i} className={classNames(styles.schedule__card, getColorClassBySubject(lesson.subject))}>
+                    ? lessons.map((lesson, index) => (
+                        <div
+                          key={index}
+                          onClick={() => openModal(lesson)}
+                          className={classNames(styles.schedule__card, getColorClassBySubject(lesson.subject))}
+                        >
                           <div className={styles.schedule__timeRange}>
                             <span>{lesson.time}</span>
                           </div>
@@ -128,7 +159,7 @@ const SheduleSection = ({}) => {
                             <span>{lesson.teacher}</span>
                           </div>
                           <div className={styles.schedule__subject}>
-                            <span>{lesson.subject}</span>
+                            <span>{lesson.subject + " " + lesson.lvl}</span>
                           </div>
                         </div>
                       ))

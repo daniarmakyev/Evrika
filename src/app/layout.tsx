@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from 'next/font/local';
 import AsideButton from "@components/AsideButton";
 import "../styles/global.scss";
+import { ModalProvider } from "@context/ModalContext";
+import LessonModal from "@components/LessonModal";
 
 const nunitoSans = localFont({
   src: [
@@ -35,8 +37,11 @@ export default function RootLayout({
   return (
     <html lang="ru" className={nunitoSans.variable}>
       <body>
-        {children}
-        <AsideButton />
+        <ModalProvider>
+          {children}
+          <AsideButton />
+          <LessonModal />
+        </ModalProvider>
       </body>
     </html>
   );

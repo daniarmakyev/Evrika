@@ -16,6 +16,7 @@
     "paths": {
       "@components/*": ["src/components/*"],
       "@icons/*": ["public/assets/icons/*"],
+      "@context/*": ["src/context/*"],
       // "@/*": ["./src/*"],
     },
     "plugins": [
