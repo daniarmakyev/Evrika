@@ -32,7 +32,7 @@ const LessonModal = () => {
   if (!isOpen || !lesson) return null;
 
   return (
-    <div className={classNames(styles.lessonModal, "container", {
+    <div className={classNames(styles.lessonModal, {
       [styles.lessonModal_show]: isVisible,
     })} onClick={handleClose}>
       <div className={styles.lessonModal__container} onClick={(e) => e.stopPropagation()}>
