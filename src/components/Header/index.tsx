@@ -24,6 +24,11 @@ const menu = [
     name: "Контакты",
     link: "/contacts",
   },
+  {
+    id: 4,
+    name: "Расписание",
+    link: "/schedule",
+  },
 ];
 
 const Header = ({}) => {
