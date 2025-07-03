@@ -31,6 +31,10 @@ const menu = [
     name: "Контакты",
     link: "/contacts",
   },
+  {
+    name: "Расписание",
+    link: "/schedule",
+  },
 ];
 
 const Footer = ({}) => {
