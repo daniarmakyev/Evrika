@@ -85,7 +85,7 @@ export default function PersonalInfo() {
             )}
           />
 
-          <Controller
+          {/* <Controller
             name="address"
             control={control}
             render={({ field }) => (
@@ -96,13 +96,13 @@ export default function PersonalInfo() {
                 disabled
               />
             )}
-          />
+          /> */}
         </form>
-        <div className={styles.buttonContainer}>
+        {/* <div className={styles.buttonContainer}>
           <button>
             <span>Изменить</span>
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );

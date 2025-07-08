@@ -4,6 +4,7 @@ import React from "react";
 import { useModal } from "@context/ModalContext";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
+import DaysWeekSelector, { DayOfWeek } from "@components/DaysWeekSelector";
 
 type Lesson = { 
   time: string;
@@ -13,9 +14,6 @@ type Lesson = {
   description: string;
   sub_description: string;
 };
-
-const daysOfWeek = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"] as const;
-type DayOfWeek = typeof daysOfWeek[number];
 
 const scheduleData: Record<DayOfWeek, Lesson[]> = {
   Пн: [
@@ -35,62 +33,7 @@ const scheduleData: Record<DayOfWeek, Lesson[]> = {
       description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
       sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
     },
-    {
-      time: "11:00 - 12:00",
-      subject: "Немецкий язык",
-      lvl: "B1",
-      teacher: "Иванова Е.П.",
-      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
-      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
-    },
-    {
-      time: "11:00 - 12:00",
-      subject: "Немецкий язык",
-      lvl: "B1",
-      teacher: "Иванова Е.П.",
-      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
-      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
-    },
-    {
-      time: "11:00 - 12:00",
-      subject: "Немецкий язык",
-      lvl: "B1",
-      teacher: "Иванова Е.П.",
-      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
-      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
-    },
-    {
-      time: "11:00 - 12:00",
-      subject: "Немецкий язык",
-      lvl: "B1",
-      teacher: "Иванова Е.П.",
-      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
-      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
-    },
-    {
-      time: "11:00 - 12:00",
-      subject: "Немецкий язык",
-      lvl: "B1",
-      teacher: "Иванова Е.П.",
-      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
-      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
-    },
-    {
-      time: "11:00 - 12:00",
-      subject: "Немецкий язык",
-      lvl: "B1",
-      teacher: "Иванова Е.П.",
-      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
-      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
-    },
-    {
-      time: "11:00 - 12:00",
-      subject: "Немецкий язык",
-      lvl: "B1",
-      teacher: "Иванова Е.П.",
-      description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
-      sub_description: "Знание английского делает путешествия проще: вы легко ориентируетесь в аэропортах, отелях, на улицах и сможете свободно общаться с людьми по всему миру, не полагаясь на переводчиков и жесты.",
-    },
+    // ... остальные уроки
   ],
   Вт: [
     {
@@ -159,9 +102,13 @@ const getColorClassBySubject = (subject: string) => {
   return styles.subjectDefault;
 };
 
-const SheduleSection = ({}) => {
+const ScheduleSection = () => {
   const { openModal } = useModal();
   const [activeDay, setActiveDay] = React.useState<DayOfWeek>("Пн");
+
+  const handleDayChange = (day: DayOfWeek) => {
+    setActiveDay(day);
+  };
 
   return (
     <section className={classNames(styles.schedule, "container")}>
@@ -169,22 +116,17 @@ const SheduleSection = ({}) => {
         <div className={styles.schedule__title}>
           <h3>Расписание</h3>
         </div>
-        <div className={styles.schedule__daysWeek}>
-          {daysOfWeek.map((day, index) => (
-            <button
-              key={index}
-              onClick={() => setActiveDay(day)}
-              className={classNames(styles.schedule__btn, {
-                [styles.schedule__btn_active]: activeDay === day,
-              })}
-            >
-              <span>{day}</span>
-            </button>
-          ))}
-        </div>
+        
+        <DaysWeekSelector
+          activeDay={activeDay}
+          onDayChange={handleDayChange}
+          className={styles.schedule__daysWeek}
+        />
+        
         {scheduleData[activeDay].length > 0 && (
           <p>Время</p>
         )}
+        
         <div className={styles.schedule__lessons}>
           {allTimeSlots.map((slot, index) => {
             const lessons = scheduleData[activeDay].filter((lesson) =>
@@ -235,4 +177,4 @@ const SheduleSection = ({}) => {
   );
 };
 
-export default SheduleSection
+export default ScheduleSection;
