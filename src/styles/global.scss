@@ -98,31 +98,31 @@ section {
   display: flex;
   flex-direction: column;
   margin: 0 auto;
-  margin-bottom: 100px;
+  padding-bottom: 40px;
 
   @include respond-above(md) {
-    margin-bottom: 68px;
+    padding-bottom: 68px;
   }
   @include respond-above(lg) {
-    margin-bottom: 83px;
+    padding-bottom: 83px;
   }
   @include respond-above(mac) {
-    margin-bottom: 100px;
+    padding-bottom: 100px;
   }
   @include respond-above(xlg) {
-    margin-bottom: 111px;
+    padding-bottom: 111px;
   }
   @include respond-above(fhd) {
-    margin-bottom: 133px;
+    padding-bottom: 133px;
   }
   @include respond-above(fhd-plus) {
-    margin-bottom: 140px;
+    padding-bottom: 140px;
   }
   @include respond-above(qhd) {
-    margin-bottom: 155px;
+    padding-bottom: 155px;
   }
   @include respond-above(uhd) {
-    margin-bottom: 235px;
+    padding-bottom: 235px;
   }
 }
 

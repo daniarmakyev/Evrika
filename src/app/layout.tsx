@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import localFont from 'next/font/local';
-import AsideButton from "@components/AsideButton";
 import "../styles/global.scss";
 import { ModalProvider } from "@context/ModalContext";
 import LessonModal from "@components/LessonModal";
@@ -39,7 +38,6 @@ export default function RootLayout({
       <body>
         <ModalProvider>
           {children}
-          <AsideButton />
           <LessonModal />
         </ModalProvider>
       </body>

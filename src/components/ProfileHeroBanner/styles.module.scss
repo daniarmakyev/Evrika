@@ -1,0 +1,206 @@
+@import "../../styles/varibles";
+@import "../../styles/mixins/";
+
+.quote {
+  width: 100vw;
+  max-width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $bg-gradient-secondary;
+  margin-top: 28px;
+
+  &__container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    h1 {
+      font-weight: bold;
+      color: $primary;
+      font-size: 20px;
+      margin-top: 24px;
+      line-height: 100%;
+    }
+  }
+
+  &__title {
+    width: 100%;
+    display: flex;
+    margin-bottom: 10px;
+  }
+}
+
+@include respond-above(sm-plus) {
+  .quote {
+    margin-top: 32px;
+
+    &__container {
+      padding: 10px auto;
+
+      h1 {
+        margin-top: 27px;
+        font-size: 23px;
+      }
+    }
+
+    &__title {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+@include respond-above(md) {
+  .quote {
+    margin-top: 41px;
+
+    &__container {
+      padding: 14px auto;
+
+      h1 {
+        margin-top: 34px;
+        font-size: 27px;
+      }
+    }
+
+    &__title {
+      margin-bottom: 14px;
+    }
+  }
+}
+
+@include respond-above(lg) {
+  .quote {
+    margin-top: 50px;
+
+    &__container {
+      padding: 17px auto;
+
+      h1 {
+        margin-top: 41px;
+        font-size: 33px;
+        width: 70%;
+      }
+    }
+
+    &__title {
+      margin-bottom: 17px;
+    }
+  }
+}
+
+@include respond-above(mac) {
+  .quote {
+    margin-top: 60px;
+
+    &__container {
+      padding: 10px auto;
+
+      h1 {
+        margin-top: 27px;
+        font-size: 23px;
+      }
+    }
+
+    &__title {
+      margin-bottom: 12px;
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .quote {
+    margin-top: 67px;
+
+    &__container {
+      padding: 22px auto;
+
+      h1 {
+        margin-top: 55px;
+        font-size: 44px;
+      }
+    }
+
+    &__title {
+      margin-bottom: 22px;
+    }
+  }
+}
+
+@include respond-above(fhd) {
+  .quote {
+    margin-top: 80px;
+
+    &__container {
+      padding: 27px auto;
+
+      h1 {
+        margin-top: 66px;
+        font-size: 53px;
+      }
+    }
+
+    &__title {
+      margin-bottom: 27px;
+    }
+  }
+}
+
+@include respond-above(fhd-plus) {
+  .quote {
+    margin-top: 84px;
+
+    &__container {
+      padding: 28px auto;
+
+      h1 {
+        margin-top: 70px;
+        font-size: 56px;
+      }
+    }
+
+    &__title {
+      margin-bottom: 28px;
+    }
+  }
+}
+
+@include respond-above(qhd) {
+  .quote {
+    margin-top: 93px;
+
+    &__container {
+      padding: 31px auto;
+
+      h1 {
+        margin-top: 78px;
+        font-size: 62px;
+      }
+    }
+
+    &__title {
+      margin-bottom: 31px;
+    }
+  }
+}
+
+@include respond-above(uhd) {
+  .quote {
+    margin-top: 141px;
+
+    &__container {
+      padding: 47px auto;
+
+      h1 {
+        margin-top: 118px;
+        font-size: 94px;
+      }
+    }
+
+    &__title {
+      margin-bottom: 47px;
+    }
+  }
+}
+//

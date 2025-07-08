@@ -59,7 +59,7 @@ $bg-gradient: linear-gradient(
 );
 $bg-gradient-secondary: linear-gradient(
   180deg,
-  rgb(131, 153, 255) 0%,
-  rgb(168, 184, 255) 45%,
+  $primary 0%,
+  #A8B8FF 28%,
   rgb(255, 255, 255) 90%
 );

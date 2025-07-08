@@ -1,0 +1,275 @@
+@import "../../styles/varibles";
+@import "../../styles/mixins/";
+
+.tabBar {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  gap: 5px;
+  padding: 0 8px;
+  padding-bottom: 8px;
+  position: relative;
+  transition: color 0.2s;
+  justify-content: center;
+
+  &__icon svg {
+    width: 12px;
+    height: 12px;
+    transition: color 0.2s;
+    color: $black-dark;
+  }
+
+  &__text {
+    color: $black-dark;
+    font-size: 8px;
+    font-weight: 600;
+    transition: color 0.2s;
+    text-wrap: nowrap;
+  }
+
+  &__underline {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background: transparent;
+    transition: background 0.2s;
+
+    &_active {
+      background: $primary;
+    }
+  }
+
+  &.tab_active {
+    .tab__text {
+      color: $primary;
+    }
+    .tab__icon svg {
+      color: $primary;
+    }
+    .tab__underline {
+      background: $primary;
+    }
+  }
+}
+
+@include respond-above(sm-plus) {
+  .tab {
+    gap: 5px;
+    padding: 0 9px;
+    padding-bottom: 10px;
+
+    &__icon svg {
+      width: 13px;
+      height: 13px;
+    }
+
+    &__text {
+      font-size: 9px;
+    }
+
+    &__underline {
+      height: 1px;
+    }
+  }
+}
+
+@include respond-above(md) {
+  .tab {
+    gap: 7px;
+    padding: 0 11px;
+    padding-bottom: 12px;
+
+    &__icon svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    &__text {
+      font-size: 10px;
+    }
+
+    &__underline {
+      height: 1px;
+    }
+  }
+}
+
+@include respond-above(lg) {
+  .tab {
+    gap: 8px;
+    padding: 0 13px;
+    padding-bottom: 14px;
+
+    &__icon svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    &__text {
+      font-size: 12px;
+    }
+
+    &__underline {
+      height: 2px;
+    }
+  }
+}
+
+@include respond-above(ipadPro) {
+  .tab {
+    gap: 8px;
+    padding: 0 14px;
+    padding-bottom: 16px;
+
+    &__icon svg {
+      width: 19px;
+      height: 19px;
+    }
+
+    &__text {
+      font-size: 13px;
+    }
+
+    &__underline {
+      height: 2px;
+    }
+  }
+}
+
+@include respond-above(mac) {
+  .tab {
+    gap: 8px;
+    padding: 0 15px;
+    padding-bottom: 17px;
+
+    &__icon svg {
+      width: 17px;
+      height: 17px;
+    }
+
+    &__text {
+      font-size: 12px;
+    }
+
+    &__underline {
+      height: 2px;
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .tab {
+    gap: 11px;
+    padding: 0 20px;
+    padding-bottom: 23px;
+
+    &__icon svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    &__text {
+      font-size: 16px;
+    }
+
+    &__underline {
+      height: 2px;
+    }
+  }
+}
+
+@include respond-above(fhd) {
+  .tab {
+    gap: 13px;
+    padding: 0 23px;
+    padding-bottom: 26px;
+
+    &__icon svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    &__text {
+      font-size: 18px;
+    }
+
+    &__underline {
+      height: 3px;
+    }
+  }
+}
+
+@include respond-above(fhd-plus) {
+  .tab {
+    gap: 16px;
+    padding: 0 29px;
+    padding-bottom: 33px;
+
+    &__icon svg {
+      width: 33px;
+      height: 33px;
+    }
+
+    &__text {
+      font-size: 23px;
+    }
+
+    &__underline {
+      height: 3px;
+    }
+  }
+}
+
+@include respond-above(qhd) {
+  .tab {
+    gap: 18px;
+    padding: 0 31px;
+    padding-bottom: 35px;
+
+    &__icon svg {
+      width: 35px;
+      height: 35px;
+    }
+
+    &__text {
+      font-size: 25px;
+    }
+
+    &__underline {
+      height: 4px;
+    }
+  }
+}
+
+@include respond-above(uhd) {
+  .tab {
+    gap: 27px;
+    padding: 0 46px;
+    padding-bottom: 52px;
+
+    &__icon svg {
+      width: 53px;
+      height: 53px;
+    }
+
+    &__text {
+      font-size: 37px;
+    }
+
+    &__underline {
+      height: 5px;
+    }
+  }
+}

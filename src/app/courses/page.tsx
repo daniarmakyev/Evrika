@@ -4,6 +4,7 @@ import CoursesSection from "@components/CoursesSection";
 import InstructorsSection from "@components/InstructorsSection";
 import SignupSection from "@components/SignupSection/indext";
 import Footer from "@components/Footer";
+import AsideButton from "@components/AsideButton";
 
 const coursesPageBanner = {
   title: "Наши языковые курсы",
@@ -22,7 +23,7 @@ const imgCards = [
     image: {
       url: "/assets/images/instructor-1.jpg",
       name: "instructor-1.jpg",
-    }
+    },
   },
   {
     name: "Светлана",
@@ -31,7 +32,7 @@ const imgCards = [
     image: {
       url: "/assets/images/instructor-2.jpg",
       name: "instructor-2.jpg",
-    }
+    },
   },
   {
     name: "Эмили",
@@ -40,7 +41,7 @@ const imgCards = [
     image: {
       url: "/assets/images/instructor-3.jpg",
       name: "instructor-3.jpg",
-    }
+    },
   },
   {
     name: "Тайсон",
@@ -49,7 +50,7 @@ const imgCards = [
     image: {
       url: "/assets/images/instructor-4.jpg",
       name: "instructor-4.jpg",
-    }
+    },
   },
 ];
 
@@ -59,6 +60,7 @@ const Courses = ({}) => {
       <Header />
       <main className="App">
         <HeroBanner data={coursesPageBanner} />
+        <AsideButton />
         <CoursesSection />
         <InstructorsSection
           data={imgCards}

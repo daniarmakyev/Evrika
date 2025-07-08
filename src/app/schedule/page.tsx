@@ -3,6 +3,7 @@ import HeroBanner from "@components/HeroBanner";
 import SignupSection from "@components/SignupSection/indext";
 import Footer from "@components/Footer";
 import SheduleSection from "@components/SheduleSection";
+import AsideButton from "@components/AsideButton";
 
 const shedulePageBanner = {
   title: "Расписание",
@@ -19,12 +20,13 @@ const Shedule = ({}) => {
       <Header />
       <main className="App">
         <HeroBanner data={shedulePageBanner} />
+        <AsideButton />ƒ
         <SheduleSection />
         <SignupSection />
       </main>
       <Footer />
     </>
-  )
+  );
 };
 
 export default Shedule;

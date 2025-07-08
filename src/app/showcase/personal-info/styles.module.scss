@@ -1,0 +1,338 @@
+@import "../../../styles/varibles.scss";
+@import "../../../styles/mixins";
+
+.personalInfoContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  margin-top: 24px;
+
+  .personalInfoWrapper {
+    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    border-radius: 10px;
+    padding: 16px;
+
+    h2 {
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 100%;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      justify-content: center;
+      margin-bottom: 24px;
+
+      input {
+        box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        width: 290px;
+      }
+    }
+
+    .buttonContainer {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    button {
+      width: fit-content;
+      display: flex;
+      align-items: flex-end;
+      justify-content: flex-end;
+      background: $primary-button;
+      border-radius: 10px;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+      padding: 10px 22px;
+
+      &:hover {
+        background: $primary;
+      }
+
+      span {
+        font-size: 13px;
+        line-height: 100%;
+        color: $White;
+      }
+    }
+  }
+}
+
+@include respond-above(sm) {
+  .personalInfoContainer {
+    margin-top: 32px;
+    .personalInfoWrapper {
+      padding: 24px;
+      h2 {
+        font-size: 20px;
+        margin-bottom: 32px;
+        justify-content: flex-start;
+      }
+      form {
+        margin-bottom: 32px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        flex-direction: row;
+        input {
+          width: 320px;
+        }
+      }
+      .buttonContainer {
+        justify-content: flex-end;
+        align-items: flex-end;
+      }
+      button {
+        padding: 12px 28px;
+        span {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(sm-plus) {
+  .personalInfoContainer {
+    margin-top: 34px;
+    .personalInfoWrapper {
+      padding: 24px;
+      h2 {
+        font-size: 20px;
+        margin-bottom: 32px;
+        justify-content: flex-start;
+      }
+      form {
+        margin-bottom: 34px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        input {
+          width: 360px;
+        }
+      }
+      .buttonContainer {
+        justify-content: flex-end;
+        align-items: flex-end;
+      }
+      button {
+        padding: 12px 30px;
+        span {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(md) {
+  .personalInfoContainer {
+    margin-top: 36px;
+    .personalInfoWrapper {
+      padding: 32px;
+      h2 {
+        font-size: 22px;
+        margin-bottom: 36px;
+      }
+      form {
+        margin-bottom: 36px;
+        input {
+          width: 400px;
+        }
+      }
+      button {
+        padding: 13px 34px;
+        span {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(lg) {
+  .personalInfoContainer {
+    margin-top: 40px;
+    .personalInfoWrapper {
+      padding: 36px;
+      h2 {
+        font-size: 23px;
+        margin-bottom: 38px;
+      }
+      form {
+        margin-bottom: 38px;
+        input {
+          width: 500px;
+        }
+      }
+      button {
+        padding: 14px 36px;
+        span {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(mac) {
+  .personalInfoContainer {
+    margin-top: 40px;
+    .personalInfoWrapper {
+      padding: 40px;
+      h2 {
+        font-size: 24px;
+        margin-bottom: 40px;
+      }
+      form {
+        margin-bottom: 40px;
+        input {
+          width: 550px;
+        }
+      }
+      button {
+        padding: 14px 40px;
+        span {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .personalInfoContainer {
+    margin-top: 50px;
+    .personalInfoWrapper {
+      padding: 50px;
+      h2 {
+        font-size: 28px;
+        margin-bottom: 50px;
+      }
+      form {
+        margin-bottom: 50px;
+        input {
+          width: 650px;
+        }
+      }
+      button {
+        padding: 16px 50px;
+        span {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(fhd) {
+  .personalInfoContainer {
+    margin-top: 60px;
+    .personalInfoWrapper {
+      padding: 60px;
+      h2 {
+        font-size: 32px;
+        margin-bottom: 60px;
+      }
+      form {
+        margin-bottom: 60px;
+        input {
+          width: 700px;
+        }
+      }
+      button {
+        padding: 18px 60px;
+        span {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(fhd-plus) {
+  .personalInfoContainer {
+    margin-top: 70px;
+    .personalInfoWrapper {
+      padding: 70px;
+      h2 {
+        font-size: 36px;
+        margin-bottom: 70px;
+      }
+      form {
+        margin-bottom: 70px;
+        input {
+          width: 850px;
+        }
+      }
+      button {
+        padding: 20px 70px;
+        span {
+          font-size: 22px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(qhd) {
+  .personalInfoContainer {
+    margin-top: 80px;
+    .personalInfoWrapper {
+      padding: 80px;
+      h2 {
+        font-size: 40px;
+        margin-bottom: 80px;
+      }
+      form {
+        margin-bottom: 80px;
+        input {
+          width: 950px;
+        }
+      }
+      button {
+        padding: 22px 80px;
+        span {
+          font-size: 25px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(uhd) {
+  .personalInfoContainer {
+    margin-top: 120px;
+    .personalInfoWrapper {
+      padding: 120px;
+      h2 {
+        font-size: 60px;
+        margin-bottom: 120px;
+      }
+      form {
+        margin-bottom: 120px;
+        input {
+          width: 1250px;
+        }
+      }
+      button {
+        padding: 33px 120px;
+        span {
+          font-size: 38px;
+        }
+      }
+    }
+  }
+}

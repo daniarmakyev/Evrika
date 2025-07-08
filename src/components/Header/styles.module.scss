@@ -3,7 +3,8 @@
 
 .header {
   width: 100%;
-  height: 60px;
+  height: 32px;
+  padding: 0 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,6 +19,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-direction: row;
+    padding: 0 4px;
   }
 
   &__logo {
@@ -28,8 +31,8 @@
     justify-content: center;
 
     svg {
-      width: 36px;
-      height: 36px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
     }
   }
@@ -42,18 +45,18 @@
     justify-content: center;
 
     ul {
-      width: 100%;
-      height: 100%;
       display: flex;
       align-items: center;
-      justify-content: center;
+      top: 38px;
+      background: $primary;
+      padding: 8px 0;
 
       li {
-        font-size: 18px;
+        font-size: 11px;
+        margin: 0 0 0 12px;
         line-height: 100%;
         cursor: pointer;
         transition: all 0.3s ease-in-out;
-        margin-right: 15px;
 
         a {
           transition: all 0.3s ease-in-out;
@@ -66,14 +69,16 @@
 
         &:last-child {
           margin-right: 0;
+          margin-bottom: 0;
         }
       }
     }
   }
 
   &__profile {
-    width: 36px;
-    height: 36px;
+    width: 18px;
+    height: 18px;
+    padding: 4px;
     position: relative;
     display: flex;
     align-items: center;
@@ -82,7 +87,7 @@
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    padding: 9px;
+
     z-index: 9;
 
     &:hover {
@@ -116,6 +121,76 @@
   }
 }
 
+@include respond-below(sm) {
+  .header {
+    height: 38px;
+    padding: 0 8px;
+
+    &__container {
+      flex-direction: row;
+      padding: 0 4px;
+    }
+
+    &__logo {
+      svg {
+        width: 22px;
+        height: 22px;
+      }
+    }
+
+    &__menu {
+      ul {
+        align-items: center;
+        top: 38px;
+        left: 0;
+        background: $primary;
+        padding: 8px 0;
+
+        li {
+          font-size: 11px;
+          margin: 0 0 0 12px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+
+    &__profile {
+      width: 20px;
+      height: 20px;
+      padding: 4px;
+    }
+
+    &__login {
+      a {
+        font-size: 11px;
+        padding: 2px 6px;
+      }
+    }
+  }
+}
+
+@include respond-below(sm) {
+  .header {
+    height: 32px;
+
+    &__logo {
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+    }
+
+    &__profile {
+      width: 16px;
+      height: 16px;
+      padding: 2px;
+    }
+  }
+}
+
 @include respond-above(md) {
   .header {
     width: 100%;
@@ -124,7 +199,7 @@
     top: 0;
     background: $primary;
     z-index: 99999;
-  
+
     &__container {
       width: 100%;
       height: 100%;
@@ -132,58 +207,58 @@
       align-items: center;
       justify-content: space-between;
     }
-  
+
     &__logo {
       width: auto;
       height: auto;
       display: flex;
       align-items: center;
       justify-content: center;
-  
+
       svg {
         width: 24px;
         height: 24px;
         border-radius: 50%;
       }
     }
-  
+
     &__menu {
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-  
+
       ul {
         width: 100%;
         height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
-  
+
         li {
           font-size: 12px;
           line-height: 100%;
           cursor: pointer;
           transition: all 0.3s ease-in-out;
           margin-right: 10px;
-  
+
           a {
             transition: all 0.3s ease-in-out;
             color: $White;
-  
+
             &:hover {
               color: $steel-blue;
             }
           }
-  
+
           &:last-child {
             margin-right: 0;
           }
         }
       }
     }
-  
+
     &__profile {
       width: 24px;
       height: 24px;
@@ -197,31 +272,31 @@
       transition: all 0.3s ease-in-out;
       padding: 6px;
       z-index: 9;
-  
+
       &:hover {
         background: $white-ligth;
       }
-  
+
       svg {
         width: auto;
         height: auto;
       }
     }
-  
+
     &__login {
       width: auto;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-  
+
       a {
         font-size: 12px;
         line-height: 100%;
         color: $White;
         transition: all 0.3s ease-in-out;
         cursor: pointer;
-  
+
         &:hover {
           color: $steel-blue;
         }
@@ -233,14 +308,14 @@
 @include respond-above(lg) {
   .header {
     height: 50px;
-  
+
     &__logo {
       svg {
         width: 30px;
         height: 30px;
       }
     }
-  
+
     &__menu {
       ul {
         li {
@@ -249,13 +324,13 @@
         }
       }
     }
-  
+
     &__profile {
       width: 30px;
       height: 30px;
       padding: 8px;
     }
-  
+
     &__login {
       a {
         font-size: 15px;
@@ -267,14 +342,14 @@
 @include respond-above(mac) {
   .header {
     height: 60px;
-  
+
     &__logo {
       svg {
         width: 36px;
         height: 36px;
       }
     }
-  
+
     &__menu {
       ul {
         li {
@@ -283,13 +358,13 @@
         }
       }
     }
-  
+
     &__profile {
       width: 36px;
       height: 36px;
       padding: 9px;
     }
-  
+
     &__login {
       a {
         font-size: 18px;
@@ -301,14 +376,14 @@
 @include respond-above(xlg) {
   .header {
     height: 67px;
-  
+
     &__logo {
       svg {
         width: 40px;
         height: 40px;
       }
     }
-  
+
     &__menu {
       ul {
         li {
@@ -317,13 +392,13 @@
         }
       }
     }
-  
+
     &__profile {
       width: 40px;
       height: 40px;
       padding: 10px;
     }
-  
+
     &__login {
       a {
         font-size: 20px;
@@ -335,14 +410,14 @@
 @include respond-above(fhd) {
   .header {
     height: 80px;
-  
+
     &__logo {
       svg {
         width: 48px;
         height: 48px;
       }
     }
-  
+
     &__menu {
       ul {
         li {
@@ -351,13 +426,13 @@
         }
       }
     }
-  
+
     &__profile {
       width: 48px;
       height: 48px;
       padding: 12px;
     }
-  
+
     &__login {
       a {
         font-size: 24px;
@@ -369,14 +444,14 @@
 @include respond-above(fhd-plus) {
   .header {
     height: 84px;
-  
+
     &__logo {
       svg {
         width: 50px;
         height: 50px;
       }
     }
-  
+
     &__menu {
       ul {
         li {
@@ -385,13 +460,13 @@
         }
       }
     }
-  
+
     &__profile {
       width: 50px;
       height: 50px;
       padding: 13px;
     }
-  
+
     &__login {
       a {
         font-size: 25px;
@@ -403,14 +478,14 @@
 @include respond-above(qhd) {
   .header {
     height: 93px;
-  
+
     &__logo {
       svg {
         width: 56px;
         height: 56px;
       }
     }
-  
+
     &__menu {
       ul {
         li {
@@ -419,13 +494,13 @@
         }
       }
     }
-  
+
     &__profile {
       width: 56px;
       height: 56px;
       padding: 14px;
     }
-  
+
     &__login {
       a {
         font-size: 28px;
@@ -437,14 +512,14 @@
 @include respond-above(uhd) {
   .header {
     height: 141px;
-  
+
     &__logo {
       svg {
         width: 85px;
         height: 85px;
       }
     }
-  
+
     &__menu {
       ul {
         li {
@@ -453,13 +528,13 @@
         }
       }
     }
-  
+
     &__profile {
       width: 85px;
       height: 85px;
       padding: 21px;
     }
-  
+
     &__login {
       a {
         font-size: 42px;

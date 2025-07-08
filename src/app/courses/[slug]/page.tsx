@@ -6,6 +6,7 @@ import InstructorsSection from "@components/InstructorsSection";
 import SignupSection from "@components/SignupSection/indext";
 import Footer from "@components/Footer";
 import WhatKnowSection from "@components/WhatKnowSection";
+import AsideButton from "@components/AsideButton";
 
 const detailCoursesPageBanner = {
   title: "Курс английского языка",
@@ -24,7 +25,7 @@ const imgCards = [
     image: {
       url: "/assets/images/instructor-1.jpg",
       name: "instructor-1.jpg",
-    }
+    },
   },
   {
     name: "Светлана",
@@ -33,7 +34,7 @@ const imgCards = [
     image: {
       url: "/assets/images/instructor-2.jpg",
       name: "instructor-2.jpg",
-    }
+    },
   },
   {
     name: "Эмили",
@@ -42,7 +43,7 @@ const imgCards = [
     image: {
       url: "/assets/images/instructor-3.jpg",
       name: "instructor-3.jpg",
-    }
+    },
   },
   {
     name: "Тайсон",
@@ -51,7 +52,7 @@ const imgCards = [
     image: {
       url: "/assets/images/instructor-4.jpg",
       name: "instructor-4.jpg",
-    }
+    },
   },
 ];
 
@@ -61,6 +62,7 @@ const DetailCourses = ({}) => {
       <Header />
       <main className="App">
         <HeroBanner data={detailCoursesPageBanner} />
+        <AsideButton />
         <StartCoursesSection title="Курс стартует:" description="27 мая 2025" />
         <SuitableCoursesSection />
         <WhatKnowSection />
