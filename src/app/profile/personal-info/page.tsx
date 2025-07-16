@@ -1,5 +1,4 @@
 "use client";
-
 import styles from "./styles.module.scss";
 import InputField from "@components/Fields/InputField";
 import classNames from "classnames";
@@ -17,6 +16,22 @@ interface FormData {
   fullName?: string;
 }
 
+const InputSkeleton = () => (
+  <div className={styles.inputSkeleton}>
+    <div className={styles.skeletonLabel}></div>
+    <div className={styles.skeletonInput}></div>
+  </div>
+);
+
+const PersonalInfoSkeleton = () => (
+  <form>
+    <InputSkeleton />
+    <InputSkeleton />
+    <InputSkeleton />
+    <InputSkeleton />
+  </form>
+);
+
 export default function PersonalInfo() {
   const { control } = useForm<FormData>({
     defaultValues: {
@@ -28,7 +43,7 @@ export default function PersonalInfo() {
     },
   });
 
-  const { student } = useAppSelector((state) => state.student);
+  const { student, loading, error } = useAppSelector((state) => state.student);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -46,11 +61,34 @@ export default function PersonalInfo() {
     }
   }, []);
 
+  const handleRetry = () => {
+    dispatch(getStudent());
+  };
+
+  if (error) {
+    return (
+      <div className={classNames(styles.personalInfoContainer, "container")}>
+        <div className={styles.personalInfoWrapper}>
+          <div className={styles.errorContainer}>
+            <div className={styles.errorIcon}>⚠️</div>
+            <h3 className={styles.errorTitle}>Ошибка загрузки</h3>
+            <p className={styles.errorMessage}>{error}</p>
+            <button className={styles.retryButton} onClick={handleRetry}>
+              <span>Попробовать снова</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={classNames(styles.personalInfoContainer, "container")}>
       <div className={styles.personalInfoWrapper}>
         <h2>Личная информация</h2>
-        {student && (
+        {loading || !student ? (
+          <PersonalInfoSkeleton />
+        ) : (
           <form>
             <Controller
               name="fullName"
@@ -110,26 +148,8 @@ export default function PersonalInfo() {
                 />
               )}
             />
-
-            {/* <Controller
-                name="address"
-                control={control}
-                render={({ field }) => (
-                  <InputField
-                    {...field}
-                    label="Адрес"
-                    placeholder="Введите ваш адрес"
-                    disabled
-                  />
-                )}
-              /> */}
           </form>
         )}
-        {/* <div className={styles.buttonContainer}>
-          <button>
-            <span>Изменить</span>
-          </button>
-        </div> */}
       </div>
     </div>
   );

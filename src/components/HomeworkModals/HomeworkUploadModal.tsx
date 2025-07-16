@@ -24,7 +24,6 @@ const HomeworkUploadModal: React.FC<Props> = ({
   isOpen,
   onClose,
   data,
-  cancelClass,
   saveClass,
 }) => {
   const dispatch = useAppDispatch();
@@ -250,14 +249,6 @@ const HomeworkUploadModal: React.FC<Props> = ({
               marginTop: "20px",
             }}
           >
-            <button
-              type="button"
-              onClick={handleClose}
-              className={cancelClass}
-              disabled={isLoading}
-            >
-              Отмена
-            </button>
             <button type="submit" className={saveClass} disabled={isLoading}>
               {isLoading
                 ? "Загрузка..."

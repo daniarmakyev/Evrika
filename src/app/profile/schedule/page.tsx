@@ -14,17 +14,45 @@ import ProfileModal from "@components/ProfileModal";
 import InputField from "@components/Fields/InputField";
 import TextArea from "@components/Fields/TextAreaField";
 
+const TableSkeleton = () => (
+  <div className={styles.tableSkeleton}>
+    <div className={styles.tableHeaderSkeleton}>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+    </div>
+    <div className={styles.tableBodySkeleton}>
+      {[...Array(5)].map((_, index) => (
+        <div key={index} className={styles.tableRowSkeletonDiv}>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonCell}></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 export default function ProfileSchedule() {
   const [activeDay, setActiveDay] = useState<DayOfWeek>("MON");
 
-  const { shedule } = useAppSelector((state) => state.shedule);
+  const { shedule, loading, error } = useAppSelector((state) => state.shedule);
   const dispatch = useAppDispatch();
-
 
   const lessonModal = useModal<LessonShedule>("lesson");
 
   const handleDayChange = (day: DayOfWeek) => {
     setActiveDay(day);
+  };
+
+  const handleRetry = () => {
+    dispatch(getShedule());
   };
 
   useEffect(() => {
@@ -97,6 +125,34 @@ export default function ProfileSchedule() {
     },
   ];
 
+  const renderContent = () => {
+    if (loading || !shedule) {
+      return <TableSkeleton />;
+    }
+
+    if (error) {
+      return (
+        <div className={styles.errorContainer}>
+          <div className={styles.errorIcon}>⚠️</div>
+          <h3 className={styles.errorTitle}>Ошибка загрузки расписания</h3>
+          <p className={styles.errorMessage}>{error}</p>
+          <button className={styles.retryButton} onClick={handleRetry}>
+            <span>Попробовать снова</span>
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <Table
+        columns={scheduleColumns}
+        data={transformScheduleData(shedule[activeDay] || [])}
+        emptyMessage="Уроков нет"
+        keyField="time"
+      />
+    );
+  };
+
   return (
     <div className={styles.schedule}>
       <div className={classNames(styles.schedule__container, "container")}>
@@ -109,18 +165,8 @@ export default function ProfileSchedule() {
             activeDay={activeDay}
             onDayChange={handleDayChange}
           />
-          {shedule ? (
-            <Table
-              columns={scheduleColumns}
-              data={transformScheduleData(shedule[activeDay] || [])}
-              emptyMessage="Уроков нет"
-              keyField="time"
-            />
-          ) :   (
-            <div className={styles.schedule__error}>
-              <h3>Ошибка сервера</h3>
-            </div>
-          )}
+
+          {renderContent()}
         </div>
       </div>
 
@@ -157,7 +203,10 @@ export default function ProfileSchedule() {
             {lessonModal.data.link && (
               <div className={styles.modal__section}>
                 <h4>Ссылка на урок</h4>
-                <Link href={lessonModal.data.link} className={styles.modal__link}>
+                <Link
+                  href={lessonModal.data.link}
+                  className={styles.modal__link}
+                >
                   <InputField
                     style={{ cursor: "pointer" }}
                     value={lessonModal.data.link}

@@ -8,7 +8,7 @@ import classNames from "classnames";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import {
   getHomeworkSubmissions,
-  getLessons
+  getLessons,
 } from "src/store/lesson/lesson.action";
 import {
   HomeworkSubmission,
@@ -22,7 +22,10 @@ import {
   HomeworkSubmissionModal,
   HomeworkUploadModal,
 } from "@components/HomeworkModals";
-import { clearError, clearSubmissionError } from "src/store/lesson/lesson.slice";
+import {
+  clearError,
+  clearSubmissionError,
+} from "src/store/lesson/lesson.slice";
 
 interface HomeWorkTableItem {
   id: number;
@@ -36,9 +39,38 @@ interface HomeWorkTableItem {
   homeworkData: HomeworkTask;
 }
 
+const TableSkeleton = () => (
+  <div className={styles.tableSkeleton}>
+    <div className={styles.tableHeaderSkeleton}>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+      <div className={styles.skeletonHeaderCell}></div>
+
+      <div className={styles.skeletonHeaderCell}></div>
+    </div>
+    <div className={styles.tableBodySkeleton}>
+      {Array.from({ length: 4 }).map((_, index) => (
+        <div key={index} className={styles.tableRowSkeletonDiv}>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonCell}></div>
+          <div className={styles.skeletonButtonCell}></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 export default function ProfileHomeWork() {
   const dispatch = useAppDispatch();
-  const { homework, lessons, loading, error, submissionError } = useAppSelector((state) => state.lesson);
+  const { homework, lessons, loading, error, submissionError } = useAppSelector(
+    (state) => state.lesson
+  );
   const [homeworkState, setHomeworkState] = useState<HomeworkSubmission[]>([]);
   const [lessonState, setLessonState] = useState<LessonListItem[]>([]);
   const [tableData, setTableData] = useState<HomeWorkTableItem[]>([]);
@@ -95,7 +127,7 @@ export default function ProfileHomeWork() {
           });
         }
       } catch (error) {
-        console.error("Error parsing groups from localStorage:", error);
+        console.error("Ошибка вставки груп с локал стореджа:", error);
         setErrorMessage("Ошибка при загрузке групп");
       }
     }
@@ -205,6 +237,23 @@ export default function ProfileHomeWork() {
     dispatch(clearSubmissionError());
   };
 
+  const handleRetry = () => {
+    const groupsId = localStorage.getItem("groups");
+    if (groupsId) {
+      try {
+        const parsedIds: string[] = JSON.parse(groupsId);
+        if (parsedIds && Array.isArray(parsedIds)) {
+          parsedIds.forEach((id) => {
+            dispatch(getLessons(id));
+          });
+        }
+      } catch (error) {
+        console.error("Ошибка вставки груп с локал стореджа:", error);
+        setErrorMessage("Ошибка при загрузке групп");
+      }
+    }
+  };
+
   const homeWorkColumns = [
     {
       key: "group",
@@ -300,53 +349,34 @@ export default function ProfileHomeWork() {
         <div className={styles.homework__title}>
           <h3>Домашнее задание</h3>
         </div>
-
         {errorMessage && (
-          <div style={{ 
-            color: "red", 
-            backgroundColor: "#ffebee", 
-            padding: "15px", 
-            borderRadius: "4px",
-            border: "1px solid #ffcdd2",
-            marginBottom: "20px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center"
-          }}>
+          <div className={styles.errorNotification}>
             <span>{errorMessage}</span>
             <button
               onClick={handleDismissError}
-              style={{ 
-                background: "none", 
-                border: "none", 
-                color: "red", 
-                cursor: "pointer",
-                fontSize: "18px",
-                fontWeight: "bold"
-              }}
+              className={styles.dismissButton}
             >
               ×
             </button>
           </div>
         )}
-
-        {loading && (
-          <div style={{ 
-            textAlign: "center", 
-            padding: "20px", 
-            color: "#666" 
-          }}>
-            Загрузка...
+        {error && !loading && (
+          <div className={styles.errorContainer}>
+            <div className={styles.errorIcon}>⚠️</div>
+            <h3 className={styles.errorTitle}>Ошибка загрузки</h3>
+            <p className={styles.errorMessage}>{error}</p>
+            <button className={styles.retryButton} onClick={handleRetry}>
+              <span>Попробовать снова</span>
+            </button>
           </div>
         )}
-
-        <div className={styles.homework__table}>
-          <Table
-            columns={homeWorkColumns}
-            data={tableData}
-            emptyMessage=""
-          />
-        </div>
+        {loading || !lessons ? (
+          <TableSkeleton />
+        ) : (
+          <div className={styles.homework__table}>
+            <Table columns={homeWorkColumns} data={tableData} emptyMessage="" />
+          </div>
+        )}
 
         <HomeworkTaskModal
           isOpen={taskModal.isOpen}

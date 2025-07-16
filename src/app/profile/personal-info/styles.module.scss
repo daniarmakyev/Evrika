@@ -30,7 +30,6 @@
       align-items: center;
       width: 100%;
       justify-content: center;
-      // margin-bottom: 24px;
 
       input {
         box-shadow: 0 0 30px rgba(219, 219, 219, 1);
@@ -70,6 +69,100 @@
       }
     }
   }
+
+  .inputSkeleton {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: 290px;
+  }
+
+  .skeletonLabel {
+    height: 16px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    width: 80px;
+  }
+
+  .skeletonInput {
+    height: 48px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 10px;
+  }
+
+  .skeletonTitle {
+    height: 24px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .errorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .errorIcon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+
+  .errorTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: $danger;
+    margin-bottom: 12px;
+  }
+
+  .errorMessage {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .retryButton {
+    background: $primary-button;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      background: $primary;
+    }
+
+    span {
+      color: white;
+    }
+  }
+}
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 @include respond-above(sm) {
@@ -83,7 +176,6 @@
         justify-content: flex-start;
       }
       form {
-        // margin-bottom: 32px;
         flex-wrap: wrap;
         justify-content: space-between;
         flex-direction: row;
@@ -102,6 +194,13 @@
         }
       }
     }
+    .inputSkeleton {
+      width: 320px;
+    }
+    .skeletonTitle {
+      margin-left: 0;
+      margin-right: auto;
+    }
   }
 }
 
@@ -116,7 +215,6 @@
         justify-content: flex-start;
       }
       form {
-        // margin-bottom: 34px;
         flex-wrap: wrap;
         justify-content: space-between;
         input {
@@ -134,6 +232,9 @@
         }
       }
     }
+    .inputSkeleton {
+      width: 360px;
+    }
   }
 }
 
@@ -147,7 +248,6 @@
         margin-bottom: 36px;
       }
       form {
-        // margin-bottom: 36px;
         input {
           width: 400px;
         }
@@ -158,6 +258,9 @@
           font-size: 15px;
         }
       }
+    }
+    .inputSkeleton {
+      width: 400px;
     }
   }
 }
@@ -172,7 +275,6 @@
         margin-bottom: 38px;
       }
       form {
-        // margin-bottom: 38px;
         input {
           width: 500px;
         }
@@ -183,6 +285,9 @@
           font-size: 16px;
         }
       }
+    }
+    .inputSkeleton {
+      width: 500px;
     }
   }
 }
@@ -197,7 +302,6 @@
         margin-bottom: 40px;
       }
       form {
-        // margin-bottom: 40px;
         input {
           width: 550px;
         }
@@ -208,6 +312,9 @@
           font-size: 16px;
         }
       }
+    }
+    .inputSkeleton {
+      width: 550px;
     }
   }
 }
@@ -222,7 +329,6 @@
         margin-bottom: 50px;
       }
       form {
-        // margin-bottom: 50px;
         input {
           width: 650px;
         }
@@ -233,6 +339,9 @@
           font-size: 18px;
         }
       }
+    }
+    .inputSkeleton {
+      width: 650px;
     }
   }
 }
@@ -247,7 +356,6 @@
         margin-bottom: 60px;
       }
       form {
-        // margin-bottom: 60px;
         input {
           width: 700px;
         }
@@ -258,6 +366,9 @@
           font-size: 20px;
         }
       }
+    }
+    .inputSkeleton {
+      width: 700px;
     }
   }
 }
@@ -272,7 +383,6 @@
         margin-bottom: 70px;
       }
       form {
-        // margin-bottom: 70px;
         input {
           width: 850px;
         }
@@ -283,6 +393,9 @@
           font-size: 22px;
         }
       }
+    }
+    .inputSkeleton {
+      width: 850px;
     }
   }
 }
@@ -297,7 +410,6 @@
         margin-bottom: 80px;
       }
       form {
-        // margin-bottom: 80px;
         input {
           width: 950px;
         }
@@ -308,6 +420,9 @@
           font-size: 25px;
         }
       }
+    }
+    .inputSkeleton {
+      width: 950px;
     }
   }
 }
@@ -322,7 +437,6 @@
         margin-bottom: 120px;
       }
       form {
-        // margin-bottom: 120px;
         input {
           width: 1250px;
         }
@@ -333,6 +447,9 @@
           font-size: 38px;
         }
       }
+    }
+    .inputSkeleton {
+      width: 1250px;
     }
   }
 }
