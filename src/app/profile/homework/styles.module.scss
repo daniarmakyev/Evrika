@@ -1,0 +1,33 @@
+@import "../../../styles/varibles";
+@import "../../../styles/mixins/";
+
+.homework {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    margin-top: 40px;
+    margin-bottom: 40px;
+  }
+
+  &__content {
+    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    padding: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  &__title {
+    h3 {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 100%;
+    }
+  }
+}

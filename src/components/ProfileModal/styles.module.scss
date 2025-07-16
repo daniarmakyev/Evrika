@@ -1,0 +1,131 @@
+@import "../../styles/varibles";
+@import "../../styles/mixins/";
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  &.fade {
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  &.slide {
+    animation: slideIn 0.3s ease-out;
+  }
+
+  &.zoom {
+    animation: zoomIn 0.3s ease-out;
+  }
+
+  &.none {
+    animation: none;
+  }
+}
+
+.modal {
+  background: $White;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 100%;
+  padding: 40px;
+  
+  &.sm {
+    max-width: 400px;
+  }
+
+  &.md {
+    max-width: 600px;
+  }
+
+  &.lg {
+    max-width: 800px;
+  }
+
+  &.xl {
+    max-width: 1200px;
+  }
+
+  &.full {
+    max-width: 95vw;
+    height: 95vh;
+    max-height: 95vh;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid $white-ligth;
+  box-sizing: border-box;
+  padding-bottom: 20px;
+}
+
+.title {
+  margin: 0;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 100%;
+  color: $black-dark;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $black-dark;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.content {
+  margin-top: 20px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes zoomIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

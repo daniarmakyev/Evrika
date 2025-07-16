@@ -2,33 +2,40 @@ import React from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 
-export const daysOfWeek = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"] as const;
-export type DayOfWeek = typeof daysOfWeek[number];
+export type DayOfWeek = (typeof daysOfWeek)[number]["value"];
+
+export const daysOfWeek = [
+  { label: "Пн", value: "MON" },
+  { label: "Вт", value: "TUE" },
+  { label: "Ср", value: "WED" },
+  { label: "Чт", value: "THU" },
+  { label: "Пт", value: "FRI" },
+  { label: "Сб", value: "SAT" },
+  { label: "Вс", value: "SUN" },
+] as const;
 
 interface DaysWeekSelectorProps {
   activeDay: DayOfWeek;
   onDayChange: (day: DayOfWeek) => void;
   className?: string;
-  customDays?: readonly string[];
 }
 
 const DaysWeekSelector: React.FC<DaysWeekSelectorProps> = ({
   activeDay,
   onDayChange,
   className = "",
-  customDays = daysOfWeek,
 }) => {
   return (
     <div className={classNames(styles.daysWeek, className)}>
-      {customDays.map((day, index) => (
+      {daysOfWeek.map(({ label, value }) => (
         <button
-          key={index}
-          onClick={() => onDayChange(day as DayOfWeek)}
+          key={value}
+          onClick={() => onDayChange(value)}
           className={classNames(styles.daysWeek__btn, {
-            [styles.daysWeek__btn_active]: activeDay === day,
+            [styles.daysWeek__btn_active]: activeDay === value,
           })}
         >
-          <span>{day}</span>
+          <span>{label}</span>
         </button>
       ))}
     </div>

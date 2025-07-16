@@ -1,9 +1,9 @@
-import React, { ChangeEvent, forwardRef, InputHTMLAttributes } from "react";
+import React, { ChangeEvent, forwardRef, TextareaHTMLAttributes } from "react";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 
-interface InputFieldProps
-  extends Omit<InputHTMLAttributes<HTMLInputElement>, "style"> {
+interface TextAreaProps
+  extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "style"> {
   label?: string;
   error?: string;
   fullWidth?: boolean;
@@ -20,12 +20,12 @@ interface InputFieldProps
   id?: string;
   type?: string;
   value?: string;
-  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+  onBlur?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
 }
 
-const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
+const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
   (
     {
       label,
@@ -42,7 +42,6 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
       required,
       name,
       id,
-      type,
       value,
       onChange,
       onBlur,
@@ -53,7 +52,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ) => {
     return (
       <div
-        className={`${styles.inputWrapper} ${
+        className={`${styles.textareaWrapper} ${
           fullWidth ? styles.fullWidth : ""
         }`}
       >
@@ -63,16 +62,16 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           </label>
         )}
         <div
-          className={classNames(styles.inputContainer, {
+          className={classNames(styles.textareaContainer, {
             [styles.shadow]: isShadow,
           })}
         >
           {leftIcon && <div className={styles.leftIcon}>{leftIcon}</div>}
-          <input
+          <textarea
             id={id}
             ref={ref}
             style={style}
-            className={`${styles.input} ${error ? styles.error : ""} ${
+            className={`${styles.textarea} ${error ? styles.error : ""} ${
               leftIcon ? styles.withLeftIcon : ""
             }`}
             placeholder={placeholder}
@@ -82,7 +81,6 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
             disabled={disabled}
             required={required}
             name={name}
-            type={type}
             value={value}
             onChange={onChange}
             onBlur={onBlur}
@@ -96,6 +94,6 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   }
 );
 
-InputField.displayName = "InputField";
+TextArea.displayName = "TextArea";
 
-export default InputField;
+export default TextArea;

@@ -1,7 +1,7 @@
 @import "../../../styles/varibles.scss";
 @import "../../../styles/mixins/";
 
-.inputWrapper {
+.textareaWrapper {
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -28,7 +28,7 @@
   border-radius: 10px;
 }
 
-.inputContainer {
+.textareaContainer {
   position: relative;
   display: flex;
   align-items: center;
@@ -40,7 +40,7 @@
   top: 4px;
   height: 13px;
   width: 13px;
-  
+
   img,
   svg {
     width: 100%;
@@ -48,8 +48,9 @@
   }
 }
 
-.input {
-  padding: 6px 8px;
+.textarea {
+  padding: 9px 8px;
+  height: 54px;
   border: 1px solid $white-ligth;
   border-radius: 6px;
   font-size: 12px;
@@ -71,15 +72,15 @@
     color: $White-ligth;
   }
 
-  &::-webkit-input-placeholder {
+  &::-webkit-textarea-placeholder {
     color: $White-ligth;
   }
 
-  &:-ms-input-placeholder {
+  &:-ms-textarea-placeholder {
     color: $White-ligth;
   }
 
-  &::-ms-input-placeholder {
+  &::-ms-textarea-placeholder {
     color: $White-ligth;
   }
 
@@ -99,7 +100,7 @@
 }
 
 @include respond-above(xs) {
-  .inputWrapper {
+  .textareaWrapper {
     gap: 3px;
     margin-bottom: 12px;
   }
@@ -115,8 +116,9 @@
     width: 16px;
   }
 
-  .input {
-    padding: 6px 9px;
+  .textarea {
+    padding: 9px 9px;
+    height: 54px;
     font-size: 12px;
 
     &.withLeftIcon {
@@ -130,7 +132,7 @@
 }
 
 @include respond-above(sm) {
-  .inputWrapper {
+  .textareaWrapper {
     gap: 5px;
     margin-bottom: 20px;
   }
@@ -146,8 +148,9 @@
     width: 18px;
   }
 
-  .input {
-    padding: 9px 12px;
+  .textarea {
+    padding: 13.5px 12px;
+    height: 81px;
     font-size: 14px;
 
     &.withLeftIcon {
@@ -161,7 +164,7 @@
 }
 
 @include respond-above(xlg) {
-  .inputWrapper {
+  .textareaWrapper {
     gap: 6px;
     margin-bottom: 22px;
   }
@@ -177,8 +180,9 @@
     width: 20px;
   }
 
-  .input {
-    padding: 10px 13px;
+  .textarea {
+    padding: 15px 13px;
+    height: 90px;
     border-radius: 7px;
     font-size: 16px;
 
@@ -193,7 +197,7 @@
 }
 
 @include respond-above(fhd) {
-  .inputWrapper {
+  .textareaWrapper {
     gap: 7px;
     margin-bottom: 26px;
   }
@@ -209,8 +213,9 @@
     width: 23px;
   }
 
-  .input {
-    padding: 12px 16px;
+  .textarea {
+    padding: 18px 16px;
+    height: 108px;
     border-radius: 8px;
     font-size: 18px;
 
@@ -225,7 +230,7 @@
 }
 
 @include respond-above(fhd-plus) {
-  .inputWrapper {
+  .textareaWrapper {
     gap: 8px;
     margin-bottom: 33px;
   }
@@ -241,8 +246,9 @@
     width: 29px;
   }
 
-  .input {
-    padding: 15px 19px;
+  .textarea {
+    padding: 22.5px 19px;
+    height: 135px;
     border-radius: 10px;
     font-size: 23px;
 
@@ -257,7 +263,7 @@
 }
 
 @include respond-above(qhd) {
-  .inputWrapper {
+  .textareaWrapper {
     gap: 9px;
     margin-bottom: 35px;
   }
@@ -273,8 +279,9 @@
     width: 32px;
   }
 
-  .input {
-    padding: 16px 21px;
+  .textarea {
+    padding: 24px 21px;
+    height: 144px;
     border-radius: 11px;
     font-size: 25px;
 
@@ -289,7 +296,7 @@
 }
 
 @include respond-above(uhd) {
-  .inputWrapper {
+  .textareaWrapper {
     gap: 12px;
     margin-bottom: 47px;
   }
@@ -305,8 +312,9 @@
     width: 42px;
   }
 
-  .input {
-    padding: 21px 29px;
+  .textarea {
+    padding: 31.5px 29px;
+    height: 189px;
     border-radius: 14px;
     font-size: 33px;
     min-width: 280px;

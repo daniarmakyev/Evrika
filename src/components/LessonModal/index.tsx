@@ -7,7 +7,7 @@ import Close from "@icons/close.svg";
 import styles from './styles.module.scss';
 
 const LessonModal = () => {
-  const { lesson, isOpen, closeModal } = useModal();
+  const { data: lesson, isOpen, closeModal } = useModal("globalLesson");
   const [isVisible, setIsVisible] = React.useState(false);
 
   const handleClose = () => {

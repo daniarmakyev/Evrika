@@ -1,48 +1,57 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
-import React from 'react';
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-type Lesson = {
-  time: string;
-  subject: string;
-  lvl: string;
-  teacher: string;
-  description: string;
-  sub_description: string;
-};
-
-type ModalContextType = {
-  lesson: Lesson | null;
+// Тип состояния для одной модалки
+interface ModalState<T = any> {
   isOpen: boolean;
-  openModal: (lesson: Lesson) => void;
-  closeModal: () => void;
-};
+  data: T | null;
+}
 
-const ModalContext = React.createContext<ModalContextType | undefined>(undefined);
+// Тип для всех модалок по ключу
+interface ModalsContextType {
+  modals: Record<string, ModalState>;
+  openModal: <T = any>(key: string, data?: T) => void;
+  closeModal: (key: string) => void;
+}
 
-export const useModal = () => {
-  const context = React.useContext(ModalContext);
-  if (!context) throw new Error("useModal должен использоваться внутри ModalProvider");
-  return context;
-};
+const ModalsContext = createContext<ModalsContextType | undefined>(undefined);
 
-export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
-  const [lesson, setLesson] = React.useState<Lesson | null>(null);
-  const [isOpen, setIsOpen] = React.useState(false);
+export const ModalProvider = ({ children }: { children: ReactNode }) => {
+  const [modals, setModals] = useState<Record<string, ModalState>>({});
 
-  const openModal = (lesson: Lesson) => {
-    setLesson(lesson);
-    setIsOpen(true);
+  const openModal = <T = any,>(key: string, data?: T) => {
+    setModals((prev) => ({
+      ...prev,
+      [key]: { isOpen: true, data: data ?? null },
+    }));
   };
 
-  const closeModal = () => {
-    setLesson(null);
-    setIsOpen(false);
+  const closeModal = (key: string) => {
+    setModals((prev) => ({
+      ...prev,
+      [key]: { isOpen: false, data: null },
+    }));
   };
 
   return (
-    <ModalContext.Provider value={{ lesson, isOpen, openModal, closeModal }}>
+    <ModalsContext.Provider value={{ modals, openModal, closeModal }}>
       {children}
-    </ModalContext.Provider>
+    </ModalsContext.Provider>
   );
 };
+
+// Универсальный хук для работы с конкретной модалкой по ключу
+export function useModal<T = any>(key: string) {
+  const context = useContext(ModalsContext);
+  if (!context) throw new Error('useModal должен использоваться внутри ModalProvider');
+  const { modals, openModal, closeModal } = context;
+  const state = modals[key] || { isOpen: false, data: null };
+  return {
+    isOpen: state.isOpen,
+    data: state.data as T | null,
+    openModal: (data?: T) => openModal<T>(key, data),
+    closeModal: () => closeModal(key),
+  };
+}

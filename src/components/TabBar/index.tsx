@@ -21,11 +21,11 @@ const TabBar: React.FC<TabBarProps> = ({ items }) => {
   return (
     <nav className={styles.tabBar}>
       {items.map((item) => {
-        const isActive = "/showcase" + item.link === pathname;
+        const isActive = "/profile" + item.link === pathname;
         return item.link ? (
           <Link
             key={item.tab}
-            href={`/showcase/${item.link}`}
+            href={`/profile/${item.link}`}
             className={classNames(styles.tab, {
               [styles.tab_active]: isActive,
             })}
