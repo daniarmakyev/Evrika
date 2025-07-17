@@ -30,6 +30,17 @@ export default function StudentProfileLayout({
     }
   }, [groups]);
 
+  useEffect(() => {
+    const token = localStorage.getItem("evrika-access-token");
+
+    if (!token) {
+      localStorage.setItem(
+        "evrika-access-token",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTUzNDQ1NzB9.gla_5czweUhBXBLL5OHArEf54d1ms9IZzAGUZS9VY6A"
+      );
+    }
+  }, []);
+
   return (
     <ModalProvider>
       <div>
@@ -39,7 +50,7 @@ export default function StudentProfileLayout({
             name={student.first_name + " " + student.last_name}
           />
         ) : (
-          <ProfileHeroBanner name="Пупкин Иванов" />
+          <ProfileHeroBanner name="Ошибка Сервера" />
         )}
         <StudentTabBar />
         {children}

@@ -8,12 +8,25 @@ import { HomeworkSubmission, HomeworkTask } from "src/consts/types";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  data: { homework: { homeworkData: HomeworkTask }; submission: HomeworkSubmission } | null;
+  data: {
+    homework: { homeworkData: HomeworkTask };
+    submission: HomeworkSubmission;
+  } | null;
   modalLinkClass?: string;
 };
 
-const HomeworkSubmissionModal: React.FC<Props> = ({ isOpen, onClose, data, modalLinkClass }) => (
-  <ProfileModal isOpen={isOpen} onClose={onClose} title="Загруженное задание" size="lg">
+const HomeworkSubmissionModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  data,
+  modalLinkClass,
+}) => (
+  <ProfileModal
+    isOpen={isOpen}
+    onClose={onClose}
+    title="Загруженное задание"
+    size="lg"
+  >
     {data && (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div>
@@ -36,16 +49,20 @@ const HomeworkSubmissionModal: React.FC<Props> = ({ isOpen, onClose, data, modal
             />
           </div>
         ) : null}
-        {data.submission?.file_path ? (
+        {!data.submission?.file_path?.includes("blob") ? (
           <div>
             <h4>Загруженный файл</h4>
-            <Link href={data.submission.file_path} className={modalLinkClass}>
+            <Link
+              href={data.submission.file_path || "#"}
+              className={modalLinkClass}
+            >
               <InputField
                 style={{ cursor: "pointer" }}
-                value={data.submission.file_path}
+                value={data.submission.file_path || ""}
                 readOnly
                 isShadow
                 fullWidth
+                type="text"
               />
             </Link>
           </div>
@@ -54,7 +71,9 @@ const HomeworkSubmissionModal: React.FC<Props> = ({ isOpen, onClose, data, modal
           <div>
             <h4>Дата отправки</h4>
             <InputField
-              value={new Date(data.submission.submitted_at).toLocaleDateString()}
+              value={new Date(
+                data.submission.submitted_at
+              ).toLocaleDateString()}
               readOnly
               isShadow
               fullWidth
@@ -66,4 +85,4 @@ const HomeworkSubmissionModal: React.FC<Props> = ({ isOpen, onClose, data, modal
   </ProfileModal>
 );
 
-export default HomeworkSubmissionModal; 
+export default HomeworkSubmissionModal;

@@ -44,25 +44,6 @@ export const getHomeworkSubmissions = createAsyncThunk<
   }
 );
 
-export const postHomeworkSubmissions = createAsyncThunk<
-  HomeworkSubmission[],
-  number | string,
-  { rejectValue: string }
->(
-  "lesson/postHomeworkSubmissions",
-  async (homeworkId, { rejectWithValue }) => {
-    try {
-      const { data } = await $apiPrivate.get<HomeworkSubmission[]>(`/submissions/homework/${homeworkId}`);
-      return data;
-    } catch (err) {
-      if (axios.isAxiosError<CustomApiError>(err)) {
-        if (err.response?.status === 404) return rejectWithValue("");
-        return rejectWithValue(err.response?.data.detail || "Не удалось загрузить уроки");
-      }
-      return rejectWithValue("Неизвестная ошибка");
-    }
-  }
-);
 
 export const submitHomeworkSubmission = createAsyncThunk<
   HomeworkSubmission,
@@ -98,7 +79,7 @@ export const submitHomeworkSubmission = createAsyncThunk<
 
 export const updateHomeworkSubmission = createAsyncThunk<
   HomeworkSubmission,
-  { submission_id: number; content: string; file?: File | null },
+  { submission_id: number; content: string; file?: File | Blob | null },
   { rejectValue: string }
 >(
   "lesson/updateHomeworkSubmission",
@@ -109,8 +90,9 @@ export const updateHomeworkSubmission = createAsyncThunk<
       if (file) {
         formData.append("file", file);
       }
+
       const { data } = await $apiPrivate.patch<HomeworkSubmission>(
-        `/submissions/${submission_id}`,
+        `/submissions/${submission_id}?content=${content || "empty"}`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -121,28 +103,6 @@ export const updateHomeworkSubmission = createAsyncThunk<
       if (axios.isAxiosError<CustomApiError>(err)) {
         if (err.response?.status === 404) return rejectWithValue("");
         return rejectWithValue(err.response?.data.detail || "Не удалось обновить домашнее задание");
-      }
-      return rejectWithValue("Неизвестная ошибка");
-    }
-  }
-);
-
-export const deleteHomeworkSubmissionFile = createAsyncThunk<
-  HomeworkSubmission,
-  number,
-  { rejectValue: string }
->(
-  "lesson/deleteHomeworkSubmissionFile",
-  async (submission_id, { rejectWithValue }) => {
-    try {
-      const { data } = await $apiPrivate.delete<HomeworkSubmission>(
-        `/submissions/${submission_id}/file`
-      );
-      return data;
-    } catch (err) {
-      if (axios.isAxiosError<CustomApiError>(err)) {
-        if (err.response?.status === 404) return rejectWithValue("");
-        return rejectWithValue(err.response?.data.detail || "Не удалось удалить файл");
       }
       return rejectWithValue("Неизвестная ошибка");
     }

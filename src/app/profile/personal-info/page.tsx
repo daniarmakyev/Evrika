@@ -50,17 +50,6 @@ export default function PersonalInfo() {
     dispatch(getStudent());
   }, [dispatch]);
 
-  useEffect(() => {
-    const token = localStorage.getItem("evrika-access-token");
-
-    if (!token) {
-      localStorage.setItem(
-        "evrika-access-token",
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTMyNDgxNTJ9.0RETBdyxQq1Yl7kOzTcC_ex1tEDffKrwd4sageUrytM"
-      );
-    }
-  }, []);
-
   const handleRetry = () => {
     dispatch(getStudent());
   };

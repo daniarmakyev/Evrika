@@ -117,6 +117,36 @@ export default function ProfileHomeWork() {
   }, [submissionError, dispatch]);
 
   useEffect(() => {
+    if (
+      submissionModal.isOpen &&
+      submissionModal.data &&
+      submissionModal.data.submission
+    ) {
+      const updatedSubmission = homeworkState.find(
+        (s) => s.id === submissionModal.data!.submission.id
+      );
+      if (updatedSubmission) {
+        submissionModal.openModal({
+          ...submissionModal.data,
+          submission: updatedSubmission,
+        });
+      }
+    }
+
+    if (uploadModal.isOpen && uploadModal.data && uploadModal.data.submission) {
+      const updatedSubmission = homeworkState.find(
+        (s) => s.id === uploadModal.data!.submission!.id
+      );
+      if (updatedSubmission) {
+        uploadModal.openModal({
+          ...uploadModal.data,
+          submission: updatedSubmission,
+        });
+      }
+    }
+  }, [homeworkState]);
+
+  useEffect(() => {
     const groupsId = localStorage.getItem("groups");
 
     if (groupsId) {

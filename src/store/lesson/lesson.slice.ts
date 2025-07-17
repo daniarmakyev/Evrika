@@ -1,12 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { LessonListItem, HomeworkSubmission } from "src/consts/types";
-import { 
-  getLessons, 
-  getHomeworkSubmissions, 
-  postHomeworkSubmissions,
+import {
+  getLessons,
+  getHomeworkSubmissions,
   submitHomeworkSubmission,
   updateHomeworkSubmission,
-  deleteHomeworkSubmissionFile
 } from "./lesson.action";
 
 interface LessonState {
@@ -53,7 +51,7 @@ export const lessonSlice = createSlice({
         state.loading = false;
         state.error = payload as string;
       })
-      
+
       .addCase(getHomeworkSubmissions.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -67,21 +65,6 @@ export const lessonSlice = createSlice({
         state.loading = false;
         state.error = payload as string;
       })
-      
-      .addCase(postHomeworkSubmissions.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(postHomeworkSubmissions.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        state.homework = payload;
-        state.error = null;
-      })
-      .addCase(postHomeworkSubmissions.rejected, (state, { payload }) => {
-        state.loading = false;
-        state.error = payload as string;
-      })
-      
       .addCase(submitHomeworkSubmission.pending, (state) => {
         state.submissionLoading = true;
         state.submissionError = null;
@@ -99,7 +82,7 @@ export const lessonSlice = createSlice({
         state.submissionLoading = false;
         state.submissionError = payload as string;
       })
-      
+
       .addCase(updateHomeworkSubmission.pending, (state) => {
         state.submissionLoading = true;
         state.submissionError = null;
@@ -117,24 +100,7 @@ export const lessonSlice = createSlice({
         state.submissionLoading = false;
         state.submissionError = payload as string;
       })
-      
-      .addCase(deleteHomeworkSubmissionFile.pending, (state) => {
-        state.submissionLoading = true;
-        state.submissionError = null;
-      })
-      .addCase(deleteHomeworkSubmissionFile.fulfilled, (state, { payload }) => {
-        state.submissionLoading = false;
-        state.submissionError = null;
-        if (state.homework) {
-          state.homework = state.homework.map((submission) =>
-            submission.id === payload.id ? payload : submission
-          );
-        }
-      })
-      .addCase(deleteHomeworkSubmissionFile.rejected, (state, { payload }) => {
-        state.submissionLoading = false;
-        state.submissionError = payload as string;
-      });
+
   },
 });
 

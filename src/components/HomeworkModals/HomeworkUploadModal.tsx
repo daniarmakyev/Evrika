@@ -27,11 +27,13 @@ const HomeworkUploadModal: React.FC<Props> = ({
   saveClass,
 }) => {
   const dispatch = useAppDispatch();
-  const { submissionLoading, submissionError } = useAppSelector(
+  const { submissionLoading, submissionError, homework } = useAppSelector(
     (state) => state.lesson
   );
   const [currentFile, setCurrentFile] = useState<string | null>(null);
   const [removeFile, setRemoveFile] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showFileWarning, setShowFileWarning] = useState(false);
 
   const {
     register,
@@ -54,15 +56,21 @@ const HomeworkUploadModal: React.FC<Props> = ({
         content: data?.submission?.content || "",
         file: undefined,
       });
-      setCurrentFile(data?.submission?.file_path || null);
+      const filePath = data?.submission?.file_path;
+      const shouldShowFile = filePath && !filePath.includes("blob");
+      setCurrentFile(shouldShowFile ? filePath : null);
       setRemoveFile(false);
+      setShowDeleteConfirm(false);
+      setShowFileWarning(false);
       dispatch(clearSubmissionError());
     }
-  }, [isOpen, data, reset, dispatch]);
+  }, [isOpen, data, reset, dispatch, homework]);
 
   useEffect(() => {
     return () => {
       dispatch(clearSubmissionError());
+      setShowDeleteConfirm(false);
+      setShowFileWarning(false);
     };
   }, [dispatch]);
 
@@ -72,13 +80,41 @@ const HomeworkUploadModal: React.FC<Props> = ({
   };
 
   const handleRemoveCurrentFile = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
     setRemoveFile(true);
+    setShowDeleteConfirm(false);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteConfirm(false);
+  };
+
+  const handleFileSelect = (files: FileList | null) => {
+    if (files && files[0]) {
+      if (currentFile && !removeFile) {
+        setShowFileWarning(true);
+      } else {
+        setCurrentFile(null);
+      }
+    }
+  };
+  const confirmFileReplace = () => {
+    setShowFileWarning(false);
+    setRemoveFile(false);
     setCurrentFile(null);
   };
 
-  const handleRestoreCurrentFile = () => {
-    setRemoveFile(false);
-    setCurrentFile(data?.submission?.file_path || null);
+  const cancelFileReplace = () => {
+    setShowFileWarning(false);
+    const fileInput = document.querySelector(
+      'input[type="file"]'
+    ) as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = "";
+    }
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,13 +125,39 @@ const HomeworkUploadModal: React.FC<Props> = ({
       const fileToUpload = formData.file?.[0] || null;
 
       if (data?.isEdit && data?.submission?.id) {
-        await dispatch(
-          updateHomeworkSubmission({
-            submission_id: data.submission.id,
-            content: formData.content || "",
-            file: fileToUpload,
-          })
-        ).unwrap();
+        if (removeFile && !fileToUpload) {
+          const emptyBlob = new Blob();
+          const result = await dispatch(
+            updateHomeworkSubmission({
+              submission_id: data.submission.id,
+              content: formData.content || "",
+              file: emptyBlob,
+            })
+          ).unwrap();
+
+          setRemoveFile(false);
+          setCurrentFile(null);
+          reset({
+            content: result.content,
+            file: undefined,
+          });
+        } else {
+          const result = await dispatch(
+            updateHomeworkSubmission({
+              submission_id: data.submission.id,
+              content: formData.content || "",
+              file: fileToUpload,
+            })
+          ).unwrap();
+
+          if (result && result.file_path) {
+            setCurrentFile(result.file_path);
+            reset({
+              content: result.content,
+              file: undefined,
+            });
+          }
+        }
       } else {
         await dispatch(
           submitHomeworkSubmission({
@@ -105,9 +167,6 @@ const HomeworkUploadModal: React.FC<Props> = ({
           })
         ).unwrap();
       }
-
-      await dispatch(getHomeworkSubmissions(data.homework.homeworkId));
-      handleClose();
     } catch (error) {
       console.error("Error submitting homework:", error);
     }
@@ -163,12 +222,104 @@ const HomeworkUploadModal: React.FC<Props> = ({
           <div>
             <h4>Файл</h4>
 
+            {showDeleteConfirm && (
+              <div
+                style={{
+                  marginBottom: "10px",
+                  padding: "10px",
+                  backgroundColor: "#ffebee",
+                  borderRadius: "4px",
+                  border: "1px solid #ffcdd2",
+                }}
+              >
+                <p style={{ margin: "0 0 10px 0" }}>
+                  Вы точно хотите удалить файл?
+                </p>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <button
+                    type="button"
+                    onClick={confirmDelete}
+                    style={{
+                      padding: "5px 10px",
+                      backgroundColor: "#f44336",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Да, удалить
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelDelete}
+                    style={{
+                      padding: "5px 10px",
+                      backgroundColor: "#9e9e9e",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Отмена
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {showFileWarning && (
+              <div
+                style={{
+                  marginBottom: "10px",
+                  padding: "10px",
+                  backgroundColor: "#fff3cd",
+                  borderRadius: "4px",
+                  border: "1px solid #ffeaa7",
+                }}
+              >
+                <p style={{ margin: "0 0 10px 0" }}>
+                  Предыдущий файл будет заменен новым. Продолжить?
+                </p>
+                <div style={{ display: "flex", gap: "10px" }}>
+                  <button
+                    type="button"
+                    onClick={confirmFileReplace}
+                    style={{
+                      padding: "5px 10px",
+                      backgroundColor: "#ff9800",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Да, заменить
+                  </button>
+                  <button
+                    type="button"
+                    onClick={cancelFileReplace}
+                    style={{
+                      padding: "5px 10px",
+                      backgroundColor: "#9e9e9e",
+                      color: "white",
+                      border: "none",
+                      borderRadius: "4px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    Отмена
+                  </button>
+                </div>
+              </div>
+            )}
+
             {currentFile && !removeFile && (
               <div
                 style={{
                   marginBottom: "10px",
                   padding: "10px",
-                  backgroundColor: "#f5f5f5",
+                  backgroundColor: "#e8f5e8",
                   borderRadius: "4px",
                   display: "flex",
                   justifyContent: "space-between",
@@ -197,27 +348,14 @@ const HomeworkUploadModal: React.FC<Props> = ({
                 style={{
                   marginBottom: "10px",
                   padding: "10px",
-                  backgroundColor: "#fff3cd",
+                  backgroundColor: "#ffebee",
                   borderRadius: "4px",
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
                 }}
               >
-                <span>Файл будет удален</span>
-                <button
-                  type="button"
-                  onClick={handleRestoreCurrentFile}
-                  style={{
-                    background: "none",
-                    border: "none",
-                    color: "blue",
-                    cursor: "pointer",
-                    textDecoration: "underline",
-                  }}
-                >
-                  Восстановить
-                </button>
+                <span>Файл будет удален при сохранении</span>
               </div>
             )}
 
@@ -225,10 +363,11 @@ const HomeworkUploadModal: React.FC<Props> = ({
               type="file"
               accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"
               {...register("file")}
+              onChange={(e) => handleFileSelect(e.target.files)}
               style={{ width: "100%" }}
             />
 
-            {fileInput && fileInput[0] && (
+            {fileInput && fileInput[0] && !showFileWarning && (
               <div
                 style={{
                   marginTop: "5px",
@@ -249,7 +388,11 @@ const HomeworkUploadModal: React.FC<Props> = ({
               marginTop: "20px",
             }}
           >
-            <button type="submit" className={saveClass} disabled={isLoading}>
+            <button
+              type="submit"
+              className={saveClass}
+              disabled={isLoading || showDeleteConfirm || showFileWarning}
+            >
               {isLoading
                 ? "Загрузка..."
                 : data.isEdit
