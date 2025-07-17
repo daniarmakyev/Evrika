@@ -5,7 +5,7 @@ import { ScheduleType } from "src/consts/types";
 interface SheduleState {
   error: string | null;
   loading: boolean;
-  shedule: ScheduleType | null; 
+  shedule: ScheduleType | null;
 }
 
 const INIT_STATE: SheduleState = {
@@ -26,9 +26,9 @@ export const sheduleSlice = createSlice({
       state.loading = false;
       state.shedule = payload;
       state.error = null;
-    }).addCase(getShedule.rejected, (state) => {
+    }).addCase(getShedule.rejected, (state, { payload }) => {
       state.loading = false;
-      state.error = "Failed to fetch schedule";
+      state.error = payload || "Failed to fetch schedule";
       state.shedule = null;
     });
   },

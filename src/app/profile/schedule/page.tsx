@@ -68,7 +68,7 @@ export default function ProfileSchedule() {
         teacher_name: `${
           lesson.teacher.first_name + " " + lesson.teacher.last_name
         }`,
-        classroom: `${lesson.classroom.title}`,
+        classroom: `${lesson.classroom.name}`,
         lessons: [lesson],
         sortTime: getTimeInMinutes(lesson.lesson_start),
       }))

@@ -7,7 +7,7 @@ export interface Group {
 
 export interface Classroom {
   id: number;
-  title: string;
+  name: string;
 }
 
 export interface Teacher {
