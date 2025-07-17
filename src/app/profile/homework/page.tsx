@@ -22,7 +22,9 @@ import {
   LessonInfoModal,
   HomeworkSubmissionModal,
   HomeworkUploadModal,
+  // Добавим модалку для примечания
 } from "@components/HomeworkModals";
+import ProfileModal from "@components/ProfileModal";
 import {
   clearError,
   clearSubmissionError,
@@ -94,6 +96,11 @@ export default function ProfileHomeWork() {
     isEdit?: boolean;
   }>("upload");
 
+  const [noteModal, setNoteModal] = useState<{
+    open: boolean;
+    note: string | null;
+  }>({ open: false, note: null });
+
   useEffect(() => {
     if (error) {
       setErrorMessage(error);
@@ -117,31 +124,45 @@ export default function ProfileHomeWork() {
   }, [submissionError, dispatch]);
 
   useEffect(() => {
-    if (
-      submissionModal.isOpen &&
-      submissionModal.data &&
-      submissionModal.data.submission
-    ) {
-      const updatedSubmission = homeworkState.find(
-        (s) => s.id === submissionModal.data!.submission.id
-      );
-      if (updatedSubmission) {
-        submissionModal.openModal({
-          ...submissionModal.data,
-          submission: updatedSubmission,
-        });
+    if (uploadModal.isOpen && uploadModal.data) {
+      const submissionId = uploadModal.data.submission?.id;
+      if (submissionId) {
+        const updatedSubmission = homeworkState.find(
+          (s) => s.id === submissionId
+        );
+        if (
+          updatedSubmission &&
+          updatedSubmission !== uploadModal.data.submission
+        ) {
+          uploadModal.openModal({
+            ...uploadModal.data,
+            submission: updatedSubmission,
+          });
+        }
+      } else if (uploadModal.data && uploadModal.data.homework) {
+        const newSubmission = homeworkState.find(
+          (s) => s.homework_id === uploadModal.data!.homework.homeworkId
+        );
+        if (newSubmission) {
+          uploadModal.openModal({
+            ...uploadModal.data,
+            submission: newSubmission,
+          });
+        }
       }
     }
-
-    if (uploadModal.isOpen && uploadModal.data && uploadModal.data.submission) {
-      const updatedSubmission = homeworkState.find(
-        (s) => s.id === uploadModal.data!.submission!.id
-      );
-      if (updatedSubmission) {
-        uploadModal.openModal({
-          ...uploadModal.data,
-          submission: updatedSubmission,
-        });
+    if (submissionModal.isOpen && submissionModal.data) {
+      const submissionId = submissionModal.data.submission?.id;
+      if (submissionId) {
+        const updatedSubmission = homeworkState.find(
+          (s) => s.id === submissionId
+        );
+        if (updatedSubmission) {
+          submissionModal.openModal({
+            ...submissionModal.data,
+            submission: updatedSubmission,
+          });
+        }
       }
     }
   }, [homeworkState]);
@@ -175,13 +196,28 @@ export default function ProfileHomeWork() {
   }, [lessons, dispatch]);
 
   useEffect(() => {
-    if (homework && homework.length > 0) {
-      setHomeworkState((prev) => {
-        const newHomeworks = homework.filter(
-          (homework) => !prev.some((item) => item.id === homework.id)
-        );
-        return [...prev, ...newHomeworks];
-      });
+    if (homework) {
+      if (homework.length > 0) {
+        setHomeworkState((prev) => {
+          const map = new Map<number, (typeof homework)[0]>();
+
+          prev.forEach((item) => {
+            map.set(item.id, item);
+          });
+
+          homework.forEach((item) => {
+            map.set(item.id, item);
+          });
+
+          return Array.from(map.values());
+        });
+      } else {
+        setHomeworkState((prev) => {
+          const currentIds = new Set(homework.map((item) => item.id));
+
+          return prev.filter((item) => currentIds.has(item.id));
+        });
+      }
     }
   }, [homework]);
 
@@ -268,23 +304,6 @@ export default function ProfileHomeWork() {
     dispatch(clearSubmissionError());
   };
 
-  const handleRetry = () => {
-    const groupsId = localStorage.getItem("groups");
-    if (groupsId) {
-      try {
-        const parsedIds: string[] = JSON.parse(groupsId);
-        if (parsedIds && Array.isArray(parsedIds)) {
-          parsedIds.forEach((id) => {
-            dispatch(getLessons(id));
-          });
-        }
-      } catch (error) {
-        console.error("Ошибка вставки груп с локал стореджа:", error);
-        setErrorMessage("Ошибка при загрузке групп");
-      }
-    }
-  };
-
   const homeWorkColumns = [
     {
       key: "group",
@@ -328,9 +347,54 @@ export default function ProfileHomeWork() {
       },
     },
     {
+      key: "note",
+      title: "Примечание",
+      width: "180px",
+      render: (_: string, row: HomeWorkTableItem) => {
+        const submission = getSubmissionForHomework(row.homeworkId);
+        if (submission && submission.review) {
+          return (
+            <button
+              className={styles.table__button}
+              style={{ color: "#1976d2", textDecoration: "underline" }}
+              onClick={() =>
+                setNoteModal({ open: true, note: submission.review })
+              }
+            >
+              {submission.review.length > 30
+                ? submission.review.substring(0, 30) + "..."
+                : submission.review}
+            </button>
+          );
+        }
+        return null;
+      },
+    },
+    {
       key: "deadline",
       title: "Срок сдачи",
       width: "140px",
+    },
+    {
+      key: "status",
+      title: "Статус",
+      width: "140px",
+      render: (_: string, row: HomeWorkTableItem) => {
+        const submission = getSubmissionForHomework(row.homeworkId);
+        return (
+          <span
+            style={{
+              color: submission ? "green" : "red",
+              fontWeight: 600,
+              borderRadius: "6px",
+              fontSize: "13px",
+              display: "inline-block",
+            }}
+          >
+            {submission ? "Отправлено" : "В ожидании"}
+          </span>
+        );
+      },
     },
     {
       key: "upload",
@@ -391,16 +455,7 @@ export default function ProfileHomeWork() {
             </button>
           </div>
         )}
-        {error && !loading && (
-          <div className={styles.errorContainer}>
-            <div className={styles.errorIcon}>⚠️</div>
-            <h3 className={styles.errorTitle}>Ошибка загрузки</h3>
-            <p className={styles.errorMessage}>{error}</p>
-            <button className={styles.retryButton} onClick={handleRetry}>
-              <span>Попробовать снова</span>
-            </button>
-          </div>
-        )}
+
         {loading || !lessons ? (
           <TableSkeleton />
         ) : (
@@ -429,9 +484,17 @@ export default function ProfileHomeWork() {
           isOpen={uploadModal.isOpen}
           onClose={uploadModal.closeModal}
           data={uploadModal.data}
-          cancelClass={styles.cancel__button}
-          saveClass={styles.save__button}
         />
+        <ProfileModal
+          isOpen={noteModal.open}
+          onClose={() => setNoteModal({ open: false, note: null })}
+          title="Примечание от учителя"
+          size="md"
+        >
+          <div style={{ padding: 20, fontSize: 16, whiteSpace: "pre-line" }}>
+            {noteModal.note}
+          </div>
+        </ProfileModal>
       </div>
     </div>
   );

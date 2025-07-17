@@ -123,10 +123,7 @@
     font-size: 14px;
     font-weight: 500;
     transition: all 0.2s ease;
-
-    &:hover {
-      background: darken($primary-button, 8%);
-    }
+    background: black;
 
     &:disabled {
       background: #ccc;
@@ -336,3 +333,4 @@
   border-radius: 8px;
   margin: 0 8px;
 }
+

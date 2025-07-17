@@ -5,6 +5,7 @@ import {
   getHomeworkSubmissions,
   submitHomeworkSubmission,
   updateHomeworkSubmission,
+  deleteHomeworkSubmission,
 } from "./lesson.action";
 
 interface LessonState {
@@ -35,6 +36,14 @@ export const lessonSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
+    // Добавляем новый reducer для ручного удаления
+    removeHomeworkSubmission: (state, action) => {
+      if (state.homework) {
+        state.homework = state.homework.filter(
+          (submission) => submission.id !== action.payload
+        );
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -51,7 +60,7 @@ export const lessonSlice = createSlice({
         state.loading = false;
         state.error = payload as string;
       })
-
+      
       .addCase(getHomeworkSubmissions.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -65,6 +74,7 @@ export const lessonSlice = createSlice({
         state.loading = false;
         state.error = payload as string;
       })
+      
       .addCase(submitHomeworkSubmission.pending, (state) => {
         state.submissionLoading = true;
         state.submissionError = null;
@@ -82,7 +92,7 @@ export const lessonSlice = createSlice({
         state.submissionLoading = false;
         state.submissionError = payload as string;
       })
-
+      
       .addCase(updateHomeworkSubmission.pending, (state) => {
         state.submissionLoading = true;
         state.submissionError = null;
@@ -100,8 +110,25 @@ export const lessonSlice = createSlice({
         state.submissionLoading = false;
         state.submissionError = payload as string;
       })
-
+      
+      .addCase(deleteHomeworkSubmission.pending, (state) => {
+        state.submissionLoading = true;
+        state.submissionError = null;
+      })
+      .addCase(deleteHomeworkSubmission.fulfilled, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = null;
+        if (state.homework) {
+          state.homework = state.homework.filter(
+            (submission) => submission.id !== payload
+          );
+        }
+      })
+      .addCase(deleteHomeworkSubmission.rejected, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = payload as string;
+      });
   },
 });
 
-export const { clearSubmissionError, clearError } = lessonSlice.actions;
+export const { clearSubmissionError, clearError, removeHomeworkSubmission } = lessonSlice.actions;

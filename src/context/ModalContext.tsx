@@ -3,13 +3,11 @@
 
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-// Тип состояния для одной модалки
 interface ModalState<T = any> {
   isOpen: boolean;
   data: T | null;
 }
 
-// Тип для всех модалок по ключу
 interface ModalsContextType {
   modals: Record<string, ModalState>;
   openModal: <T = any>(key: string, data?: T) => void;
@@ -42,7 +40,6 @@ export const ModalProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
-// Универсальный хук для работы с конкретной модалкой по ключу
 export function useModal<T = any>(key: string) {
   const context = useContext(ModalsContext);
   if (!context) throw new Error('useModal должен использоваться внутри ModalProvider');

@@ -85,6 +85,7 @@ export interface HomeworkSubmission {
   file_path: string | null;
   content: string;
   submitted_at: string;
+  review: string | null
 }
 
 export interface StudentGroupType {

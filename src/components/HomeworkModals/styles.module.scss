@@ -1,0 +1,11 @@
+@import "../../styles/varibles";
+@import "../../styles/mixins/";
+
+.save__button {
+    background-color: $primary;
+    color: $White;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+}
