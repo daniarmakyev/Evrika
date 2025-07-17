@@ -2,11 +2,13 @@
 @import "../../styles/mixins/";
 
 .signup {
+  margin-bottom: 24px; 
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+
 
   &__container {
     width: 100%;
@@ -116,6 +118,7 @@
 
 @include respond-above(md) {
   .signup {
+    margin-bottom: 30px;
     width: 100%;
     height: 100%;
     display: flex;
@@ -231,6 +234,7 @@
 
 @include respond-above(lg) {
   .signup {
+    margin-bottom: 35px;
     &__container {
       padding: 42px;
     }
@@ -267,6 +271,7 @@
 
 @include respond-above(mac) {
   .signup {
+    margin-bottom: 40px;
     &__container {
       padding: 50px;
     }
@@ -303,6 +308,7 @@
 
 @include respond-above(xlg) {
   .signup {
+    margin-bottom: 44px;
     &__container {
       padding: 56px;
     }
@@ -339,6 +345,7 @@
 
 @include respond-above(fhd) {
   .signup {
+    margin-bottom: 53px;
     &__container {
       padding: 67px;
     }
@@ -375,6 +382,7 @@
 
 @include respond-above(fhd-plus) {
   .signup {
+    margin-bottom: 62px;
     &__container {
       border-radius: 20px;
       padding: 70px;
@@ -413,6 +421,7 @@
 
 @include respond-above(qhd) {
   .signup {
+    margin-bottom: 71px;
     &__container {
       padding: 78px;
     }
@@ -449,6 +458,7 @@
 
 @include respond-above(uhd) {
   .signup {
+    margin-bottom: 94px;
     &__container {
       border-radius: 30px;
       padding: 118px;

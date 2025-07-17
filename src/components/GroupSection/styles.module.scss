@@ -2,6 +2,7 @@
 @import "../../styles/mixins/";
 
 .group {
+  margin-bottom: 24px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -24,7 +25,7 @@
     justify-content: center;
     gap: 40px;
   }
-  
+
   &__wrapper {
     flex: 1 1 calc(33.333% - 40px);
     width: auto;
@@ -67,11 +68,11 @@
         width: 80%;
       }
     }
-  
+
     &:hover {
       transform: translateY(-5px);
     }
-  
+
     img {
       width: 100px;
       margin-bottom: 30px;
@@ -113,12 +114,13 @@
 
 @include respond-above(md) {
   .group {
+    margin-bottom: 30px;
     width: 100%;
     height: 100%;
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-  
+
     &__container {
       width: 100%;
       height: 100%;
@@ -127,7 +129,7 @@
       align-items: flex-start;
       justify-content: flex-start;
     }
-  
+
     &__cards {
       display: flex;
       flex-wrap: wrap;
@@ -135,7 +137,7 @@
       justify-content: center;
       gap: 27px;
     }
-    
+
     &__wrapper {
       flex: 1 1 calc(33.333% - 27px);
       width: auto;
@@ -151,43 +153,43 @@
       transition: transform 0.3s ease-in-out;
       overflow: hidden;
       padding: 20px;
-  
+
       &_grow1 {
         flex: 1 1 100%;
         width: 100%;
         height: 272px;
-  
+
         img {
           width: 136px !important;
         }
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       &_grow2 {
         flex: 1 1 calc(50% - 27px);
         height: 272px;
-  
+
         img {
           width: 136px !important;
         }
-  
+
         p {
           width: 85%;
         }
       }
-    
+
       &:hover {
         transform: translateY(-5px);
       }
-    
+
       img {
         width: 68px;
         margin-bottom: 20px;
       }
-  
+
       &__title {
         width: 100%;
         height: auto;
@@ -196,7 +198,7 @@
         justify-content: center;
         text-align: center;
         margin-bottom: 14px;
-  
+
         h3 {
           font-weight: bold;
           font-size: 19px;
@@ -204,7 +206,7 @@
           color: $black;
         }
       }
-  
+
       &__description {
         width: 100%;
         height: auto;
@@ -212,7 +214,7 @@
         align-items: center;
         justify-content: center;
         text-align: center;
-  
+
         p {
           font-size: 11px;
           line-height: 140%;
@@ -225,48 +227,49 @@
 
 @include respond-above(lg) {
   .group {
+    margin-bottom: 35px;
     &__cards {
       gap: 33px;
     }
-    
+
     &__wrapper {
       height: 250px;
       padding: 25px;
-  
+
       &_grow1 {
         height: 333px;
-  
+
         img {
           width: 167px !important;
         }
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       &_grow2 {
         flex: 1 1 calc(50% - 33px);
         height: 333px;
-  
+
         img {
           width: 167px !important;
         }
       }
-    
+
       img {
         width: 83px;
         margin-bottom: 25px;
       }
-  
+
       &__title {
         margin-bottom: 17px;
-  
+
         h3 {
           font-size: 23px;
         }
       }
-  
+
       &__description {
         p {
           font-size: 13px;
@@ -278,49 +281,50 @@
 
 @include respond-above(mac) {
   .group {
+    margin-bottom: 40px;
     &__cards {
       gap: 40px;
     }
-    
+
     &__wrapper {
       flex: 1 1 calc(33.333% - 40px);
       height: 300px;
       padding: 30px;
-  
+
       &_grow1 {
         height: 400px;
-  
+
         img {
           width: 200px !important;
         }
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       &_grow2 {
         flex: 1 1 calc(50% - 40px);
         height: 400px;
-  
+
         img {
           width: 200px !important;
         }
       }
-    
+
       img {
         width: 100px;
         margin-bottom: 30px;
       }
-  
+
       &__title {
         margin-bottom: 20px;
-  
+
         h3 {
           font-size: 28px;
         }
       }
-  
+
       &__description {
         p {
           font-size: 16px;
@@ -332,49 +336,50 @@
 
 @include respond-above(xlg) {
   .group {
+    margin-bottom: 44px;
     &__cards {
       gap: 44px;
     }
-    
+
     &__wrapper {
       flex: 1 1 calc(33.333% - 44px);
       height: 333px;
       padding: 33px;
-  
+
       &_grow1 {
         height: 444px;
-  
+
         img {
           width: 222px !important;
         }
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       &_grow2 {
         flex: 1 1 calc(50% - 44px);
         height: 444px;
-  
+
         img {
           width: 222px !important;
         }
       }
-    
+
       img {
         width: 111px;
         margin-bottom: 33px;
       }
-  
+
       &__title {
         margin-bottom: 22px;
-  
+
         h3 {
           font-size: 31px;
         }
       }
-  
+
       &__description {
         p {
           font-size: 18px;
@@ -386,31 +391,32 @@
 
 @include respond-above(fhd) {
   .group {
+    margin-bottom: 53px;
     &__cards {
       gap: 53px;
     }
-    
+
     &__wrapper {
       flex: 1 1 calc(33.333% - 53px);
       height: 399px;
       padding: 40px;
-  
+
       &_grow1 {
         height: 532px;
-  
+
         img {
           width: 266px !important;
         }
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       &_grow2 {
         flex: 1 1 calc(50% - 53.2px);
         height: 532px;
-  
+
         img {
           width: 266px !important;
         }
@@ -419,20 +425,20 @@
           width: 90%;
         }
       }
-    
+
       img {
         width: 133px;
         margin-bottom: 40px;
       }
-  
+
       &__title {
         margin-bottom: 27px;
-  
+
         h3 {
           font-size: 37px;
         }
       }
-  
+
       &__description {
         p {
           font-size: 21px;
@@ -444,49 +450,50 @@
 
 @include respond-above(fhd-plus) {
   .group {
+    margin-bottom: 62px;
     &__cards {
       gap: 56px;
     }
-    
+
     &__wrapper {
       flex: 1 1 calc(33.333% - 56px);
       height: 420px;
       padding: 42px;
-  
+
       &_grow1 {
         height: 560px;
-  
+
         img {
           width: 280px !important;
         }
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       &_grow2 {
         flex: 1 1 calc(50% - 56px);
         height: 560px;
-  
+
         img {
           width: 280px !important;
         }
       }
-    
+
       img {
         width: 140px;
         margin-bottom: 42px;
       }
-  
+
       &__title {
         margin-bottom: 28px;
-  
+
         h3 {
           font-size: 39px;
         }
       }
-  
+
       &__description {
         p {
           font-size: 22px;
@@ -498,32 +505,33 @@
 
 @include respond-above(qhd) {
   .group {
+    margin-bottom: 71px;
     &__cards {
       gap: 62px;
     }
-    
+
     &__wrapper {
       flex: 1 1 calc(33.333% - 62px);
       height: 465px;
       border-radius: 20px;
       padding: 46.5px;
-  
+
       &_grow1 {
         height: 620px;
-  
+
         img {
           width: 310px !important;
         }
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       &_grow2 {
         flex: 1 1 calc(50% - 62px);
         height: 620px;
-  
+
         img {
           width: 310px !important;
         }
@@ -532,24 +540,24 @@
           width: 70%;
         }
       }
-    
+
       &:hover {
         transform: translateY(-10px);
       }
-    
+
       img {
         width: 155px;
         margin-bottom: 46.5px;
       }
-  
+
       &__title {
         margin-bottom: 31px;
-  
+
         h3 {
           font-size: 43px;
         }
       }
-  
+
       &__description {
         p {
           width: 70%;
@@ -562,32 +570,33 @@
 
 @include respond-above(uhd) {
   .group {
+    margin-bottom: 94px;
     &__cards {
       gap: 94px;
     }
-    
+
     &__wrapper {
       flex: 1 1 calc(33.333% - 94px);
       height: 705px;
       border-radius: 30px;
       padding: 71px;
-  
+
       &_grow1 {
         height: 940px;
-  
+
         img {
           width: 470px !important;
         }
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       &_grow2 {
         flex: 1 1 calc(50% - 94px);
         height: 940px;
-  
+
         img {
           width: 470px !important;
         }
@@ -596,24 +605,24 @@
           width: 100%;
         }
       }
-    
+
       &:hover {
         transform: translateY(-15px);
       }
-    
+
       img {
         width: 235px;
         margin-bottom: 71px;
       }
-  
+
       &__title {
         margin-bottom: 47px;
-  
+
         h3 {
           font-size: 66px;
         }
       }
-  
+
       &__description {
         p {
           width: 90%;

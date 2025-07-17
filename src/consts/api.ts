@@ -12,6 +12,3 @@ $apiPrivate.interceptors.request.use((config) => {
     }
     return config;
 });
-
-
-//   

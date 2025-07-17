@@ -4,6 +4,7 @@ import styles from "./styles.module.scss";
 import Table from "@components/Table";
 import UploadIcon from "@icons/upload-file.svg";
 import EditPen from "@icons/edit-pen.svg";
+import Close from "@icons/close.svg";
 import classNames from "classnames";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import {
@@ -356,7 +357,7 @@ export default function ProfileHomeWork() {
               onClick={handleDismissError}
               className={styles.dismissButton}
             >
-              ×
+              <Close />
             </button>
           </div>
         )}

@@ -2,6 +2,7 @@
 @import "../../styles/mixins/";
 
 .comingCourses {
+  margin-bottom: 24px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -33,7 +34,7 @@
     justify-content: space-between;
     box-shadow: 0 0 30px rgba(219, 219, 219, 1);
     border-radius: 10px;
-    transition: transform .3s ease-in-out;
+    transition: transform 0.3s ease-in-out;
     padding: 40px;
 
     &:hover {
@@ -121,7 +122,8 @@
       margin-right: 10px;
     }
 
-    span, p {
+    span,
+    p {
       font-size: 14px;
       line-height: 100%;
     }
@@ -161,7 +163,7 @@
       justify-content: center;
       background: $primary-button;
       border-radius: 10px;
-      transition: all .3s ease-in-out;
+      transition: all 0.3s ease-in-out;
       cursor: pointer;
       padding: 14px 30px;
 
@@ -190,7 +192,7 @@
       font-size: 14px;
       line-height: 100%;
       color: $black;
-      transition: all .3s ease-in-out;
+      transition: all 0.3s ease-in-out;
 
       &:hover {
         color: $placeholder;
@@ -204,7 +206,7 @@
         content: ">";
         margin-left: 5px;
         display: inline-block;
-        transition: transform .3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
       }
     }
   }
@@ -212,12 +214,13 @@
 
 @include respond-above(md) {
   .comingCourses {
+    margin-bottom: 30px;
     width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-  
+
     &__container {
       width: 100%;
       height: 100%;
@@ -226,7 +229,7 @@
       align-items: center;
       justify-content: center;
     }
-  
+
     &__cards {
       display: flex;
       flex-wrap: wrap;
@@ -234,7 +237,7 @@
       justify-content: flex-start;
       gap: 27px;
     }
-  
+
     &__wrapper {
       flex: 1 1 100%;
       display: flex;
@@ -243,24 +246,24 @@
       justify-content: space-between;
       box-shadow: 0 0 30px rgba(219, 219, 219, 1);
       border-radius: 10px;
-      transition: transform .3s ease-in-out;
+      transition: transform 0.3s ease-in-out;
       padding: 27px;
-  
+
       &:hover {
         transform: translateY(-5px);
       }
-  
+
       &_big {
         flex: 1 1 calc(70% - 27px);
         max-width: 70%;
       }
-  
+
       &_small {
         flex: 1 1 calc(30% - 27px);
         max-width: 30%;
       }
     }
-  
+
     &__title {
       width: 100%;
       height: auto;
@@ -268,7 +271,7 @@
       align-items: flex-start;
       justify-content: flex-start;
       margin-bottom: 14px;
-  
+
       h3 {
         font-weight: bold;
         font-size: 16px;
@@ -276,7 +279,7 @@
         color: $black;
       }
     }
-  
+
     &__description {
       width: auto;
       height: auto;
@@ -284,22 +287,22 @@
       align-items: flex-start;
       justify-content: flex-start;
       margin-bottom: 14px;
-  
+
       &_isDetails {
         margin-bottom: 27px;
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       p {
         font-size: 14px;
         line-height: 140%;
         color: $placeholder;
       }
     }
-  
+
     &__details {
       width: 100%;
       height: 100%;
@@ -308,7 +311,7 @@
       align-items: flex-start;
       justify-content: flex-start;
     }
-  
+
     &__infoBlock {
       width: 100%;
       height: auto;
@@ -317,26 +320,27 @@
       justify-content: space-between;
       margin-bottom: 27px;
     }
-  
+
     &__detail {
       width: auto;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: flex-start;
-  
+
       svg {
         width: 14px;
         height: 14px;
         margin-right: 7px;
       }
-  
-      span, p {
+
+      span,
+      p {
         font-size: 10px;
         line-height: 100%;
       }
     }
-  
+
     &__info {
       width: auto;
       height: 100%;
@@ -344,25 +348,25 @@
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
-  
+
       span {
         color: $placeholder;
         margin-bottom: 2px;
       }
-  
+
       p {
         font-weight: bold;
         color: $black;
       }
     }
-  
+
     &__active {
       width: 100%;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-  
+
       button {
         width: auto;
         height: auto;
@@ -371,14 +375,14 @@
         justify-content: center;
         background: $primary-button;
         border-radius: 10px;
-        transition: all .3s ease-in-out;
+        transition: all 0.3s ease-in-out;
         cursor: pointer;
         padding: 10px 20px;
-  
+
         &:hover {
           background: $primary;
         }
-  
+
         span {
           font-weight: bold;
           font-size: 11px;
@@ -387,34 +391,34 @@
         }
       }
     }
-  
+
     &__more {
       width: auto;
       height: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-  
+
       span {
         font-weight: bold;
         font-size: 10px;
         line-height: 100%;
         color: $black;
-        transition: all .3s ease-in-out;
-  
+        transition: all 0.3s ease-in-out;
+
         &:hover {
           color: $placeholder;
-  
+
           &::after {
             transform: translateX(5px);
           }
         }
-  
+
         &::after {
           content: ">";
           margin-left: 5px;
           display: inline-block;
-          transition: transform .3s ease-in-out;
+          transition: transform 0.3s ease-in-out;
         }
       }
     }
@@ -423,86 +427,88 @@
 
 @include respond-above(lg) {
   .comingCourses {
+    margin-bottom: 35px;
     &__cards {
       gap: 33px;
     }
-  
+
     &__wrapper {
       border-radius: 8px;
       padding: 33px;
-  
+
       &_big {
         flex: 1 1 calc(70% - 33px);
         max-width: 70%;
       }
-  
+
       &_small {
         flex: 1 1 calc(30% - 33px);
         max-width: 30%;
       }
     }
-  
+
     &__title {
       margin-bottom: 17px;
-  
+
       h3 {
         font-size: 20px;
       }
     }
-  
+
     &__description {
       margin-bottom: 17px;
-  
+
       &_isDetails {
         margin-bottom: 33px;
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       p {
         font-size: 17px;
       }
     }
-  
+
     &__infoBlock {
       margin-bottom: 33px;
     }
-  
+
     &__detail {
       svg {
         width: 17px;
         height: 17px;
         margin-right: 8px;
       }
-  
-      span, p {
+
+      span,
+      p {
         font-size: 12px;
       }
     }
-  
+
     &__info {
       span {
         margin-bottom: 3px;
       }
     }
-  
+
     &__active {
       button {
         border-radius: 8px;
         padding: 12px 25px;
-  
+
         span {
           font-size: 13px;
         }
       }
     }
-  
+
     &__more {
       span {
         font-size: 12px;
-  
+
         &::after {
           margin-left: 4px;
         }
@@ -513,80 +519,82 @@
 
 @include respond-above(mac) {
   .comingCourses {
+    margin-bottom: 40px;
     &__cards {
       gap: 40px;
     }
-  
+
     &__wrapper {
       border-radius: 10px;
       padding: 40px;
-  
+
       &_big {
         flex: 1 1 calc(70% - 40px);
         max-width: 70%;
       }
-  
+
       &_small {
         flex: 1 1 calc(30% - 40px);
         max-width: 30%;
       }
     }
-  
+
     &__title {
       margin-bottom: 20px;
-  
+
       h3 {
         font-size: 24px;
       }
     }
-  
+
     &__description {
       margin-bottom: 20px;
-  
+
       &_isDetails {
         margin-bottom: 40px;
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       p {
         font-size: 20px;
       }
     }
-  
+
     &__infoBlock {
       margin-bottom: 40px;
     }
-  
+
     &__detail {
       svg {
         width: 20px;
         height: 20px;
         margin-right: 10px;
       }
-  
-      span, p {
+
+      span,
+      p {
         font-size: 14px;
       }
     }
-  
+
     &__active {
       button {
         border-radius: 10px;
         padding: 14px 30px;
-  
+
         span {
           font-size: 16px;
         }
       }
     }
-  
+
     &__more {
       span {
         font-size: 14px;
-  
+
         &::after {
           margin-left: 5px;
         }
@@ -597,80 +605,82 @@
 
 @include respond-above(xlg) {
   .comingCourses {
+    margin-bottom: 44px;
     &__cards {
       gap: 44px;
     }
-  
+
     &__wrapper {
       border-radius: 11px;
       padding: 44px;
-  
+
       &_big {
         flex: 1 1 calc(70% - 44px);
         max-width: 70%;
       }
-  
+
       &_small {
         flex: 1 1 calc(30% - 44px);
         max-width: 30%;
       }
     }
-  
+
     &__title {
       margin-bottom: 22px;
-  
+
       h3 {
         font-size: 27px;
       }
     }
-  
+
     &__description {
       margin-bottom: 22px;
-  
+
       &_isDetails {
         margin-bottom: 44px;
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       p {
         font-size: 22px;
       }
     }
-  
+
     &__infoBlock {
       margin-bottom: 44px;
     }
-  
+
     &__detail {
       svg {
         width: 22px;
         height: 22px;
         margin-right: 11px;
       }
-  
-      span, p {
+
+      span,
+      p {
         font-size: 16px;
       }
     }
-  
+
     &__active {
       button {
         border-radius: 11px;
         padding: 16px 33px;
-  
+
         span {
           font-size: 18px;
         }
       }
     }
-  
+
     &__more {
       span {
         font-size: 16px;
-  
+
         &::after {
           margin-left: 6px;
         }
@@ -681,86 +691,88 @@
 
 @include respond-above(fhd) {
   .comingCourses {
+    margin-bottom: 53px;
     &__cards {
       gap: 53px;
     }
-  
+
     &__wrapper {
       border-radius: 13px;
       padding: 53px;
-  
+
       &_big {
         flex: 1 1 calc(70% - 53px);
         max-width: 70%;
       }
-  
+
       &_small {
         flex: 1 1 calc(30% - 53px);
         max-width: 30%;
       }
     }
-  
+
     &__title {
       margin-bottom: 27px;
-  
+
       h3 {
         font-size: 32px;
       }
     }
-  
+
     &__description {
       margin-bottom: 27px;
-  
+
       &_isDetails {
         margin-bottom: 53px;
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       p {
         font-size: 27px;
       }
     }
-  
+
     &__infoBlock {
       margin-bottom: 53px;
     }
-  
+
     &__detail {
       svg {
         width: 27px;
         height: 27px;
         margin-right: 13px;
       }
-  
-      span, p {
+
+      span,
+      p {
         font-size: 19px;
       }
     }
-  
+
     &__info {
       span {
         margin-bottom: 4px;
       }
     }
-  
+
     &__active {
       button {
         border-radius: 13px;
         padding: 19px 40px;
-  
+
         span {
           font-size: 21px;
         }
       }
     }
-  
+
     &__more {
       span {
         font-size: 19px;
-  
+
         &::after {
           margin-left: 7px;
         }
@@ -771,90 +783,92 @@
 
 @include respond-above(fhd-plus) {
   .comingCourses {
+    margin-bottom: 62px;
     &__cards {
       gap: 56px;
     }
-  
+
     &__wrapper {
       border-radius: 14px;
       padding: 56px;
-  
+
       &:hover {
         transform: translateY(-10px);
       }
-  
+
       &_big {
         flex: 1 1 calc(70% - 56px);
         max-width: 70%;
       }
-  
+
       &_small {
         flex: 1 1 calc(30% - 56px);
         max-width: 30%;
       }
     }
-  
+
     &__title {
       margin-bottom: 28px;
-  
+
       h3 {
         font-size: 34px;
       }
     }
-  
+
     &__description {
       margin-bottom: 28px;
-  
+
       &_isDetails {
         margin-bottom: 56px;
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       p {
         font-size: 28px;
       }
     }
-  
+
     &__infoBlock {
       margin-bottom: 56px;
     }
-  
+
     &__detail {
       svg {
         width: 28px;
         height: 28px;
         margin-right: 14px;
       }
-  
-      span, p {
+
+      span,
+      p {
         font-size: 20px;
       }
     }
-  
+
     &__active {
       button {
         border-radius: 20px;
         padding: 20px 42px;
-  
+
         span {
           font-size: 22px;
         }
       }
     }
-  
+
     &__more {
       span {
         font-size: 20px;
-  
+
         &:hover {
           &::after {
             transform: translateX(10px);
           }
         }
-  
+
         &::after {
           margin-left: 7px;
         }
@@ -865,85 +879,87 @@
 
 @include respond-above(qhd) {
   .comingCourses {
+    margin-bottom: 71px;
     &__cards {
       gap: 62px;
     }
-  
+
     &__wrapper {
       border-radius: 16px;
       padding: 62px;
-  
+
       &_big {
         flex: 1 1 calc(70% - 62px);
         max-width: 70%;
       }
-  
+
       &_small {
         flex: 1 1 calc(30% - 62px);
         max-width: 30%;
       }
     }
-  
+
     &__title {
       margin-bottom: 31px;
-  
+
       h3 {
         font-size: 37px;
       }
     }
-  
+
     &__description {
       margin-bottom: 31px;
-  
+
       &_isDetails {
         margin-bottom: 62px;
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       p {
         font-size: 31px;
       }
     }
-  
+
     &__infoBlock {
       margin-bottom: 62px;
     }
-  
+
     &__detail {
       svg {
         width: 31px;
         height: 31px;
         margin-right: 16px;
       }
-  
-      span, p {
+
+      span,
+      p {
         font-size: 22px;
       }
     }
-  
+
     &__info {
       span {
         margin-bottom: 5px;
       }
     }
-  
+
     &__active {
       button {
         padding: 22px 47px;
-  
+
         span {
           font-size: 25px;
         }
       }
     }
-  
+
     &__more {
       span {
         font-size: 22px;
-  
+
         &::after {
           margin-left: 8px;
         }
@@ -954,96 +970,98 @@
 
 @include respond-above(uhd) {
   .comingCourses {
+    margin-bottom: 94px;
     &__cards {
       gap: 94px;
     }
-  
+
     &__wrapper {
       border-radius: 24px;
       padding: 94px;
-  
+
       &:hover {
         transform: translateY(-15px);
       }
-  
+
       &_big {
         flex: 1 1 calc(70% - 94px);
         max-width: 70%;
       }
-  
+
       &_small {
         flex: 1 1 calc(30% - 94px);
         max-width: 30%;
       }
     }
-  
+
     &__title {
       margin-bottom: 47px;
-  
+
       h3 {
         font-size: 56px;
       }
     }
-  
+
     &__description {
       margin-bottom: 47px;
-  
+
       &_isDetails {
         margin-bottom: 94px;
-  
+
         p {
           width: 50%;
         }
       }
-  
+
       p {
         font-size: 47px;
       }
     }
-  
+
     &__infoBlock {
       margin-bottom: 94px;
     }
-  
+
     &__detail {
       svg {
         width: 47px;
         height: 47px;
         margin-right: 24px;
       }
-  
-      span, p {
+
+      span,
+      p {
         font-size: 33px;
       }
     }
-  
+
     &__info {
       span {
         margin-bottom: 7px;
       }
     }
-  
+
     &__active {
       button {
         border-radius: 30px;
         padding: 33px 71px;
-  
+
         span {
           font-size: 38px;
         }
       }
     }
-  
+
     &__more {
       span {
         font-size: 33px;
-  
+
         &:hover {
           &::after {
             transform: translateX(15px);
           }
         }
-  
+
         &::after {
           margin-left: 12px;
         }
