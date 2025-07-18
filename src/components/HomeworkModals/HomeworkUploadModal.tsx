@@ -147,7 +147,6 @@ const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-
   const onSubmit = async (formData: any) => {
     if (!data?.homework?.homeworkId) return;
 

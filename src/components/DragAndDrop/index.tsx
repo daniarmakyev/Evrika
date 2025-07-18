@@ -4,9 +4,8 @@ import styles from "./styles.module.scss";
 interface DragDropUploadProps {
   onFileSelect: (files: FileList | null) => void;
   accept?: string;
-  key?: string | number;
   multiple?: boolean;
-  maxSize?: number; // в байтах
+  maxSize?: number; 
   disabled?: boolean;
   className?: string;
   children?: React.ReactNode;
@@ -20,7 +19,6 @@ interface DragDropUploadProps {
 const DragDropUpload: React.FC<DragDropUploadProps> = ({
   onFileSelect,
   accept = "*",
-  key,
   multiple = false,
   maxSize,
   disabled = false,
