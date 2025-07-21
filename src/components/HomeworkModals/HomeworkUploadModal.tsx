@@ -531,18 +531,7 @@ const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
                 type="button"
                 onClick={handleDeleteSubmission}
                 disabled={isLoading || showDeleteSubmissionConfirm}
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#f44336",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor:
-                    isLoading || showDeleteSubmissionConfirm
-                      ? "not-allowed"
-                      : "pointer",
-                  opacity: isLoading || showDeleteSubmissionConfirm ? 0.6 : 1,
-                }}
+                className={styles.delete__button}
               >
                 Удалить задание
               </button>
