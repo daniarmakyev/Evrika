@@ -41,7 +41,7 @@ const SignupSection: React.FC = ({}) => {
       <div className={styles.signup__container}>
         <div className={styles.signup__info}>
           <div className={styles.signup__title}>
-            <h3>Ответим на все вопросы - начнем вместе!</h3>
+            <h3>Ответим на все вопросы - начнем вмёсте!</h3>
           </div>
           <div className={styles.signup__description}>
             <p>Если Вы хотите узнать больше о школе “Эврика”, или не знаете какую программу выбрать - оставьте заявку и наши менеджеры свяжутся с Вами в течениe рабочего дня с 10:00 до 18:00.</p>
