@@ -5,7 +5,7 @@ import styles from "./styles.module.scss";
 const cards = [
   {
     title: "Больше возможностей",
-    description: "Если вы никогда не учили английский или забыли всё со школы — этот курс поможет начать с самого простого. Пошаговое обучение, понятные объяснения и поддержка преподавателей.",
+    description: "Английский открывает двери к обучению за границей, карьерному росту и доступу к лучшим мировым источникам знаний. Это инвестиция в ваше будущее, которая окупается многократно.",
   },
   {
     title: "Путешествия без преград",
@@ -21,7 +21,7 @@ const WhatKnowSection = ({}) => {
   return (
     <section className={classNames(styles.know, "container")}>
       <div className={styles.know__container}>
-        <SectionInfo title="Что даёт знание английского языка" />
+        <SectionInfo title="Что даёт знание английского языка:" />
         <div className={styles.know__cards}>
           {cards.map((card, index) => (
             <div key={index} className={styles.know__wrapper}>
