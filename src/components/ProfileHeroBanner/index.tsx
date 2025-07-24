@@ -18,7 +18,7 @@ const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
       <div className={classNames(styles.quote__container, "container")}>
         <div className={styles.quote__title}>
           <h1>
-            {role === "teacher" ? "Здравствуйте, учитель," : "Привет,"}
+            {role === "teacher" || role === "admin" ? "Здравствуйте, учитель," : "Привет,"}
             <br />
             {name}
           </h1>
