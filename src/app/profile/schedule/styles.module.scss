@@ -205,6 +205,96 @@
   }
 }
 
+.attendance {
+  &__button {
+    padding: 8px 16px;
+    border: 2px solid #dc3545;
+    background-color: transparent;
+    color: $White;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    min-width: 110px;
+    background-color: #dc3545;
+    color: white;
+
+    svg {
+      width: 18px;
+      color: white;
+      height: 17px;
+      font-weight: 800;
+    }
+
+    &_active {
+      background-color: #28a745;
+      color: white;
+      border-color: #28a745;
+
+      &:hover {
+        background-color: #218838;
+        border-color: #218838;
+      }
+    }
+  }
+}
+
+.groups {
+  &__header {
+    background-color: $primary;
+    color: $White;
+    display: flex;
+    justify-content: space-between;
+    padding: 14px;
+    border-radius: 8px 8px 0 0;
+
+    h4 {
+      font-weight: 600;
+      font-size: 16px;
+      margin: 0;
+    }
+  }
+}
+
+.students {
+  &__list {
+    max-height: 400px;
+    overflow-y: auto;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: #666;
+    font-style: italic;
+  }
+}
+
+.student {
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+    background-color: white;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+  }
+}
+
 @keyframes skeleton-loading {
   0% {
     background-position: -200% 0;
