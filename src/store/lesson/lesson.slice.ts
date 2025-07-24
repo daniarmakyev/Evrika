@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LessonListItem, HomeworkSubmission } from "src/consts/types";
+import { LessonListItem, HomeworkSubmission, HomeworkTask } from "src/consts/types";
 import {
   getLessons,
   getHomeworkSubmissions,
   submitHomeworkSubmission,
   updateHomeworkSubmission,
   deleteHomeworkSubmission,
+  getHomeworkWithSubmissions,
 } from "./lesson.action";
 
 interface LessonState {
@@ -15,6 +16,8 @@ interface LessonState {
   homework: HomeworkSubmission[] | null;
   submissionLoading: boolean;
   submissionError: string | null;
+  selectedHomework: HomeworkTask | null;
+  selectedSubmissions: HomeworkSubmission[] | null;
 }
 
 const INIT_LESSON_STATE: LessonState = {
@@ -24,6 +27,8 @@ const INIT_LESSON_STATE: LessonState = {
   homework: null,
   submissionLoading: false,
   submissionError: null,
+  selectedHomework: null,
+  selectedSubmissions: null,
 };
 
 export const lessonSlice = createSlice({
@@ -36,7 +41,6 @@ export const lessonSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
-    // Добавляем новый reducer для ручного удаления
     removeHomeworkSubmission: (state, action) => {
       if (state.homework) {
         state.homework = state.homework.filter(
@@ -60,7 +64,7 @@ export const lessonSlice = createSlice({
         state.loading = false;
         state.error = payload as string;
       })
-      
+
       .addCase(getHomeworkSubmissions.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -74,7 +78,7 @@ export const lessonSlice = createSlice({
         state.loading = false;
         state.error = payload as string;
       })
-      
+
       .addCase(submitHomeworkSubmission.pending, (state) => {
         state.submissionLoading = true;
         state.submissionError = null;
@@ -92,7 +96,7 @@ export const lessonSlice = createSlice({
         state.submissionLoading = false;
         state.submissionError = payload as string;
       })
-      
+
       .addCase(updateHomeworkSubmission.pending, (state) => {
         state.submissionLoading = true;
         state.submissionError = null;
@@ -110,7 +114,7 @@ export const lessonSlice = createSlice({
         state.submissionLoading = false;
         state.submissionError = payload as string;
       })
-      
+
       .addCase(deleteHomeworkSubmission.pending, (state) => {
         state.submissionLoading = true;
         state.submissionError = null;
@@ -127,6 +131,22 @@ export const lessonSlice = createSlice({
       .addCase(deleteHomeworkSubmission.rejected, (state, { payload }) => {
         state.submissionLoading = false;
         state.submissionError = payload as string;
+      }).addCase(getHomeworkWithSubmissions.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.selectedHomework = null;
+        state.selectedSubmissions = null;
+      })
+      .addCase(getHomeworkWithSubmissions.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.selectedHomework = payload.homework;
+        state.selectedSubmissions = payload.submissions;
+      })
+      .addCase(getHomeworkWithSubmissions.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload as string;
+        state.selectedHomework = null;
+        state.selectedSubmissions = null;
       });
   },
 });

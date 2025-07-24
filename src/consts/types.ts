@@ -56,6 +56,7 @@ export interface UserType {
 
 export interface HomeworkTask {
   id: number;
+  created_at: string;
   deadline: string;
   description: string;
   file_path: string | null;
@@ -91,14 +92,20 @@ export interface HomeworkSubmission {
 export interface GroupType {
   id: number;
   name: string;
-  created_at: string;
+  created_at?: string;
   start_date: string;
   end_date: string;
   is_active: boolean;
-  is_archived: boolean;
-  course_id: number;
-  teacher: Teacher;
-  teacher_id: number;
+  is_archived?: boolean;
+  course_id?: number;
+  teacher?: Teacher;
+  teacher_id?: number;
+  student_count: number | string;
+  students?: Array<{
+    id: number;
+    first_name: string;
+    last_name: string;
+  }>;
 }
 
 export interface CustomApiError {

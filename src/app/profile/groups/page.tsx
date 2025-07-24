@@ -4,59 +4,27 @@ import styles from "./styles.module.scss";
 import Table from "@components/Table";
 import ProfileModal from "@components/ProfileModal";
 import { useModal } from "@context/ModalContext";
-
-export interface GroupCardData {
-  group: string;
-  time: string;
-  count: number;
-}
-
-interface Student {
-  id: number;
-  name: string;
-}
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { useEffect } from "react";
+import { getGroup } from "src/store/user/user.action";
+import { GroupType } from "src/consts/types";
+import Link from "next/link";
 
 export default function Groups() {
-  const groupModal = useModal<GroupCardData>("groups");
+  const groupModal = useModal<GroupType>("groups");
+  const { groups } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
 
-  const groupsData = [
-    {
-      group: "Испанский-0921-01-B1",
-      time: "10:00 - 12:00",
-      count: 18,
-    },
-    {
-      group: "Английский-0921-01-B1",
-      time: "13:00 - 15:00",
-      count: 22,
-    },
-    {
-      group: "Русский-0921-01-B1",
-      time: "15:30 - 17:30",
-      count: 15,
-    },
-  ];
+  useEffect(() => {
+    dispatch(getGroup("teacher"));
+  }, [dispatch]);
 
-  const studentsData: { [key: string]: Student[] } = {
-    "Испанский-0921-01-B1": [
-      { id: 1, name: "Иванов Иван Иванович" },
-      { id: 2, name: "Петров Петр Петрович" },
-      { id: 3, name: "Сидоров Сидор Сидорович" },
-      { id: 4, name: "Кузнецова Анна Владимировна" },
-      { id: 5, name: "Смирнов Александр Николаевич" },
-    ],
-    "Английский-0921-01-B1": [
-      { id: 6, name: "Козлов Михаил Сергеевич" },
-      { id: 7, name: "Новикова Елена Андреевна" },
-      { id: 8, name: "Волков Дмитрий Олегович" },
-      { id: 9, name: "Морозова Ольга Ивановна" },
-    ],
-    "Русский-0921-01-B1": [
-      { id: 10, name: "Лебедев Артем Викторович" },
-      { id: 11, name: "Соколова Мария Алексеевна" },
-      { id: 12, name: "Павлов Роман Дмитриевич" },
-    ],
-  };
+  const groupsTableData = (groups || []).map((g) => ({
+    group: g.name,
+    time: g.start_date && g.end_date ? `${g.start_date} — ${g.end_date}` : "",
+    count: Array.isArray(g.students) ? g.students.length : 0,
+    ...g,
+  }));
 
   const groupsColums = [
     {
@@ -66,7 +34,7 @@ export default function Groups() {
     },
     {
       key: "time",
-      title: "Время",
+      title: "Период",
       width: "230px",
     },
     {
@@ -79,18 +47,17 @@ export default function Groups() {
       title: "Просмотр",
       isButton: true,
       width: "140px",
-      render: (_value: unknown, row: GroupCardData) => {
-        return (
-          <button
-            className={styles.table__button}
-            onClick={() => {
-              groupModal.openModal(row);
-            }}
-          >
-            Открыть
-          </button>
-        );
-      },
+      render: (
+        _value: unknown,
+        row: GroupType & { group: string; time: string; count: number }
+      ) => (
+        <button
+          className={styles.table__button}
+          onClick={() => groupModal.openModal(row)}
+        >
+          Открыть
+        </button>
+      ),
     },
   ];
 
@@ -98,22 +65,28 @@ export default function Groups() {
     console.log(`Открыть профиль студента: ${studentName} (ID: ${studentId})`);
   };
 
-  const currentStudents = groupModal.data?.group
-    ? studentsData[groupModal.data.group] || []
-    : [];
+  const currentStudents =
+    Array.isArray(groupModal.data?.students) &&
+    groupModal.data.students.length > 0
+      ? groupModal.data.students
+      : [];
 
   return (
     <div className={styles.groups}>
       <div className={classNames(styles.groups__container, "container")}>
         <div className={styles.groups__content}>
           <h2 className={styles.groups__title}>Группы</h2>
-          <Table columns={groupsColums} data={groupsData} emptyMessage="" />
+          <Table
+            columns={groupsColums}
+            data={groupsTableData}
+            emptyMessage="Нет групп"
+          />
         </div>
       </div>
       <ProfileModal
         isOpen={groupModal.isOpen}
         onClose={groupModal.closeModal}
-        title={groupModal.data ? `Группа: ${groupModal.data.group}` : "Группа"}
+        title={groupModal.data ? `Группа: ${groupModal.data.name}` : "Группа"}
         size="lg"
       >
         <div className={styles.students}>
@@ -125,20 +98,28 @@ export default function Groups() {
             {currentStudents.length > 0 ? (
               currentStudents.map((student) => (
                 <div key={student.id} className={styles.student__item}>
-                  <span className={styles.student__name}>{student.name}</span>
-                  <button
+                  <span className={styles.student__name}>
+                    {student.last_name} {student.first_name}
+                  </span>
+                  <Link
+                  href={`/profile/homework/${student.id}`}
                     className={styles.student__button}
-                    onClick={() => handleOpenProfile(student.id, student.name)}
+                    onClick={() =>
+                      handleOpenProfile(
+                        student.id,
+                        `${student.last_name} ${student.first_name}`
+                      )
+                    }
                   >
                     Открыть
-                  </button>
+                  </Link>
                 </div>
               ))
             ) : (
               <div className={styles.students__empty}>
                 Студенты не найдены
                 <br />
-                <small>Группа: {groupModal.data?.group || "не выбрана"}</small>
+                <small>Группа: {groupModal.data?.name || "не выбрана"}</small>
               </div>
             )}
           </div>

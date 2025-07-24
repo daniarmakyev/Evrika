@@ -60,25 +60,64 @@ const teacherData = [
   {
     tab: "Домашнее задание",
     icon: <HomeIcon />,
-    link: "/homework",
+    link: "/homework/teacher",
   },
 ];
 
-export default function StudentTabBar({ role }: { role: string }) {
+export default function StudentTabBar({
+  role,
+  isProfileStudent,
+  studentId,
+}: {
+  role: string | null;
+  isProfileStudent?: boolean;
+  studentId?: string | number | null;
+}) {
+  if (!role) return null; 
+
+  const studentProfileWithId = studentId
+    ? [
+        {
+          tab: "Домашнее задание",
+          icon: <HomeIcon />,
+          link: `/homework/${studentId}`,
+        },
+        {
+          tab: "Посещаемость",
+          icon: <UserIcon />,
+          link: `/attendance/${studentId}`,
+        },
+      ]
+    : [];
+
   return (
     <div className={styles.tabBarWrapper}>
       <div className={classNames(styles.tabBarContainer, "container")}>
-        <TabBar
-          items={
-            role === "teacher"
-              ? teacherData
-              : studentData.map((tab) => ({
-                  ...tab,
-                  isUnderline: true,
-                }))
-          }
-        />
+        {isProfileStudent ? (
+          <TabBar
+            items={
+              role === "teacher" || role === "admin"
+                ? studentProfileWithId
+                : studentData.map((tab) => ({
+                    ...tab,
+                    isUnderline: true,
+                  }))
+            }
+          />
+        ) : (
+          <TabBar
+            items={
+              role === "teacher" || role === "admin"
+                ? teacherData
+                : studentData.map((tab) => ({
+                    ...tab,
+                    isUnderline: true,
+                  }))
+            }
+          />
+        )}
       </div>
     </div>
   );
 }
+

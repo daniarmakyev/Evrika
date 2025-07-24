@@ -13,7 +13,7 @@ interface DragDropUploadProps {
   showProgress?: boolean;
   progress?: number;
   isLoading?: boolean;
-  selectedFiles?: FileList | undefined;
+  selectedFiles?: FileList | undefined | null;
 }
 
 const DragDropUpload: React.FC<DragDropUploadProps> = ({

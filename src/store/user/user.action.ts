@@ -28,13 +28,20 @@ export const getUser = createAsyncThunk<
 
 export const getGroup = createAsyncThunk<
     GroupType[],
-    void,
+    string,
     { rejectValue: string }
 >(
     "user/getGroup",
-    async (_, { rejectWithValue }) => {
+    async (role, { rejectWithValue }) => {
         try {
-            const { data } = await $apiPrivate.get<GroupType[]>(`/group/?limit=10&offset=0`);
+            let data;
+            if (role === "admin" || role === "teacher") {
+                const response = await $apiPrivate.get<GroupType[]>(`/group-students/?limit=10&offset=0`);
+                data = response.data;
+            } else {
+                const response = await $apiPrivate.get<GroupType[]>(`/group-students/my`);
+                data = response.data;
+            }
             return data;
         } catch (err) {
             if (axios.isAxiosError<CustomApiError>(err)) {
