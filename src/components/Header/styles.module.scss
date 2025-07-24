@@ -542,3 +542,23 @@
     }
   }
 }
+
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  button {
+    background-color: $primary-button;
+    color: $White;
+    padding: 6px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      background-color: darken($primary-button, 10%);
+    }
+  }
+}

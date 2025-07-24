@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import classNames from "classnames";
 // import PopupHeader from "@components/Ui/Popup";
@@ -32,6 +32,14 @@ const menu = [
 ];
 
 const Header = ({}) => {
+  const [user, setUser] = React.useState<string | null>(null);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("evrika-access-token", user);
+    }
+  }, [user]);
+
   // const profileRef = React.useRef<HTMLDivElement>(null);
   // const [isOpen, setIsOpen] = React.useState(false);
 
@@ -61,9 +69,7 @@ const Header = ({}) => {
           <ul>
             {menu.map((item) => (
               <li key={item.id}>
-                <Link href={item.link}>
-                  {item.name}
-                </Link>
+                <Link href={item.link}>{item.name}</Link>
               </li>
             ))}
           </ul>
@@ -76,12 +82,33 @@ const Header = ({}) => {
           <Profile />
           <PopupHeader isOpen={isOpen} />
         </div> */}
-        <div className={styles.header__login}>
+        {/* <div className={styles.header__login}>
           <Link href="/auth/login">Войти</Link>
+        </div> */}
+
+        <div className={styles.buttons}>
+          <button
+            onClick={() =>
+              setUser(
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTUzNDQ1NzB9.gla_5czweUhBXBLL5OHArEf54d1ms9IZzAGUZS9VY6A"
+              )
+            }
+          >
+            Ученик
+          </button>
+          <button
+            onClick={() =>
+              setUser(
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTU4OTU2NzN9.D-ND4Ygj9uTz8pzoKQ9ctxI9UicyZMnHvLUA6rXBQlc"
+              )
+            }
+          >
+            Учитель
+          </button>
         </div>
       </div>
     </header>
-  )
+  );
 };
 
 export default Header;

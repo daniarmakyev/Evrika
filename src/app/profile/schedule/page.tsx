@@ -251,7 +251,15 @@ export default function ProfileSchedule() {
           </div>
         )}
       </ProfileModal>
+{/* 
+      <ProfileModal
+        isOpen={groupModal.isOpen}
+        onClose={groupModal.closeModal}
+        title={groupModal.data ? `Группа: ${groupModal.data.group}` : "Группа"}
+        size="lg"
+      >
 
+      </ProfileModal> */}
       <LessonCreateModal
         isOpen={createLessonModal.isOpen}
         onClose={createLessonModal.closeModal}

@@ -27,7 +27,6 @@
     font-weight: 800;
     line-height: 100%;
   }
-
   &__header {
     background-color: $primary;
     color: $White;
@@ -38,5 +37,47 @@
       font-weight: 600;
       font-size: 16px;
     }
+  }
+}
+
+.students {
+  &__list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+  }
+}
+
+.student {
+  &__item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid $white-ligth;
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  &__name {
+    flex: 1;
+    font-size: 14px;
+  }
+
+  &__button {
+    padding: 6px 12px;
+    color: $primary;
+    text-decoration: underline;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
   }
 }
