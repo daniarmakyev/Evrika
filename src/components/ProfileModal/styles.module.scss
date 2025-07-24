@@ -13,6 +13,8 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  overflow: auto;
+  padding-top: 90px;
 
   &.fade {
     animation: fadeIn 0.3s ease-out;
@@ -35,14 +37,16 @@
   background: $White;
   border-radius: 10px;
   box-shadow: 0 0 30px rgba(219, 219, 219, 1);
-  max-height: 90vh;
   overflow-y: auto;
   position: relative;
   overflow-y: auto;
   width: 100%;
   max-width: 100%;
   padding: 40px;
-  
+  max-height: 95vh;
+  margin-top: auto;
+  margin-bottom: auto;
+
   &.sm {
     max-width: 400px;
   }

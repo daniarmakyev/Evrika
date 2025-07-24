@@ -4,13 +4,11 @@ import TabBar from "@components/TabBar";
 import UserIcon from "public/assets/icons/user-outline.svg";
 import CalendarIcon from "public/assets/icons/calendar-outline.svg";
 import HomeIcon from "public/assets/icons/home-outline.svg";
-// import LessonIcon from "public/assets/icons/lesson-outline.svg";
-// import DollarIcon from "public/assets/icons/dollar-outline.svg";
-// import CheksIcon from "public/assets/icons/cheks-outline.svg";
+import GroupsIcon from "public/assets/icons/groups-outline.svg";
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 
-const tabData = [
+const studentData = [
   {
     tab: "Личная информация",
     icon: <UserIcon />,
@@ -43,15 +41,42 @@ const tabData = [
   // },
 ];
 
-export default function StudentTabBar() {
+const teacherData = [
+  {
+    tab: "Личная информация",
+    icon: <UserIcon />,
+    link: "/personal-info",
+  },
+  {
+    tab: "Расписание",
+    icon: <CalendarIcon />,
+    link: "/schedule",
+  },
+  {
+    tab: "Группы",
+    icon: <GroupsIcon />,
+    link: "/groups",
+  },
+  {
+    tab: "Домашнее задание",
+    icon: <HomeIcon />,
+    link: "/homework",
+  },
+];
+
+export default function StudentTabBar({ role }: { role: string }) {
   return (
     <div className={styles.tabBarWrapper}>
       <div className={classNames(styles.tabBarContainer, "container")}>
         <TabBar
-          items={tabData.map((tab) => ({
-            ...tab,
-            isUnderline: true,
-          }))}
+          items={
+            role === "teacher"
+              ? teacherData
+              : studentData.map((tab) => ({
+                  ...tab,
+                  isUnderline: true,
+                }))
+          }
         />
       </div>
     </div>

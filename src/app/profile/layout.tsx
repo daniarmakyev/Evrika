@@ -6,7 +6,7 @@ import StudentTabBar from "@components/StudentTabBar";
 import { ModalProvider } from "@context/ModalContext";
 import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { getGroup, getStudent } from "src/store/users/student/student.action";
+import { getGroup, getUser } from "src/store/user/user.action";
 
 export default function StudentProfileLayout({
   children,
@@ -14,11 +14,11 @@ export default function StudentProfileLayout({
   children: React.ReactNode;
 }) {
   const dispatch = useAppDispatch();
-  const { groups, student } = useAppSelector((state) => state.student);
+  const { groups, user } = useAppSelector((state) => state.user);
 
   useEffect(() => {
     dispatch(getGroup());
-    dispatch(getStudent());
+    dispatch(getUser());
   }, [dispatch]);
 
   useEffect(() => {
@@ -28,12 +28,16 @@ export default function StudentProfileLayout({
         JSON.stringify(groups.map((item) => item.id))
       );
     }
-  }, [groups]);
+    if (user?.role) {
+      localStorage.setItem("role", user.role);
+    }
+  }, [groups, user]);
 
   useEffect(() => {
     localStorage.setItem(
       "evrika-access-token",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTUzNDQ1NzB9.gla_5czweUhBXBLL5OHArEf54d1ms9IZzAGUZS9VY6A"
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTUzNDQ1NzB9.gla_5czweUhBXBLL5OHArEf54d1ms9IZzAGUZS9VY6A"
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTU4OTU2NzN9.D-ND4Ygj9uTz8pzoKQ9ctxI9UicyZMnHvLUA6rXBQlc"
     );
   }, []);
 
@@ -41,14 +45,19 @@ export default function StudentProfileLayout({
     <ModalProvider>
       <div>
         <Header />
-        {student ? (
+        {user ? (
           <ProfileHeroBanner
-            name={student.first_name + " " + student.last_name}
+            name={user.first_name + " " + user.last_name}
+            role={user.role}
           />
         ) : (
-          <ProfileHeroBanner name="Ошибка Сервера" />
+          <ProfileHeroBanner name="" />
         )}
-        <StudentTabBar />
+        {user?.role === "admin" || user?.role === "teacher" ? (
+          <StudentTabBar role={"teacher"} />
+        ) : (
+          <StudentTabBar role={"student"} />
+        )}
         {children}
         <Footer />
       </div>

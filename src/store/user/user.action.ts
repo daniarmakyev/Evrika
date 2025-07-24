@@ -1,21 +1,21 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { $apiPrivate } from "src/consts/api";
-import { StudentGroupType, StudentType } from "src/consts/types";
+import { GroupType, UserType } from "src/consts/types";
 
 interface CustomApiError {
     detail?: string;
 }
 
-export const getStudent = createAsyncThunk<
-    StudentType,
+export const getUser = createAsyncThunk<
+    UserType,
     void,
     { rejectValue: string }
 >(
-    "student/getStudent",
+    "user/getUser",
     async (_, { rejectWithValue }) => {
         try {
-            const { data } = await $apiPrivate.get<StudentType>(`/user/profile`);
+            const { data } = await $apiPrivate.get<UserType>(`/user/profile`);
             return data;
         } catch (err) {
             if (axios.isAxiosError<CustomApiError>(err)) {
@@ -27,14 +27,14 @@ export const getStudent = createAsyncThunk<
 );
 
 export const getGroup = createAsyncThunk<
-    StudentGroupType[],
+    GroupType[],
     void,
     { rejectValue: string }
 >(
-    "student/getGroup",
+    "user/getGroup",
     async (_, { rejectWithValue }) => {
         try {
-            const { data } = await $apiPrivate.get<StudentGroupType[]>(`/group/?limit=10&offset=0`);
+            const { data } = await $apiPrivate.get<GroupType[]>(`/group/?limit=10&offset=0`);
             return data;
         } catch (err) {
             if (axios.isAxiosError<CustomApiError>(err)) {

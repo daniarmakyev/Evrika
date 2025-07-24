@@ -1,14 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { useDispatch, useSelector } from "react-redux";
 import { sheduleSlice } from "./shedule/shedule.slice";
-import { studentSlice } from "./users/student/student.slice";
 import { lessonSlice } from "./lesson/lesson.slice";
+import { userSlice } from "./user/user.slice";
 
 
 export const store = configureStore({
     reducer: {
         shedule: sheduleSlice.reducer,
-        student: studentSlice.reducer,
+        user: userSlice.reducer,
         lesson: lessonSlice.reducer,
     },
 });

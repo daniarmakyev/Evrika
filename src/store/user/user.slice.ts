@@ -1,40 +1,40 @@
-import { StudentGroupType, StudentType } from "src/consts/types";
-import { getGroup, getStudent } from "./student.action";
+import { GroupType, UserType } from "src/consts/types";
+import { getGroup, getUser } from "./user.action";
 import { createSlice } from "@reduxjs/toolkit";
 
-interface StudentState {
+interface UserState {
   error: string | null;
   loading: boolean;
-  student: StudentType | null;
-  groups: StudentGroupType[] | null
+  user: UserType | null;
+  groups: GroupType[] | null
 }
 
-const INIT_STATE: StudentState = {
+const INIT_STATE: UserState = {
   error: null,
   loading: false,
-  student: null,
+  user: null,
   groups: null
 };
 
-export const studentSlice = createSlice({
-  name: "student",
+export const userSlice = createSlice({
+  name: "user",
   initialState: INIT_STATE,
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(getStudent.pending, (state) => {
+      .addCase(getUser.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getStudent.fulfilled, (state, { payload }) => {
+      .addCase(getUser.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.student = payload;
+        state.user = payload;
         state.error = null;
       })
-      .addCase(getStudent.rejected, (state, { payload }) => {
+      .addCase(getUser.rejected, (state, { payload }) => {
         state.loading = false;
-        state.error = payload || "Failed to get student";
-        state.student = null;
+        state.error = payload || "Failed to get user";
+        state.user = null;
       }).addCase(getGroup.pending, (state) => {
         state.loading = true;
         state.error = null;

@@ -2,10 +2,10 @@
 import styles from "./styles.module.scss";
 import InputField from "@components/Fields/InputField";
 import classNames from "classnames";
-import { useEffect } from "react";
+import { memo, useEffect } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { getStudent } from "src/store/users/student/student.action";
+import { getUser } from "src/store/user/user.action";
 
 interface FormData {
   firstName?: string;
@@ -32,7 +32,7 @@ const PersonalInfoSkeleton = () => (
   </form>
 );
 
-export default function PersonalInfo() {
+const PersonalInfo: React.FC = () => {
   const { control } = useForm<FormData>({
     defaultValues: {
       firstName: "",
@@ -43,15 +43,15 @@ export default function PersonalInfo() {
     },
   });
 
-  const { student, loading, error } = useAppSelector((state) => state.student);
+  const { user, loading, error } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getStudent());
+    dispatch(getUser());
   }, [dispatch]);
 
   const handleRetry = () => {
-    dispatch(getStudent());
+    dispatch(getUser());
   };
 
   if (error) {
@@ -75,7 +75,7 @@ export default function PersonalInfo() {
     <div className={classNames(styles.personalInfoContainer, "container")}>
       <div className={styles.personalInfoWrapper}>
         <h2>Личная информация</h2>
-        {loading || !student ? (
+        {loading || !user ? (
           <PersonalInfoSkeleton />
         ) : (
           <form>
@@ -85,7 +85,7 @@ export default function PersonalInfo() {
               render={({ field }) => (
                 <InputField
                   {...field}
-                  value={`${student.first_name} ${student.last_name}`}
+                  value={`${user.first_name} ${user.last_name}`}
                   label="Имя и фамилия"
                   placeholder="Введите имя и фамилию"
                   disabled
@@ -99,10 +99,12 @@ export default function PersonalInfo() {
               render={({ field }) => (
                 <InputField
                   {...field}
-                  value={student.courses
-                    .map((course) => course.name)
-                    .join(", ")}
-                  label="Курсы"
+                  value={user.courses.map((course) => course.name).join(", ")}
+                  label={
+                    user.role === "admin" || user.role === "teacher"
+                      ? "Курсы преподавания"
+                      : "Курсы"
+                  }
                   placeholder="Введите курсы"
                   disabled
                 />
@@ -115,7 +117,7 @@ export default function PersonalInfo() {
               render={({ field }) => (
                 <InputField
                   {...field}
-                  value={student.phone_number || ""}
+                  value={user.phone_number || ""}
                   label="Телефон"
                   placeholder="+7 (999) 999-99-99"
                   disabled
@@ -129,7 +131,7 @@ export default function PersonalInfo() {
               render={({ field }) => (
                 <InputField
                   {...field}
-                  value={student.email}
+                  value={user.email}
                   label="Почта"
                   type="email"
                   placeholder="example@mail.com"
@@ -142,4 +144,6 @@ export default function PersonalInfo() {
       </div>
     </div>
   );
-}
+};
+
+export default memo(PersonalInfo);

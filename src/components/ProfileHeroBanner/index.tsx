@@ -1,20 +1,24 @@
 "use client";
 
-import React from "react";
+import React, { memo } from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 
 interface ProfileHeroBannerProps {
   name: string;
+  role?: string;
 }
 
-const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({ name }) => {
+const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
+  name,
+  role,
+}) => {
   return (
     <section className={styles.quote}>
       <div className={classNames(styles.quote__container, "container")}>
         <div className={styles.quote__title}>
           <h1>
-            Привет,
+            {role === "teacher" ? "Здравствуйте, учитель," : "Привет,"}
             <br />
             {name}
           </h1>
@@ -24,4 +28,4 @@ const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({ name }) => {
   );
 };
 
-export default ProfileHeroBanner;
+export default memo(ProfileHeroBanner);

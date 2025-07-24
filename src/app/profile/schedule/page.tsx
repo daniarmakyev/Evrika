@@ -13,6 +13,7 @@ import { useModal } from "@context/ModalContext";
 import ProfileModal from "@components/ProfileModal";
 import InputField from "@components/Fields/InputField";
 import TextArea from "@components/Fields/TextAreaField";
+import LessonCreateModal from "./SheduleUploadModal";
 
 const TableSkeleton = () => (
   <div className={styles.tableSkeleton}>
@@ -41,11 +42,13 @@ const TableSkeleton = () => (
 
 export default function ProfileSchedule() {
   const [activeDay, setActiveDay] = useState<DayOfWeek>("MON");
-
+  const [role, setRole] = useState<string | null>(null);
   const { shedule, loading, error } = useAppSelector((state) => state.shedule);
   const dispatch = useAppDispatch();
 
   const lessonModal = useModal<LessonShedule>("lesson");
+  const groupModal = useModal("group");
+  const createLessonModal = useModal("create-lesson");
 
   const handleDayChange = (day: DayOfWeek) => {
     setActiveDay(day);
@@ -57,6 +60,10 @@ export default function ProfileSchedule() {
 
   useEffect(() => {
     dispatch(getShedule());
+    const userRole = localStorage.getItem("role");
+    if (userRole) {
+      setRole(userRole);
+    }
   }, [dispatch]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -82,6 +89,21 @@ export default function ProfileSchedule() {
       key: "group",
       title: "Группа",
       width: "230px",
+      isButton: role === "admin" || role === "teacher",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      render: (lessons: LessonShedule[], rowData: any) => {
+        if (role === "admin" || role === "teacher") {
+          return (
+            <button
+              className={styles.table__button}
+              onClick={() => groupModal.openModal()}
+            >
+              {rowData.group}
+            </button>
+          );
+        }
+        return <span>{rowData.group}</span>;
+      },
     },
     {
       key: "time",
@@ -159,6 +181,15 @@ export default function ProfileSchedule() {
         <div className={styles.schedule__content}>
           <div className={styles.schedule__title}>
             <h3>Расписание занятий</h3>
+            {role === "admin" || role === "teacher" ? (
+              <button
+                onClick={() => {
+                  createLessonModal.openModal({});
+                }}
+              >
+                Добавить урок
+              </button>
+            ) : null}
           </div>
 
           <DaysWeekSelector
@@ -220,6 +251,11 @@ export default function ProfileSchedule() {
           </div>
         )}
       </ProfileModal>
+
+      <LessonCreateModal
+        isOpen={createLessonModal.isOpen}
+        onClose={createLessonModal.closeModal}
+      />
     </div>
   );
 }

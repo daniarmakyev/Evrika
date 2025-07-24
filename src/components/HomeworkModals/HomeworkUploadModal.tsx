@@ -21,6 +21,7 @@ type Props = {
   onClose: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any; // { homework: HomeWorkTableItem; submission?: HomeworkSubmission; isEdit?: boolean }
+  role?: string | null; // Optional role prop to pass user role
 };
 
 const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
@@ -110,7 +111,6 @@ const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
         const submissionId = data.submission.id;
         await dispatch(deleteHomeworkSubmission(submissionId)).unwrap();
 
-        // Если thunk не обновил состояние, делаем это вручную
         dispatch(removeHomeworkSubmission(submissionId));
 
         setShowDeleteSubmissionConfirm(false);
@@ -151,10 +151,12 @@ const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
     if (!data?.homework?.homeworkId) return;
 
     try {
-      const fileToUpload = formData.file && formData.file[0] ? formData.file[0] : undefined;
+      const fileToUpload =
+        formData.file && formData.file[0] ? formData.file[0] : undefined;
 
       if (data?.isEdit && data?.submission?.id) {
-        const hasFileChanges = typeof fileToUpload !== "undefined" || removeFile;
+        const hasFileChanges =
+          typeof fileToUpload !== "undefined" || removeFile;
 
         if (hasFileChanges) {
           const result = await dispatch(

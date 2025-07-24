@@ -44,13 +44,13 @@ export interface StudentCourse {
   level_code: string;
 }
 
-export interface StudentType {
+export interface UserType {
   id: number;
   first_name: string;
   last_name: string;
   email: string;
   phone_number: string | null;
-  role: "student";
+  role: "student" | "admin" | "teacher";
   courses: StudentCourse[];
 }
 
@@ -88,7 +88,7 @@ export interface HomeworkSubmission {
   review: string | null
 }
 
-export interface StudentGroupType {
+export interface GroupType {
   id: number;
   name: string;
   created_at: string;

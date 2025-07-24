@@ -78,7 +78,7 @@ export default function ProfileHomeWork() {
   const [lessonState, setLessonState] = useState<LessonListItem[]>([]);
   const [tableData, setTableData] = useState<HomeWorkTableItem[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
+  const [role, setRole] = useState<string | null>(null);
   const [, setUploadForm] = useState({
     answer: "",
     file: null as File | null,
@@ -100,6 +100,13 @@ export default function ProfileHomeWork() {
     open: boolean;
     note: string | null;
   }>({ open: false, note: null });
+
+  useEffect(() => {
+    const userRole = localStorage.getItem("role");
+    if (userRole) {
+      setRole(userRole);
+    }
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -165,7 +172,7 @@ export default function ProfileHomeWork() {
         }
       }
     }
-  }, [homeworkState]);
+  }, [homeworkState , uploadModal, submissionModal]);
 
   useEffect(() => {
     const groupsId = localStorage.getItem("groups");
@@ -484,6 +491,7 @@ export default function ProfileHomeWork() {
           isOpen={uploadModal.isOpen}
           onClose={uploadModal.closeModal}
           data={uploadModal.data}
+          role={role}
         />
         <ProfileModal
           isOpen={noteModal.open}
