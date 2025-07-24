@@ -37,7 +37,8 @@ export default function StudentProfileLayout({
     localStorage.setItem(
       "evrika-access-token",
       // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTUzNDQ1NzB9.gla_5czweUhBXBLL5OHArEf54d1ms9IZzAGUZS9VY6A"
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTU4OTU2NzN9.D-ND4Ygj9uTz8pzoKQ9ctxI9UicyZMnHvLUA6rXBQlc"
+      // "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTU4OTU2NzN9.D-ND4Ygj9uTz8pzoKQ9ctxI9UicyZMnHvLUA6rXBQlc"
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI3IiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTU5NDY4MjZ9.apOK0YXHQzNA9RvopbKazfHVxu4Gx5vqvsujgHEMNg0"
     );
   }, []);
 
