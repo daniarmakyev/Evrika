@@ -33,7 +33,7 @@ export default function ProfileLayout({
     }
   }, [params,dispatch]);
 
-  // const isProfileStudent = !!studentId;
+  const isProfileStudent = !!studentId;
 
   useEffect(() => {
     dispatch(getUser());
@@ -69,7 +69,7 @@ export default function ProfileLayout({
             <StudentTabBar
               role={user.role}
               studentId={studentId}
-              // isProfileStudent={false}
+              isProfileStudent={isProfileStudent}
             />
           </>
         ) : (
