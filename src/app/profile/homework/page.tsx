@@ -165,7 +165,7 @@ export default function ProfileHomeWork() {
         }
       }
     }
-  }, [homeworkState]);
+  }, [homeworkState, submissionModal, uploadModal]);
 
   useEffect(() => {
     const groupsId = localStorage.getItem("groups");

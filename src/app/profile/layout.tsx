@@ -31,7 +31,7 @@ export default function ProfileLayout({
     if(params){
       dispatch(getUser());
     }
-  }, [params]);
+  }, [params,dispatch]);
 
   const isProfileStudent = !!studentId;
 

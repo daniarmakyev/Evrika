@@ -5,7 +5,6 @@ import Table from "@components/Table";
 import FileIcon from "@icons/upload-file.svg";
 import EditPen from "@icons/edit-pen.svg";
 import Close from "@icons/close.svg";
-import Plus from "@icons/upload-file.svg";
 import classNames from "classnames";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import {
