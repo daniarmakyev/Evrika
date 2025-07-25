@@ -105,7 +105,7 @@ export default function TeacherHomework() {
       reloadLessons();
       dispatch(clearRefreshFlag());
     }
-  }, [shouldRefresh, dispatch]);
+  }, [shouldRefresh, dispatch, reloadLessons]);
 
   useEffect(() => {
     if (error) {
