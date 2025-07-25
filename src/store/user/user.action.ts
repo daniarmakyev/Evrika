@@ -51,3 +51,22 @@ export const getGroup = createAsyncThunk<
         }
     }
 );
+
+export const getUserById = createAsyncThunk<
+    UserType,
+    string | number,
+    { rejectValue: string }
+>(
+    "user/getUserById",
+    async (id, { rejectWithValue }) => {
+        try {
+            const { data } = await $apiPrivate.get<UserType>(`/user/${id}`);
+            return data;
+        } catch (err) {
+            if (axios.isAxiosError<CustomApiError>(err)) {
+                return rejectWithValue(err.response?.data.detail || "Ошибка получения студента");
+            }
+            return rejectWithValue("Неизвестная ошибка!");
+        }
+    }
+);

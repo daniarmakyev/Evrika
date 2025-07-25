@@ -7,10 +7,13 @@ import {
   submitHomeworkSubmission,
   updateHomeworkSubmission,
   deleteHomeworkSubmission,
+  getHomeworkSubmissions,
 } from "src/store/lesson/lesson.action";
 import {
   clearSubmissionError,
   removeHomeworkSubmission,
+  clearRefreshFlag,
+  setShouldRefresh,
 } from "src/store/lesson/lesson.slice";
 import DragAndDrop from "@components/DragAndDrop";
 import styles from "./styles.module.scss";
@@ -21,14 +24,13 @@ type Props = {
   onClose: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any; // { homework: HomeWorkTableItem; submission?: HomeworkSubmission; isEdit?: boolean }
-  role?: string | null; // Optional role prop to pass user role
+  role?: string | null; 
 };
 
 const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
   const dispatch = useAppDispatch();
-  const { submissionLoading, submissionError, homework } = useAppSelector(
-    (state) => state.lesson
-  );
+  const { submissionLoading, submissionError, homework, shouldRefresh } =
+    useAppSelector((state) => state.lesson);
   const [currentFile, setCurrentFile] = useState<string | null>(null);
   const [removeFile, setRemoveFile] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -159,7 +161,7 @@ const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
           typeof fileToUpload !== "undefined" || removeFile;
 
         if (hasFileChanges) {
-          const result = await dispatch(
+          await dispatch(
             updateHomeworkSubmission({
               submission_id: data.submission.id,
               content: formData.content || "",
@@ -167,33 +169,13 @@ const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
               removeFile: removeFile,
             })
           ).unwrap();
-
-          setRemoveFile(false);
-
-          if (removeFile) {
-            setCurrentFile(null);
-          } else if (result && result.file_path) {
-            setCurrentFile(result.file_path);
-          }
-
-          reset({
-            content: result.content,
-            file: undefined,
-          });
-          setDragKey((k) => k + 1);
         } else {
-          const result = await dispatch(
+          await dispatch(
             updateHomeworkSubmission({
               submission_id: data.submission.id,
               content: formData.content || "",
             })
           ).unwrap();
-
-          reset({
-            content: result.content,
-            file: undefined,
-          });
-          setDragKey((k) => k + 1);
         }
       } else {
         await dispatch(
@@ -203,20 +185,30 @@ const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
             file: fileToUpload,
           })
         ).unwrap();
-
-        reset({
-          content: "",
-          file: undefined,
-        });
-        setDragKey((k) => k + 1);
-        onClose();
       }
+
+      dispatch(setShouldRefresh());
+
+      reset({
+        content: "",
+        file: undefined,
+      });
+      setDragKey((k) => k + 1);
+      onClose();
     } catch (error) {
       console.error("Error submitting homework:", error);
     }
   };
 
+
   const isLoading = submissionLoading || isSubmitting;
+
+  useEffect(() => {
+    if (shouldRefresh && data?.homework?.homeworkId) {
+      dispatch(getHomeworkSubmissions(data.homework.homeworkId));
+      dispatch(clearRefreshFlag());
+    }
+  }, [shouldRefresh, data?.homework?.homeworkId, dispatch]);
 
   return (
     <ProfileModal

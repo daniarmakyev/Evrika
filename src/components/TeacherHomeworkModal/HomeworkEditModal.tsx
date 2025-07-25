@@ -16,7 +16,7 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any; 
+  data: any;
 };
 
 interface EditHomeworkForm {
@@ -25,7 +25,11 @@ interface EditHomeworkForm {
   file: FileList | undefined;
 }
 
-const HomeworkEditModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
+const TeacherHomeworkEditModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  data,
+}) => {
   const dispatch = useAppDispatch();
   const { submissionLoading, submissionError } = useAppSelector(
     (state) => state.lesson
@@ -34,7 +38,8 @@ const HomeworkEditModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
   const [currentFile, setCurrentFile] = useState<string | null>(null);
   const [removeFile, setRemoveFile] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [showDeleteHomeworkConfirm, setShowDeleteHomeworkConfirm] = useState(false);
+  const [showDeleteHomeworkConfirm, setShowDeleteHomeworkConfirm] =
+    useState(false);
   const [showFileWarning, setShowFileWarning] = useState(false);
   const [dragKey, setDragKey] = useState(0);
   const [pendingFile, setPendingFile] = useState<FileList | null>(null);
@@ -142,18 +147,19 @@ const HomeworkEditModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
     setDragKey((k) => k + 1);
   };
 
-  const handleFileSelect = (files: FileList | null) => {
-    if (files && files.length > 0 && (currentFile || fileInput)) {
-      setPendingFile(files);
-      setShowFileWarning(true);
-    } else if (files) {
-      setValue("file", files);
-    }
-  };
+  // const handleFileSelect = (files: FileList | null) => {
+  //   if (files && files.length > 0 && (currentFile || fileInput)) {
+  //     setPendingFile(files);
+  //     setShowFileWarning(true);
+  //   } else if (files) {
+  //     setValue("file", files);
+  //   }
+  // };
 
   const onSubmit = async (formData: EditHomeworkForm) => {
     try {
-      const fileToUpload = formData.file && formData.file[0] ? formData.file[0] : undefined;
+      const fileToUpload =
+        formData.file && formData.file[0] ? formData.file[0] : undefined;
 
       await dispatch(
         updateHomeworkAssignment({
@@ -211,45 +217,138 @@ const HomeworkEditModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
 
         <div>
           <h4>Файл (необязательно)</h4>
-          {currentFile && !removeFile && (
-            <div className={styles.current__file}>
-              <div className={styles.file__info}>
-                <span className={styles.file__name}>
-                  Текущий файл: {currentFile.split("/").pop()}
-                </span>
+
+          {showDeleteConfirm && (
+            <div
+              style={{
+                marginBottom: "10px",
+                padding: "10px",
+                backgroundColor: "#ffebee",
+                borderRadius: "4px",
+                border: "1px solid #ffcdd2",
+              }}
+            >
+              <p style={{ margin: "0 0 10px 0" }}>
+                Вы точно хотите удалить файл?
+              </p>
+              <div style={{ display: "flex", gap: "10px" }}>
                 <button
                   type="button"
-                  onClick={handleRemoveCurrentFile}
-                  className={styles.remove__file__button}
+                  onClick={confirmDelete}
+                  className={styles.delete__button}
                 >
-                  Удалить файл
+                  Да, удалить
+                </button>
+                <button
+                  type="button"
+                  onClick={cancelDelete}
+                  className={styles.cancel__button}
+                >
+                  Отмена
                 </button>
               </div>
+            </div>
+          )}
+
+          {showFileWarning && (
+            <div
+              style={{
+                marginBottom: "10px",
+                padding: "10px",
+                backgroundColor: "#fff3cd",
+                borderRadius: "4px",
+                border: "1px solid #ffeaa7",
+              }}
+            >
+              <p style={{ margin: "0 0 10px 0" }}>
+                У вас уже есть прикрепленный файл. Хотите заменить его новым?
+              </p>
+              <div style={{ display: "flex", gap: "10px" }}>
+                <button
+                  type="button"
+                  onClick={confirmFileReplace}
+                  className={styles.save__button}
+                >
+                  Заменить
+                </button>
+                <button
+                  type="button"
+                  onClick={cancelFileReplace}
+                  className={styles.cancel__button}
+                >
+                  Отмена
+                </button>
+              </div>
+            </div>
+          )}
+
+          {currentFile && !removeFile && (
+            <div
+              style={{
+                marginBottom: "10px",
+                padding: "10px",
+                backgroundColor: "#e8f5e8",
+                borderRadius: "4px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>Текущий файл: {currentFile.split("/").pop()}</span>
+              <button
+                type="button"
+                onClick={handleRemoveCurrentFile}
+                className={styles.remove__file__button}
+              >
+                Удалить файл
+              </button>
+            </div>
+          )}
+
+          {removeFile && (
+            <div
+              style={{
+                marginBottom: "10px",
+                padding: "10px",
+                backgroundColor: "#ffebee",
+                borderRadius: "4px",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>Файл будет удален при сохранении</span>
             </div>
           )}
 
           <DragAndDrop
             key={dragKey}
             selectedFiles={fileInput}
-            onFileSelect={handleFileSelect}
+            onFileSelect={(files) => {
+              if (files && files[0]) {
+                if (currentFile && !removeFile) {
+                  setShowFileWarning(true);
+                  setPendingFile(files);
+                  setValue("file", undefined);
+                } else {
+                  setCurrentFile(null);
+                  setValue("file", files);
+                  setPendingFile(null);
+                  setRemoveFile(false);
+                }
+              } else {
+                setValue("file", undefined);
+                setPendingFile(null);
+                setCurrentFile(null);
+                setRemoveFile(false);
+              }
+            }}
             accept={".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"}
             multiple={false}
-            disabled={isLoading}
+            disabled={isLoading || showDeleteConfirm || showFileWarning}
             isLoading={isLoading}
-            buttonText="Выберите новый файл"
+            buttonText="Выберите файл"
           />
-
-          {fileInput && fileInput[0] && (
-            <div
-              style={{
-                marginTop: "5px",
-                fontSize: "14px",
-                color: "#666",
-              }}
-            >
-              Выбран новый файл: {(fileInput[0] as File)?.name}
-            </div>
-          )}
         </div>
 
         <div>
@@ -281,14 +380,7 @@ const HomeworkEditModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
           </button>
 
           <div style={{ display: "flex", gap: "10px" }}>
-            <button
-              type="button"
-              onClick={handleClose}
-              className={styles.cancel__button}
-              disabled={isLoading}
-            >
-              Отмена
-            </button>
+
             <button
               type="submit"
               className={styles.save__button}
@@ -300,31 +392,42 @@ const HomeworkEditModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
         </div>
       </form>
 
-      {showDeleteConfirm && (
-        <div className={styles.confirm__overlay}>
-          <div className={styles.confirm__modal}>
-            <h4>Подтвердите удаление</h4>
-            <p>Вы уверены, что хотите удалить текущий файл?</p>
-            <div className={styles.confirm__actions}>
-              <button onClick={cancelDelete} className={styles.cancel__button}>
-                Отмена
-              </button>
-              <button onClick={confirmDelete} className={styles.delete__button}>
-                Удалить
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       {showDeleteHomeworkConfirm && (
-        <div className={styles.confirm__overlay}>
-          <div className={styles.confirm__modal}>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              maxWidth: "400px",
+              width: "90%",
+            }}
+          >
             <h4>Подтвердите удаление</h4>
             <p>
-              Вы уверены, что хотите удалить это домашнее задание? Это действие нельзя отменить.
+              Вы уверены, что хотите удалить это домашнее задание? Это действие
+              нельзя отменить.
             </p>
-            <div className={styles.confirm__actions}>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                justifyContent: "flex-end",
+              }}
+            >
               <button
                 onClick={cancelDeleteHomework}
                 className={styles.cancel__button}
@@ -342,31 +445,8 @@ const HomeworkEditModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
           </div>
         </div>
       )}
-
-      {showFileWarning && (
-        <div className={styles.confirm__overlay}>
-          <div className={styles.confirm__modal}>
-            <h4>Заменить файл?</h4>
-            <p>У вас уже есть прикрепленный файл. Хотите заменить его новым?</p>
-            <div className={styles.confirm__actions}>
-              <button
-                onClick={cancelFileReplace}
-                className={styles.cancel__button}
-              >
-                Отмена
-              </button>
-              <button
-                onClick={confirmFileReplace}
-                className={styles.save__button}
-              >
-                Заменить
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </ProfileModal>
   );
 };
 
-export default HomeworkEditModal;
+export default TeacherHomeworkEditModal;

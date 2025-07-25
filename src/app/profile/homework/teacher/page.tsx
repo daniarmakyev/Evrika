@@ -2,26 +2,23 @@
 import React, { useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import Table from "@components/Table";
-import FileIcon from "@icons/file.svg";
+import FileIcon from "@icons/upload-file.svg";
 import EditPen from "@icons/edit-pen.svg";
 import Close from "@icons/close.svg";
-import Plus from "@icons/plus.svg";
+import Plus from "@icons/upload-file.svg";
 import classNames from "classnames";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import {
   getLessons,
   getHomeworkWithSubmissions,
 } from "src/store/lesson/lesson.action";
-import {
-  
-  HomeworkTask,
-  LessonListItem,
-} from "src/consts/types";
+import { HomeworkTask, LessonListItem } from "src/consts/types";
 import { useModal } from "@context/ModalContext";
 
 import {
   clearError,
   clearSubmissionError,
+  clearRefreshFlag,
 } from "src/store/lesson/lesson.slice";
 import {
   TeacherHomeworkViewModal,
@@ -33,7 +30,6 @@ interface TeacherHomeworkTableItem {
   id: number;
   group: string;
   assignment: string;
-  dateSubmitted: string;
   deadline: string;
   viewHomework: string;
   homeworkId: number;
@@ -66,9 +62,14 @@ const TableSkeleton = () => (
 
 export default function TeacherHomework() {
   const dispatch = useAppDispatch();
-  const { selectedSubmissions, loading, error, submissionError, lessons } = useAppSelector(
-    (state) => state.lesson
-  );
+  const {
+    selectedSubmissions,
+    loading,
+    error,
+    submissionError,
+    lessons,
+    shouldRefresh,
+  } = useAppSelector((state) => state.lesson);
 
   const [lessonState, setLessonState] = useState<LessonListItem[]>([]);
   const [tableData, setTableData] = useState<TeacherHomeworkTableItem[]>([]);
@@ -79,6 +80,33 @@ export default function TeacherHomework() {
   }>("view");
   const editModal = useModal<TeacherHomeworkTableItem>("edit");
   const createModal = useModal<object>("create");
+
+  const reloadLessons = () => {
+    const groupsId = localStorage.getItem("groups");
+    if (groupsId) {
+      try {
+        const parsedIds: string[] = JSON.parse(groupsId);
+        if (parsedIds && Array.isArray(parsedIds)) {
+          setLessonState([]);
+          setTableData([]);
+
+          parsedIds.forEach((id) => {
+            dispatch(getLessons(id));
+          });
+        }
+      } catch (error) {
+        console.error("Ошибка перезагрузки групп:", error);
+        setErrorMessage("Ошибка при перезагрузке групп");
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (shouldRefresh) {
+      reloadLessons();
+      dispatch(clearRefreshFlag());
+    }
+  }, [shouldRefresh, dispatch]);
 
   useEffect(() => {
     if (error) {
@@ -139,9 +167,6 @@ export default function TeacherHomework() {
           id: lesson.id,
           group: lesson.group_name,
           assignment: lesson.homework?.description || "",
-          dateSubmitted: lesson.homework?.created_at
-            ? new Date(lesson.homework.created_at).toLocaleDateString()
-            : "",
           deadline: lesson.homework?.deadline
             ? new Date(lesson.homework.deadline).toLocaleDateString()
             : "",
@@ -174,6 +199,16 @@ export default function TeacherHomework() {
     dispatch(clearSubmissionError());
   };
 
+  const handleCreateSuccess = () => {
+    createModal.closeModal();
+    reloadLessons();
+  };
+
+  // const handleEditSuccess = () => {
+  //   editModal.closeModal();
+  //   reloadLessons();
+  // };
+
   const teacherHomeworkColumns = [
     {
       key: "group",
@@ -191,11 +226,6 @@ export default function TeacherHomework() {
           </span>
         );
       },
-    },
-    {
-      key: "dateSubmitted",
-      title: "Дата отправки",
-      width: "150px",
     },
     {
       key: "deadline",
@@ -239,8 +269,7 @@ export default function TeacherHomework() {
             onClick={handleOpenCreateModal}
             className={styles.add__button}
           >
-            <Plus />
-            <span>Добавить ДЗ</span>
+            <span>Добавить</span>
           </button>
         </div>
 
@@ -285,6 +314,7 @@ export default function TeacherHomework() {
           onClose={createModal.closeModal}
           data={createModal.data}
           lessons={lessonState}
+          onSuccess={handleCreateSuccess}
         />
       </div>
     </div>

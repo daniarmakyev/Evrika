@@ -56,7 +56,6 @@ export interface UserType {
 
 export interface HomeworkTask {
   id: number;
-  created_at: string;
   deadline: string;
   description: string;
   file_path: string | null;

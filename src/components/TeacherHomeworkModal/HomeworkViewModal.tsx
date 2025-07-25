@@ -1,14 +1,16 @@
 import ProfileModal from "@components/ProfileModal";
 import TextArea from "@components/Fields/TextAreaField";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { HomeworkSubmission } from "src/consts/types";
 import styles from "./styles.module.scss";
+import { getUserById } from "src/store/user/user.action";
+import { useAppDispatch } from "src/store/store";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  homework?: any; 
+  homework?: any;
   submissions?: HomeworkSubmission[] | null;
   loading?: boolean;
 };
@@ -20,6 +22,41 @@ const HomeworkViewModal: React.FC<Props> = ({
   submissions,
   loading,
 }) => {
+  const dispatch = useAppDispatch();
+  const [students, setStudents] = useState<
+    Record<number, { first_name: string; last_name: string }>
+  >({});
+
+  useEffect(() => {
+    if (isOpen && submissions && submissions.length > 0) {
+      const uniqueIds = Array.from(
+        new Set(submissions.map((s) => s.student_id))
+      );
+
+      Promise.all(
+        uniqueIds.map((id) =>
+          dispatch(getUserById(id))
+            .unwrap()
+            .catch(() => null)
+        )
+      ).then((users) => {
+        const studentsMap: Record<
+          number,
+          { first_name: string; last_name: string }
+        > = {};
+        users.forEach((user, idx) => {
+          if (user) {
+            studentsMap[uniqueIds[idx]] = {
+              first_name: user.first_name,
+              last_name: user.last_name,
+            };
+          }
+        });
+        setStudents(studentsMap);
+      });
+    }
+  }, [isOpen, submissions, dispatch]);
+
   const handleDownloadFile = (filePath: string, fileName: string) => {
     const link = document.createElement("a");
     link.href = filePath;
@@ -79,7 +116,12 @@ const HomeworkViewModal: React.FC<Props> = ({
                   }}
                 >
                   <div style={{ marginBottom: 8 }}>
-                    <b>Студент ID:</b> {submission.student_id}
+                    <b>Студент:</b>{" "}
+                    {students[submission.student_id]
+                      ? `${students[submission.student_id].first_name} ${
+                          students[submission.student_id].last_name
+                        } `
+                      : submission.student_id}
                   </div>
                   <div style={{ marginBottom: 8 }}>
                     <b>Ответ:</b>
@@ -100,7 +142,8 @@ const HomeworkViewModal: React.FC<Props> = ({
                         onClick={() =>
                           handleDownloadFile(
                             submission.file_path as string,
-                            (submission.file_path as string).split("/").pop() || "file"
+                            (submission.file_path as string).split("/").pop() ||
+                              "file"
                           )
                         }
                         className={styles.download__button}
@@ -116,7 +159,7 @@ const HomeworkViewModal: React.FC<Props> = ({
                       ? new Date(submission.submitted_at).toLocaleString()
                       : "Не отправлено"}
                   </div>
-                  <div style={{ marginBottom: 8 }}>
+                  {/* <div style={{ marginBottom: 8 }}>
                     <b>Статус:</b>{" "}
                     <span
                       style={{
@@ -127,7 +170,7 @@ const HomeworkViewModal: React.FC<Props> = ({
                     >
                       {submission ? "Отправлено" : "В ожидании"}
                     </span>
-                  </div>
+                  </div> */}
                   {submission.review && (
                     <div>
                       <b>Комментарий:</b>

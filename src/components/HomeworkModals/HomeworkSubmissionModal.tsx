@@ -49,7 +49,7 @@ const HomeworkSubmissionModal: React.FC<Props> = ({
             />
           </div>
         ) : null}
-        {!data.submission?.file_path?.includes("blob") ? (
+        {!data.submission?.file_path?.includes("blob") && data.submission.file_path !== null ? (
           <div>
             <h4>Загруженный файл</h4>
             <Link

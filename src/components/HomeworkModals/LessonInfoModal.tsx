@@ -16,7 +16,7 @@ const LessonInfoModal: React.FC<Props> = ({ isOpen, onClose, data }) => (
     {data && (
       <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
         <div>
-          <h4>Название урока</h4>
+          <h4>Название</h4>
           <InputField value={data.name} readOnly isShadow fullWidth />
         </div>
         {data.description && (

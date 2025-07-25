@@ -23,11 +23,26 @@
     gap: 40px;
   }
 
-  &__title {
-    h3 {
-      font-size: 24px;
-      font-weight: 800;
-      line-height: 100%;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    &__title {
+      h3 {
+        font-size: 24px;
+        font-weight: 800;
+        line-height: 100%;
+      }
+    }
+
+    .add__button {
+      background-color: $primary;
+      display: flex;
+      align-items: center;
+      color: $White;
+      gap: 5px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
     }
   }
 
@@ -151,7 +166,7 @@
   .errorTitle {
     font-size: 24px;
     font-weight: 700;
-    color: #d32f2f;
+    color: $danger;
     margin-bottom: 12px;
   }
 
@@ -193,7 +208,7 @@
   }
 
   .errorNotification {
-    color: #d32f2f;
+    color: $danger;
     background-color: #ffebee;
     padding: 15px;
     border-radius: 4px;
@@ -208,7 +223,7 @@
     .dismissButton {
       background: none;
       border: none;
-      color: #d32f2f;
+      color: $danger;
       cursor: pointer;
       font-size: 18px;
       font-weight: bold;
@@ -333,4 +348,3 @@
   border-radius: 8px;
   margin: 0 8px;
 }
-

@@ -22,7 +22,6 @@ import {
   LessonInfoModal,
   HomeworkSubmissionModal,
   HomeworkUploadModal,
-  // Добавим модалку для примечания
 } from "@components/HomeworkModals";
 import ProfileModal from "@components/ProfileModal";
 import {
@@ -188,8 +187,8 @@ export default function ProfileHomeWork() {
   useEffect(() => {
     if (lessons && lessons.length > 0) {
       lessons.forEach((lesson) => {
-        if (lesson.homework) {
-          dispatch(getHomeworkSubmissions(lesson));
+        if (lesson && lesson.homework && lesson.homework.id) {
+          dispatch(getHomeworkSubmissions(lesson.homework.id));
         }
       });
     }

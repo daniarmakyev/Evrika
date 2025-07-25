@@ -11,7 +11,7 @@ export const getLessons = createAsyncThunk<
   "lesson/getLessons",
   async (groupId, { rejectWithValue }) => {
     try {
-      const { data } = await $apiPrivate.get<LessonListItem[]>(`/lessons/group/${groupId}/lessons?limit=10&offset=0`);
+      const { data } = await $apiPrivate.get<LessonListItem[]>(`/lessons/group/${groupId}/lessons?limit=20&offset=0`);
       return data;
     } catch (err) {
       if (axios.isAxiosError<CustomApiError>(err)) {
@@ -25,24 +25,22 @@ export const getLessons = createAsyncThunk<
 
 export const getHomeworkSubmissions = createAsyncThunk<
   HomeworkSubmission[],
-  LessonListItem,
+  number,
   { rejectValue: string }
 >(
   "lesson/getHomeworkSubmissions",
-  async (lesson, { rejectWithValue }) => {
+  async (homework_id, { rejectWithValue }) => {
     try {
-      let data = {};
-      if (lesson.homework) {
-        const response = await $apiPrivate.get<HomeworkSubmission[]>(
-          `/submissions/homework/${lesson.id}/my_submission`
-        );
-        data = response.data;
-      }
+      const response = await $apiPrivate.get<HomeworkSubmission[] | HomeworkSubmission>(
+        `/submissions/homework/${homework_id}/my_submission`
+      );
 
+      const data = response.data;
       return Array.isArray(data) ? data : [data];
     } catch (err) {
       if (axios.isAxiosError<CustomApiError>(err)) {
-        if (err.response?.status === 404 || err.response?.status === 403 || err.response?.status === 500) {
+        const status = err.response?.status;
+        if (status === 404 || status === 403 || status === 500) {
           return rejectWithValue("");
         }
         return rejectWithValue(err.response?.data.detail || "");
@@ -52,13 +50,14 @@ export const getHomeworkSubmissions = createAsyncThunk<
   }
 );
 
+
 export const submitHomeworkSubmission = createAsyncThunk<
   HomeworkSubmission,
   { homework_id: number; content: string; file?: File | null },
   { rejectValue: string }
 >(
   "lesson/submitHomeworkSubmission",
-  async ({ homework_id, content, file }, { rejectWithValue }) => {
+  async ({ homework_id, content, file }, { rejectWithValue, dispatch }) => {
     try {
       const formData = new FormData();
       formData.append("homework_id", String(homework_id));
@@ -66,6 +65,7 @@ export const submitHomeworkSubmission = createAsyncThunk<
       if (file) {
         formData.append("file", file);
       }
+
       const { data } = await $apiPrivate.post<HomeworkSubmission>(
         `/submissions/homework/${homework_id}`,
         formData,
@@ -73,16 +73,23 @@ export const submitHomeworkSubmission = createAsyncThunk<
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+
+
+      dispatch(getHomeworkSubmissions(homework_id));
+
       return data;
     } catch (err) {
       if (axios.isAxiosError<CustomApiError>(err)) {
         if (err.response?.status === 404) return rejectWithValue("");
-        return rejectWithValue(err.response?.data.detail || "Не удалось отправить домашнее задание");
+        return rejectWithValue(
+          err.response?.data.detail || "Не удалось отправить домашнее задание"
+        );
       }
       return rejectWithValue("Неизвестная ошибка");
     }
   }
 );
+
 
 export const updateHomeworkSubmission = createAsyncThunk<
   HomeworkSubmission,
@@ -176,6 +183,7 @@ export const getHomeworkWithSubmissions = createAsyncThunk<
     }
   }
 );
+
 export const updateHomeworkAssignment = createAsyncThunk<
   HomeworkTask,
   {
@@ -209,6 +217,63 @@ export const updateHomeworkAssignment = createAsyncThunk<
     } catch (err) {
       if (axios.isAxiosError<CustomApiError>(err)) {
         return rejectWithValue(err.response?.data.detail || "Не удалось обновить домашнее задание");
+      }
+      return rejectWithValue("Неизвестная ошибка");
+    }
+  }
+);
+
+export const createHomeworkAssignment = createAsyncThunk<
+  HomeworkTask & { submissions: HomeworkSubmission[] },
+  {
+    title: string;
+    description: string;
+    deadline: string;
+    lesson_id: number;
+    file?: File | null;
+  },
+  { rejectValue: string }
+>(
+  "lesson/createHomeworkAssignment",
+  async ({ description, deadline, lesson_id, file }, { rejectWithValue }) => {
+    try {
+      const formData = new FormData();
+      formData.append("description", description || "");
+      formData.append("deadline", deadline);
+      if (file) {
+        formData.append("file", file);
+      }
+      const { data } = await $apiPrivate.post<HomeworkTask & { submissions: HomeworkSubmission[] }>(
+        `/homeworks/lesson/${lesson_id}`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return data;
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        return rejectWithValue(err.response?.data.detail || "Не удалось создать домашнее задание");
+      }
+      return rejectWithValue("Неизвестная ошибка");
+    }
+  }
+);
+
+export const deleteHomeworkAssignment = createAsyncThunk<
+  number,
+  number,
+  { rejectValue: string }
+>(
+  "lesson/deleteHomeworkAssignment",
+  async (homeworkId, { rejectWithValue }) => {
+    try {
+      await $apiPrivate.delete(`/homeworks/${homeworkId}`);
+      return homeworkId;
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        if (err.response?.status === 404) return rejectWithValue("Домашнее задание не найдено");
+        return rejectWithValue(err.response?.data.detail || "Не удалось удалить домашнее задание");
       }
       return rejectWithValue("Неизвестная ошибка");
     }

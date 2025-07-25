@@ -6,8 +6,10 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { LessonListItem } from "src/consts/types";
 import { clearSubmissionError } from "src/store/lesson/lesson.slice";
+import { createHomeworkAssignment } from "src/store/lesson/lesson.action";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-
+import styles from "./styles.module.scss";
+import SelectField from "@components/Fields/SelectField";
 
 type Props = {
   isOpen: boolean;
@@ -15,6 +17,7 @@ type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
   lessons: LessonListItem[];
+  onSuccess?: () => void;
 };
 
 interface CreateHomeworkForm {
@@ -25,7 +28,12 @@ interface CreateHomeworkForm {
   file: FileList | undefined;
 }
 
-const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
+const HomeworkCreateModal: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  lessons,
+  onSuccess,
+}) => {
   const dispatch = useAppDispatch();
   const { submissionLoading, submissionError } = useAppSelector(
     (state) => state.lesson
@@ -37,7 +45,7 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
     handleSubmit,
     reset,
     setValue,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     watch,
   } = useForm<CreateHomeworkForm>({
     defaultValues: {
@@ -61,7 +69,7 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
         file: undefined,
       });
       dispatch(clearSubmissionError());
-      setDragKey(k => k + 1);
+      setDragKey((k) => k + 1);
     }
   }, [isOpen, reset, dispatch]);
 
@@ -78,7 +86,8 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
 
   const onSubmit = async (formData: CreateHomeworkForm) => {
     try {
-      const fileToUpload = formData.file && formData.file[0] ? formData.file[0] : undefined;
+      const fileToUpload =
+        formData.file && formData.file[0] ? formData.file[0] : undefined;
 
       await dispatch(
         createHomeworkAssignment({
@@ -91,8 +100,13 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
       ).unwrap();
 
       reset();
-      setDragKey(k => k + 1);
-      onClose();
+      setDragKey((k) => k + 1);
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        onClose();
+      }
     } catch (error) {
       console.error("Error creating homework:", error);
     }
@@ -100,13 +114,14 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
 
   const isLoading = submissionLoading || isSubmitting;
 
-  const lessonOptions = lessons.map(lesson => ({
-    value: lesson.id.toString(),
-    label: `${lesson.group_name} - ${lesson.name}`,
-  }));
+  const lessonOptions = lessons
+    .filter((lesson) => !lesson.homework)
+    .map((lesson) => ({
+      value: lesson.id.toString(),
+      label: `${lesson.group_name} - ${lesson.name}`,
+    }));
 
-  // Получаем сегодняшнюю дату в формате YYYY-MM-DD для минимального значения
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <ProfileModal
@@ -134,13 +149,18 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
         )}
 
         <div>
-          <h4>Название задания</h4>
+          <h4>Название</h4>
           <InputField
             {...register("title", { required: "Название обязательно" })}
             placeholder="Введите название домашнего задания..."
             fullWidth
             isShadow
           />
+          {errors.title && (
+            <span style={{ color: "red", fontSize: "14px" }}>
+              {errors.title.message}
+            </span>
+          )}
         </div>
 
         <div>
@@ -151,6 +171,11 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
             fullWidth
             isShadow
           />
+          {errors.description && (
+            <span style={{ color: "red", fontSize: "14px" }}>
+              {errors.description.message}
+            </span>
+          )}
         </div>
 
         <div>
@@ -159,7 +184,7 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
             key={dragKey}
             selectedFiles={fileInput}
             onFileSelect={(files) => {
-              setValue("file", files);
+              setValue("file", files ?? undefined);
             }}
             accept={".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png"}
             multiple={false}
@@ -189,6 +214,11 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
             fullWidth
             isShadow
           />
+          {errors.deadline && (
+            <span style={{ color: "red", fontSize: "14px" }}>
+              {errors.deadline.message}
+            </span>
+          )}
         </div>
 
         <div>
@@ -200,6 +230,11 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
             fullWidth
             isShadow
           />
+          {errors.lessonId && (
+            <span style={{ color: "red", fontSize: "14px" }}>
+              {errors.lessonId.message}
+            </span>
+          )}
         </div>
 
         <div
@@ -210,14 +245,6 @@ const HomeworkCreateModal: React.FC<Props> = ({ isOpen, onClose, lessons }) => {
             marginTop: "20px",
           }}
         >
-          <button
-            type="button"
-            onClick={handleClose}
-            className={styles.cancel__button}
-            disabled={isLoading}
-          >
-            Отмена
-          </button>
           <button
             type="submit"
             className={styles.save__button}

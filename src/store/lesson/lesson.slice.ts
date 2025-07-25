@@ -7,6 +7,9 @@ import {
   updateHomeworkSubmission,
   deleteHomeworkSubmission,
   getHomeworkWithSubmissions,
+  createHomeworkAssignment,
+  deleteHomeworkAssignment,
+  updateHomeworkAssignment,
 } from "./lesson.action";
 
 interface LessonState {
@@ -18,6 +21,7 @@ interface LessonState {
   submissionError: string | null;
   selectedHomework: HomeworkTask | null;
   selectedSubmissions: HomeworkSubmission[] | null;
+  shouldRefresh: boolean;
 }
 
 const INIT_LESSON_STATE: LessonState = {
@@ -29,6 +33,7 @@ const INIT_LESSON_STATE: LessonState = {
   submissionError: null,
   selectedHomework: null,
   selectedSubmissions: null,
+  shouldRefresh: false,
 };
 
 export const lessonSlice = createSlice({
@@ -48,6 +53,12 @@ export const lessonSlice = createSlice({
         );
       }
     },
+    setShouldRefresh: (state) => {
+      state.shouldRefresh = true;
+    },
+    clearRefreshFlag: (state) => {
+      state.shouldRefresh = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -59,6 +70,7 @@ export const lessonSlice = createSlice({
         state.loading = false;
         state.lessons = payload;
         state.error = null;
+        state.shouldRefresh = false;
       })
       .addCase(getLessons.rejected, (state, { payload }) => {
         state.loading = false;
@@ -131,7 +143,9 @@ export const lessonSlice = createSlice({
       .addCase(deleteHomeworkSubmission.rejected, (state, { payload }) => {
         state.submissionLoading = false;
         state.submissionError = payload as string;
-      }).addCase(getHomeworkWithSubmissions.pending, (state) => {
+      })
+
+      .addCase(getHomeworkWithSubmissions.pending, (state) => {
         state.loading = true;
         state.error = null;
         state.selectedHomework = null;
@@ -147,8 +161,73 @@ export const lessonSlice = createSlice({
         state.error = payload as string;
         state.selectedHomework = null;
         state.selectedSubmissions = null;
+      })
+
+      .addCase(createHomeworkAssignment.pending, (state) => {
+        state.submissionLoading = true;
+        state.submissionError = null;
+      })
+      .addCase(createHomeworkAssignment.fulfilled, (state) => {
+        state.submissionLoading = false;
+        state.submissionError = null;
+        state.shouldRefresh = true;
+
+      })
+      .addCase(createHomeworkAssignment.rejected, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = payload as string;
+      })
+
+      .addCase(deleteHomeworkAssignment.pending, (state) => {
+        state.submissionLoading = true;
+        state.submissionError = null;
+      })
+      .addCase(deleteHomeworkAssignment.fulfilled, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = null;
+        state.shouldRefresh = true;
+
+        if (state.lessons) {
+          state.lessons = state.lessons.map(lesson =>
+            lesson.homework?.id === payload
+              ? { ...lesson, homework: undefined }
+              : lesson
+          );
+        }
+      })
+      .addCase(deleteHomeworkAssignment.rejected, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = payload as string;
+      })
+
+      .addCase(updateHomeworkAssignment.pending, (state) => {
+        state.submissionLoading = true;
+        state.submissionError = null;
+      })
+      .addCase(updateHomeworkAssignment.fulfilled, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = null;
+        state.shouldRefresh = true;
+
+        if (state.lessons) {
+          state.lessons = state.lessons.map(lesson =>
+            lesson.homework?.id === payload.id
+              ? { ...lesson, homework: payload }
+              : lesson
+          );
+        }
+      })
+      .addCase(updateHomeworkAssignment.rejected, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = payload as string;
       });
   },
 });
 
-export const { clearSubmissionError, clearError, removeHomeworkSubmission } = lessonSlice.actions;
+export const {
+  clearSubmissionError,
+  clearError,
+  removeHomeworkSubmission,
+  clearRefreshFlag,
+  setShouldRefresh,
+} = lessonSlice.actions;

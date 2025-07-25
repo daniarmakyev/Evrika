@@ -1,5 +1,5 @@
 import { GroupType, UserType } from "src/consts/types";
-import { getGroup, getUser } from "./user.action";
+import { getGroup, getUser, getUserById } from "./user.action";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface UserState {
@@ -48,6 +48,19 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = payload || "Failed to get group";
         state.groups = null;
+      }).addCase(getUserById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getUserById.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.user = payload;
+        state.error = null;
+      })
+      .addCase(getUserById.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload || "Failed to get user";
+        state.user = null;
       });
   },
-});
+})
