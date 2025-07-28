@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LessonListItem, HomeworkSubmission, HomeworkTask } from "src/consts/types";
+import { LessonListItem, HomeworkSubmission, HomeworkTask, Classroom } from "src/consts/types";
 import {
   getLessons,
   getHomeworkSubmissions,
@@ -10,6 +10,8 @@ import {
   createHomeworkAssignment,
   deleteHomeworkAssignment,
   updateHomeworkAssignment,
+  getClassrooms,
+
 } from "./lesson.action";
 
 interface LessonState {
@@ -22,6 +24,7 @@ interface LessonState {
   selectedHomework: HomeworkTask | null;
   selectedSubmissions: HomeworkSubmission[] | null;
   shouldRefresh: boolean;
+  classrooms: Classroom[] | null;
 }
 
 const INIT_LESSON_STATE: LessonState = {
@@ -34,6 +37,7 @@ const INIT_LESSON_STATE: LessonState = {
   selectedHomework: null,
   selectedSubmissions: null,
   shouldRefresh: false,
+  classrooms: null,
 };
 
 export const lessonSlice = createSlice({
@@ -220,6 +224,18 @@ export const lessonSlice = createSlice({
       .addCase(updateHomeworkAssignment.rejected, (state, { payload }) => {
         state.submissionLoading = false;
         state.submissionError = payload as string;
+      }).addCase(getClassrooms.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getClassrooms.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.classrooms = payload;
+        state.error = null;
+      })
+      .addCase(getClassrooms.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload as string;
       });
   },
 });

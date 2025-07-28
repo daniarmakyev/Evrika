@@ -7,6 +7,7 @@ import Table from "@components/Table";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import { getShedule } from "src/store/shedule/shedule.action";
+import { getUser, getGroup } from "src/store/user/user.action";
 import { LessonShedule } from "src/consts/types";
 import { formatTimeRangeShedule, getTimeInMinutes } from "src/consts/utilits";
 import { useModal } from "@context/ModalContext";
@@ -16,6 +17,7 @@ import TextArea from "@components/Fields/TextAreaField";
 import LessonCreateModal from "./SheduleUploadModal";
 import Close from "@icons/close.svg";
 import Succes from "@icons/succes.svg";
+import { getClassrooms } from "src/store/lesson/lesson.action";
 
 const TableSkeleton = () => (
   <div className={styles.tableSkeleton}>
@@ -45,13 +47,24 @@ const TableSkeleton = () => (
 export default function ProfileSchedule() {
   const [activeDay, setActiveDay] = useState<DayOfWeek>("MON");
   const [role, setRole] = useState<string | null>(null);
-  const [attendanceData, setAttendanceData] = useState<{[key: number]: boolean}>({});
+  const [attendanceData, setAttendanceData] = useState<{
+    [key: number]: boolean;
+  }>({});
+
   const { shedule, loading, error } = useAppSelector((state) => state.shedule);
+  const { user, groups } = useAppSelector((state) => state.user);
+  const { classrooms } = useAppSelector((state) => state.lesson);
+
   const dispatch = useAppDispatch();
 
   const lessonModal = useModal<LessonShedule>("lesson");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const groupModal = useModal<{groupName: string, lessonId: number, students: any[]}>("group");
+  const groupModal = useModal<{
+    groupName: string;
+    lessonId: number;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    students: any[];
+  }>("group");
   const createLessonModal = useModal("create-lesson");
 
   const handleDayChange = (day: DayOfWeek) => {
@@ -63,9 +76,9 @@ export default function ProfileSchedule() {
   };
 
   const toggleAttendance = (studentId: number) => {
-    setAttendanceData(prev => ({
+    setAttendanceData((prev) => ({
       ...prev,
-      [studentId]: !prev[studentId]
+      [studentId]: !prev[studentId],
     }));
   };
 
@@ -79,11 +92,31 @@ export default function ProfileSchedule() {
 
   useEffect(() => {
     dispatch(getShedule());
+    dispatch(getUser());
+
     const userRole = localStorage.getItem("role");
     if (userRole) {
       setRole(userRole);
+      if (userRole === "admin" || userRole === "teacher") {
+        dispatch(getGroup(userRole));
+        dispatch(getClassrooms());
+      }
     }
   }, [dispatch]);
+
+  const handleCreateLessonClick = () => {
+    if (!user) {
+      dispatch(getUser());
+    }
+    if (!classrooms) {
+      dispatch(getClassrooms());
+    }
+    if (!groups && role) {
+      dispatch(getGroup(role));
+    }
+
+    createLessonModal.openModal({});
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transformScheduleData = (scheduleEntries: any[]) => {
@@ -116,11 +149,13 @@ export default function ProfileSchedule() {
           return (
             <button
               className={styles.table__button}
-              onClick={() => groupModal.openModal({
-                groupName: rowData.group,
-                lessonId: rowData.lessons[0]?.id || 0,
-                students: mockStudentsData
-              })}
+              onClick={() =>
+                groupModal.openModal({
+                  groupName: rowData.group,
+                  lessonId: rowData.lessons[0]?.id || 0,
+                  students: mockStudentsData,
+                })
+              }
             >
               {rowData.group}
             </button>
@@ -206,13 +241,7 @@ export default function ProfileSchedule() {
           <div className={styles.schedule__title}>
             <h3>Расписание занятий</h3>
             {role === "admin" || role === "teacher" ? (
-              <button
-                onClick={() => {
-                  createLessonModal.openModal({});
-                }}
-              >
-                Добавить урок
-              </button>
+              <button onClick={handleCreateLessonClick}>Добавить урок</button>
             ) : null}
           </div>
 
@@ -279,7 +308,11 @@ export default function ProfileSchedule() {
       <ProfileModal
         isOpen={groupModal.isOpen}
         onClose={groupModal.closeModal}
-        title={groupModal.data ? `Посещаемость: ${groupModal.data.groupName}` : "Посещаемость"}
+        title={
+          groupModal.data
+            ? `Посещаемость: ${groupModal.data.groupName}`
+            : "Посещаемость"
+        }
         size="lg"
       >
         <div className={styles.students}>
@@ -288,7 +321,8 @@ export default function ProfileSchedule() {
             <h4>Посещаемость</h4>
           </header>
           <div className={styles.students__list}>
-            {groupModal.data?.students && groupModal.data.students.length > 0 ? (
+            {groupModal.data?.students &&
+            groupModal.data.students.length > 0 ? (
               groupModal.data.students.map((student) => (
                 <div key={student.id} className={styles.student__item}>
                   <span className={styles.student__name}>
@@ -296,11 +330,17 @@ export default function ProfileSchedule() {
                   </span>
                   <button
                     className={`${styles.attendance__button} ${
-                      attendanceData[student.id] ? styles.attendance__button_active : ''
+                      attendanceData[student.id]
+                        ? styles.attendance__button_active
+                        : ""
                     }`}
                     onClick={() => toggleAttendance(student.id)}
                   >
-                    {attendanceData[student.id] ? <Succes/> : <Close strokeWidth={3} />}
+                    {attendanceData[student.id] ? (
+                      <Succes />
+                    ) : (
+                      <Close strokeWidth={3} />
+                    )}
                   </button>
                 </div>
               ))
@@ -314,6 +354,9 @@ export default function ProfileSchedule() {
       <LessonCreateModal
         isOpen={createLessonModal.isOpen}
         onClose={createLessonModal.closeModal}
+        onSuccess={() => {
+          dispatch(getShedule());
+        }}
       />
     </div>
   );

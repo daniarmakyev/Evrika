@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { $apiPrivate } from "src/consts/api";
-import { LessonListItem, HomeworkSubmission, CustomApiError, HomeworkTask } from "src/consts/types";
+import { LessonListItem, HomeworkSubmission, CustomApiError, HomeworkTask, CreateLessonRequest, Classroom } from "src/consts/types";
 
 export const getLessons = createAsyncThunk<
   LessonListItem[],
@@ -17,6 +17,42 @@ export const getLessons = createAsyncThunk<
       if (axios.isAxiosError<CustomApiError>(err)) {
         if (err.response?.status === 404) return rejectWithValue("");
         return rejectWithValue(err.response?.data.detail || "Ошибка получения уроков");
+      }
+      return rejectWithValue("Неизвестная ошибка!");
+    }
+  }
+);
+
+export const createLesson = createAsyncThunk<
+  void,
+  { groupId: number; body: CreateLessonRequest },
+  { rejectValue: string }
+>(
+  "lesson/createLesson",
+  async ({ groupId, body }, { rejectWithValue, dispatch }) => {
+    try {
+      const formatTime = (time: string) => {
+        if (time.includes('Z') || time.includes(':') && time.split(':').length === 3) {
+          return time;
+        }
+        return `${time}:00`;
+      };
+
+      const formattedBody = {
+        ...body,
+        lesson_start: formatTime(body.lesson_start),
+        lesson_end: formatTime(body.lesson_end),
+        passed: body.passed || false
+      };
+
+      await $apiPrivate.post(
+        `/lessons/group/${groupId}`,
+        formattedBody
+      );
+      dispatch(getLessons(groupId));
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        return rejectWithValue(err.response?.data.detail || "Ошибка при создании урока");
       }
       return rejectWithValue("Неизвестная ошибка!");
     }
@@ -50,7 +86,6 @@ export const getHomeworkSubmissions = createAsyncThunk<
   }
 );
 
-
 export const submitHomeworkSubmission = createAsyncThunk<
   HomeworkSubmission,
   { homework_id: number; content: string; file?: File | null },
@@ -74,9 +109,7 @@ export const submitHomeworkSubmission = createAsyncThunk<
         }
       );
 
-
       dispatch(getHomeworkSubmissions(homework_id));
-
       return data;
     } catch (err) {
       if (axios.isAxiosError<CustomApiError>(err)) {
@@ -89,7 +122,6 @@ export const submitHomeworkSubmission = createAsyncThunk<
     }
   }
 );
-
 
 export const updateHomeworkSubmission = createAsyncThunk<
   HomeworkSubmission,
@@ -226,7 +258,6 @@ export const updateHomeworkAssignment = createAsyncThunk<
 export const createHomeworkAssignment = createAsyncThunk<
   HomeworkTask & { submissions: HomeworkSubmission[] },
   {
-    title: string;
     description: string;
     deadline: string;
     lesson_id: number;
@@ -276,6 +307,25 @@ export const deleteHomeworkAssignment = createAsyncThunk<
         return rejectWithValue(err.response?.data.detail || "Не удалось удалить домашнее задание");
       }
       return rejectWithValue("Неизвестная ошибка");
+    }
+  }
+);
+
+export const getClassrooms = createAsyncThunk<
+  Classroom[],
+  void,
+  { rejectValue: string }
+>(
+  "lesson/getClassrooms",
+  async (_, { rejectWithValue }) => {
+    try {
+      const { data } = await $apiPrivate.get<Classroom[]>(`/classrooms/`);
+      return data;
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        return rejectWithValue(err.response?.data.detail || "Ошибка получения аудиторий");
+      }
+      return rejectWithValue("Неизвестная ошибка!");
     }
   }
 );

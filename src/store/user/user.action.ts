@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { $apiPrivate } from "src/consts/api";
-import { GroupType, UserType } from "src/consts/types";
+import { GroupDetail, GroupResponseType, UserType } from "src/consts/types";
 
 interface CustomApiError {
     detail?: string;
@@ -27,25 +27,37 @@ export const getUser = createAsyncThunk<
 );
 
 export const getGroup = createAsyncThunk<
-    GroupType[],
+    GroupResponseType,
     string,
     { rejectValue: string }
 >(
     "user/getGroup",
     async (role, { rejectWithValue }) => {
         try {
-            let data;
-            if (role === "admin" || role === "teacher") {
-                const response = await $apiPrivate.get<GroupType[]>(`/group-students/?limit=10&offset=0`);
-                data = response.data;
-            } else {
-                const response = await $apiPrivate.get<GroupType[]>(`/group-students/my`);
-                data = response.data;
-            }
+            const { data } = await $apiPrivate.get<GroupResponseType>(`/group/my`);
             return data;
         } catch (err) {
             if (axios.isAxiosError<CustomApiError>(err)) {
                 return rejectWithValue(err.response?.data.detail || "Ошибка получения групп");
+            }
+            return rejectWithValue("Неизвестная ошибка!");
+        }
+    }
+);
+
+export const getGroupById = createAsyncThunk<
+    GroupDetail,
+    number | string,
+    { rejectValue: string }
+>(
+    "user/getGroupById",
+    async (id, { rejectWithValue }) => {
+        try {
+            const { data } = await $apiPrivate.get<GroupDetail>(`group-students/${id}`);
+            return data;
+        } catch (err) {
+            if (axios.isAxiosError<CustomApiError>(err)) {
+                return rejectWithValue(err.response?.data.detail || "Ошибка получения группы");
             }
             return rejectWithValue("Неизвестная ошибка!");
         }
