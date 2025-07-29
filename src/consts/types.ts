@@ -147,8 +147,8 @@ export type CreateLessonRequest = {
   name: string;
   description: string;
   link?: string;
-  day: string; 
-  lesson_start: string; 
+  day: string;
+  lesson_start: string;
   lesson_end: string;
   teacher_id: number;
   classroom_id: number;
@@ -159,4 +159,13 @@ export interface Classroom {
   id: number;
   name: string;
   created_at: string;
+}
+
+
+export interface AttendanceType {
+  id: number;
+  status: "absent" | "attended";
+  created_at: string;
+  student?: UserType | null;
+  lesson_id: number | null | string;
 }

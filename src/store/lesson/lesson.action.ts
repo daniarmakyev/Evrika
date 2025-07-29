@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { $apiPrivate } from "src/consts/api";
-import { LessonListItem, HomeworkSubmission, CustomApiError, HomeworkTask, CreateLessonRequest, Classroom } from "src/consts/types";
+import { LessonListItem, HomeworkSubmission, CustomApiError, HomeworkTask, CreateLessonRequest, Classroom, LessonShedule } from "src/consts/types";
 
 export const getLessons = createAsyncThunk<
   LessonListItem[],
@@ -47,6 +47,42 @@ export const createLesson = createAsyncThunk<
 
       await $apiPrivate.post(
         `/lessons/group/${groupId}`,
+        formattedBody
+      );
+      dispatch(getLessons(groupId));
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        return rejectWithValue(err.response?.data.detail || "Ошибка при создании урока");
+      }
+      return rejectWithValue("Неизвестная ошибка!");
+    }
+  }
+);
+
+export const editLesson = createAsyncThunk<
+  void,
+  { lesson: LessonShedule; groupId: number | string; body: CreateLessonRequest },
+  { rejectValue: string }
+>(
+  "lesson/editLesson",
+  async ({ lesson, groupId, body }, { rejectWithValue, dispatch }) => {
+    try {
+      const formatTime = (time: string) => {
+        if (time.includes('Z') || time.includes(':') && time.split(':').length === 3) {
+          return time;
+        }
+        return `${time}:00`;
+      };
+
+      const formattedBody = {
+        ...body,
+        lesson_start: formatTime(body.lesson_start),
+        lesson_end: formatTime(body.lesson_end),
+        passed: body.passed || false
+      };
+
+      await $apiPrivate.patch(
+        `/lessons/${lesson.id}`,
         formattedBody
       );
       dispatch(getLessons(groupId));

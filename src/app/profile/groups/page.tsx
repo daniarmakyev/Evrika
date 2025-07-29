@@ -9,10 +9,11 @@ import { useEffect } from "react";
 import { getGroup, getGroupById } from "src/store/user/user.action";
 import { GroupType } from "src/consts/types";
 import Link from "next/link";
+import LoadingSpinner from "@components/Ui/LoadingSpinner";
 
 export default function Groups() {
   const groupModal = useModal<GroupType>("groups");
-  const { groups, group, loading, error } = useAppSelector(
+  const { groups, group, loading, error, groupLoading } = useAppSelector(
     (state) => state.user
   );
   const dispatch = useAppDispatch();
@@ -95,50 +96,57 @@ export default function Groups() {
         title={groupModal.data ? `Группа: ${groupModal.data.name}` : "Группа"}
         size="lg"
       >
-        <div className={styles.students}>
-          <header className={styles.groups__header}>
-            <h4>ФИО</h4>
-            <h4>Действие</h4>
-          </header>
+        {!groupLoading ? (
+          <div className={styles.students}>
+            <header className={styles.groups__header}>
+              <h4>ФИО</h4>
+              <h4>Действие</h4>
+            </header>
 
-          <div className={styles.students__list}>
-            {loading ? (
-              <div className={styles.students__loading}>
-                Загрузка студентов...
-              </div>
-            ) : error ? (
-              <div className={styles.students__error}>
-                Ошибка загрузки: {error}
-              </div>
-            ) : currentStudents.length > 0 ? (
-              currentStudents.map((student) => (
-                <div key={student.id} className={styles.student__item}>
-                  <span className={styles.student__name}>
-                    {student.last_name} {student.first_name}
-                  </span>
-                  <Link
-                    href={`/profile/homework/${student.id}`}
-                    className={styles.student__button}
-                    onClick={() =>
-                      handleOpenProfile(
-                        student.id,
-                        `${student.last_name} ${student.first_name}`
-                      )
-                    }
-                  >
-                    Открыть
-                  </Link>
+            <div className={styles.students__list}>
+              {loading ? (
+                <div className={styles.students__loading}>
+                  Загрузка студентов...
                 </div>
-              ))
-            ) : (
-              <div className={styles.students__empty}>
-                Студенты не найдены
-                <br />
-                <small>Группа: {groupModal.data?.name || "не выбрана"}</small>
-              </div>
-            )}
+              ) : error ? (
+                <div className={styles.students__error}>
+                  Ошибка загрузки: {error}
+                </div>
+              ) : currentStudents.length > 0 ? (
+                currentStudents.map((student) => (
+                  <div key={student.id} className={styles.student__item}>
+                    <span className={styles.student__name}>
+                      {student.last_name} {student.first_name}
+                    </span>
+                    <Link
+                      href={`/profile/homework/${student.id}`}
+                      className={styles.student__button}
+                      onClick={() =>
+                        handleOpenProfile(
+                          student.id,
+                          `${student.last_name} ${student.first_name}`
+                        )
+                      }
+                    >
+                      Открыть
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <div className={styles.students__empty}>
+                  Студенты не найдены
+                  <br />
+                  <small>Группа: {groupModal.data?.name || "не выбрана"}</small>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className={styles.students__loading}>
+            <LoadingSpinner />
+            <span>Загрузка групп...</span>
+          </div>
+        )}
       </ProfileModal>
     </div>
   );

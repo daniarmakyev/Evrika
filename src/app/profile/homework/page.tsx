@@ -22,7 +22,6 @@ import {
   LessonInfoModal,
   HomeworkSubmissionModal,
   HomeworkUploadModal,
-  // Добавим модалку для примечания
 } from "@components/HomeworkModals";
 import ProfileModal from "@components/ProfileModal";
 import {
