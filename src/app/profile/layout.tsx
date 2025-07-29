@@ -1,3 +1,5 @@
+
+// Исправленный ProfileLayout
 "use client";
 
 import Footer from "@components/Footer";
@@ -28,10 +30,10 @@ export default function ProfileLayout({
   }, [params]);
 
   useEffect(() => {
-    if(params){
+    if (params) {
       dispatch(getUser());
     }
-  }, [params,dispatch]);
+  }, [params, dispatch]);
 
   const isProfileStudent = !!studentId;
 
@@ -47,10 +49,10 @@ export default function ProfileLayout({
   }, [user, dispatch]);
 
   useEffect(() => {
-    if (groups) {
+    if (groups?.groups) {
       localStorage.setItem(
         "groups",
-        JSON.stringify(groups.map((item) => item.id))
+        JSON.stringify(groups.groups.map((item) => item.id))
       );
     }
   }, [groups]);

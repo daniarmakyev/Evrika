@@ -6,12 +6,14 @@ interface SheduleState {
   error: string | null;
   loading: boolean;
   shedule: ScheduleType | null;
+
 }
 
 const INIT_STATE: SheduleState = {
   error: null,
   loading: false,
   shedule: null,
+
 };
 
 export const sheduleSlice = createSlice({
@@ -28,8 +30,8 @@ export const sheduleSlice = createSlice({
       state.error = null;
     }).addCase(getShedule.rejected, (state, { payload }) => {
       state.loading = false;
-      state.error = payload || "Failed to fetch schedule";
+      state.error = payload || "Failed to get schedule";
       state.shedule = null;
-    });
+    })
   },
 });

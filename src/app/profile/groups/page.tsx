@@ -6,23 +6,34 @@ import ProfileModal from "@components/ProfileModal";
 import { useModal } from "@context/ModalContext";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import { useEffect } from "react";
-import { getGroup } from "src/store/user/user.action";
+import { getGroup, getGroupById } from "src/store/user/user.action";
 import { GroupType } from "src/consts/types";
 import Link from "next/link";
+import LoadingSpinner from "@components/Ui/LoadingSpinner";
 
 export default function Groups() {
   const groupModal = useModal<GroupType>("groups");
-  const { groups } = useAppSelector((state) => state.user);
+  const { groups, group, loading, error, groupLoading } = useAppSelector(
+    (state) => state.user
+  );
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(getGroup("teacher"));
   }, [dispatch]);
 
-  const groupsTableData = (groups || []).map((g) => ({
+  useEffect(() => {
+    if (groupModal.isOpen && groupModal.data?.id) {
+      dispatch(getGroupById(groupModal.data.id));
+    }
+  }, [groupModal.isOpen, groupModal.data?.id, dispatch]);
+
+  const groupsArray = groups?.groups || [];
+
+  const groupsTableData = groupsArray.map((g) => ({
     group: g.name,
     time: g.start_date && g.end_date ? `${g.start_date} — ${g.end_date}` : "",
-    count: Array.isArray(g.students) ? g.students.length : 0,
+    count: g.student_count || 0,
     ...g,
   }));
 
@@ -34,7 +45,7 @@ export default function Groups() {
     },
     {
       key: "time",
-      title: "Период",
+      title: "Время",
       width: "230px",
     },
     {
@@ -65,11 +76,7 @@ export default function Groups() {
     console.log(`Открыть профиль студента: ${studentName} (ID: ${studentId})`);
   };
 
-  const currentStudents =
-    Array.isArray(groupModal.data?.students) &&
-    groupModal.data.students.length > 0
-      ? groupModal.data.students
-      : [];
+  const currentStudents = group?.students || [];
 
   return (
     <div className={styles.groups}>
@@ -89,41 +96,57 @@ export default function Groups() {
         title={groupModal.data ? `Группа: ${groupModal.data.name}` : "Группа"}
         size="lg"
       >
-        <div className={styles.students}>
-          <header className={styles.groups__header}>
-            <h4>ФИО</h4>
-            <h4>Действие</h4>
-          </header>
-          <div className={styles.students__list}>
-            {currentStudents.length > 0 ? (
-              currentStudents.map((student) => (
-                <div key={student.id} className={styles.student__item}>
-                  <span className={styles.student__name}>
-                    {student.last_name} {student.first_name}
-                  </span>
-                  <Link
-                  href={`/profile/homework/${student.id}`}
-                    className={styles.student__button}
-                    onClick={() =>
-                      handleOpenProfile(
-                        student.id,
-                        `${student.last_name} ${student.first_name}`
-                      )
-                    }
-                  >
-                    Открыть
-                  </Link>
+        {!groupLoading ? (
+          <div className={styles.students}>
+            <header className={styles.groups__header}>
+              <h4>ФИО</h4>
+              <h4>Действие</h4>
+            </header>
+
+            <div className={styles.students__list}>
+              {loading ? (
+                <div className={styles.students__loading}>
+                  Загрузка студентов...
                 </div>
-              ))
-            ) : (
-              <div className={styles.students__empty}>
-                Студенты не найдены
-                <br />
-                <small>Группа: {groupModal.data?.name || "не выбрана"}</small>
-              </div>
-            )}
+              ) : error ? (
+                <div className={styles.students__error}>
+                  Ошибка загрузки: {error}
+                </div>
+              ) : currentStudents.length > 0 ? (
+                currentStudents.map((student) => (
+                  <div key={student.id} className={styles.student__item}>
+                    <span className={styles.student__name}>
+                      {student.last_name} {student.first_name}
+                    </span>
+                    <Link
+                      href={`/profile/homework/${student.id}`}
+                      className={styles.student__button}
+                      onClick={() =>
+                        handleOpenProfile(
+                          student.id,
+                          `${student.last_name} ${student.first_name}`
+                        )
+                      }
+                    >
+                      Открыть
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <div className={styles.students__empty}>
+                  Студенты не найдены
+                  <br />
+                  <small>Группа: {groupModal.data?.name || "не выбрана"}</small>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className={styles.students__loading}>
+            <LoadingSpinner />
+            <span>Загрузка групп...</span>
+          </div>
+        )}
       </ProfileModal>
     </div>
   );

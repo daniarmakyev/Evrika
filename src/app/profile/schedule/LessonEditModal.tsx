@@ -4,9 +4,14 @@ import TextArea from "@components/Fields/TextAreaField";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { createLesson, getClassrooms } from "src/store/lesson/lesson.action";
+import { editLesson, getClassrooms } from "src/store/lesson/lesson.action";
 import { clearError } from "src/store/lesson/lesson.slice";
 import { getUser, getGroup } from "src/store/user/user.action";
+import { LessonShedule } from "src/consts/types";
+
+interface LessonSheduleExtended extends LessonShedule {
+  group_id?: number;
+}
 import styles from "./modal.module.scss";
 
 type LessonFormData = {
@@ -15,7 +20,6 @@ type LessonFormData = {
   link: string;
   timeFrom: string;
   timeTo: string;
-  groups: string;
   date: string;
   classrooms: string | number;
 };
@@ -24,18 +28,17 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   onSuccess?: () => void;
-  groupId?: number;
+  lesson?: LessonSheduleExtended | null;
 };
 
-const LessonCreateModal: React.FC<Props> = ({
+const LessonEditModal: React.FC<Props> = ({
   isOpen,
   onClose,
   onSuccess,
-  groupId,
+  lesson,
 }) => {
   const dispatch = useAppDispatch();
 
-  // Redux state
   const { error, loading } = useAppSelector((state) => state.lesson);
   const { classrooms, loading: classroomsLoading } = useAppSelector(
     (state) => state.lesson
@@ -50,6 +53,7 @@ const LessonCreateModal: React.FC<Props> = ({
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<LessonFormData>({
     defaultValues: {
@@ -58,11 +62,22 @@ const LessonCreateModal: React.FC<Props> = ({
       link: "",
       timeFrom: "",
       timeTo: "",
-      groups: "",
       date: "",
       classrooms: "",
     },
   });
+
+  useEffect(() => {
+    if (isOpen && lesson) {
+      setValue("name", lesson.name || "");
+      setValue("description", lesson.description || "");
+      setValue("link", lesson.link || "");
+      setValue("timeFrom", lesson.lesson_start || "");
+      setValue("timeTo", lesson.lesson_end || "");
+      setValue("classrooms", lesson.classroom?.id || "");
+      setValue("date", lesson.day || "");
+    }
+  }, [isOpen, lesson, setValue]);
 
   useEffect(() => {
     if (isOpen) {
@@ -74,14 +89,14 @@ const LessonCreateModal: React.FC<Props> = ({
         dispatch(getClassrooms());
       }
 
-      if (!groupId && !groups) {
+      if (!groups) {
         const userRole = localStorage.getItem("role");
         if (userRole) {
           dispatch(getGroup(userRole));
         }
       }
     }
-  }, [isOpen, user, classrooms, groups, groupId, dispatch]);
+  }, [isOpen, user, classrooms, groups, dispatch]);
 
   const handleClose = () => {
     reset();
@@ -91,9 +106,9 @@ const LessonCreateModal: React.FC<Props> = ({
 
   const onSubmit = async (formData: LessonFormData) => {
     try {
-      if (!user?.id) {
+      if (!user?.id || !lesson?.id) {
         throw new Error(
-          "Не удалось получить ID преподавателя. Попробуйте перезагрузить страницу."
+          "Не удалось получить данные для обновления урока. Попробуйте перезагрузить страницу."
         );
       }
 
@@ -106,18 +121,18 @@ const LessonCreateModal: React.FC<Props> = ({
         lesson_end: formData.timeTo,
         teacher_id: user.id,
         classroom_id: Number(formData.classrooms),
-        passed: false,
       };
 
-      const targetGroupId = groupId || Number(formData.groups);
+      const groupId = lesson.group_id || groups?.groups?.[0]?.id;
 
-      if (!targetGroupId) {
-        throw new Error("Выберите группу для урока");
+      if (!groupId) {
+        throw new Error("Не удалось определить группу для урока");
       }
 
       await dispatch(
-        createLesson({
-          groupId: targetGroupId,
+        editLesson({
+          lesson: lesson,
+          groupId: groupId,
           body: lessonData,
         })
       ).unwrap();
@@ -129,11 +144,9 @@ const LessonCreateModal: React.FC<Props> = ({
       reset();
       onClose();
     } catch (error) {
-      console.error("Error creating lesson:", error);
+      console.error("Error updating lesson:", error);
     }
   };
-
-  const availableGroups = groups?.groups || [];
 
   const isDataLoading = userLoading || (!user && isOpen);
 
@@ -141,7 +154,7 @@ const LessonCreateModal: React.FC<Props> = ({
     <ProfileModal
       isOpen={isOpen}
       onClose={handleClose}
-      title="Создание урока"
+      title="Редактирование урока"
       size="lg"
     >
       {isDataLoading ? (
@@ -246,30 +259,6 @@ const LessonCreateModal: React.FC<Props> = ({
             </div>
 
             <div className={styles.rightFields}>
-              {!groupId && (
-                <div className={styles.fieldGroup}>
-                  <h4>Выберите группы</h4>
-                  <select
-                    {...register("groups", {
-                      required: "Выбор группы обязателен",
-                    })}
-                    className={styles.selectField}
-                  >
-                    <option value="">Выберите группу</option>
-                    {availableGroups.map((group) => (
-                      <option key={group.id} value={group.id}>
-                        {group.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.groups && (
-                    <span className={styles.errorMessage}>
-                      {errors.groups.message}
-                    </span>
-                  )}
-                </div>
-              )}
-
               <div className={styles.fieldGroup}>
                 <h4>Дата</h4>
                 <InputField
@@ -290,7 +279,7 @@ const LessonCreateModal: React.FC<Props> = ({
               className={styles.save__button}
               disabled={isSubmitting || loading || !user}
             >
-              {isSubmitting || loading ? "Создание..." : "Создать"}
+              {isSubmitting || loading ? "Сохранение..." : "Сохранить"}
             </button>
           </div>
         </form>
@@ -299,4 +288,4 @@ const LessonCreateModal: React.FC<Props> = ({
   );
 };
 
-export default LessonCreateModal;
+export default LessonEditModal;

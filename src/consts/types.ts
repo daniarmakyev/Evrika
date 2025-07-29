@@ -1,9 +1,6 @@
 export type DayCode = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
 
-export interface Group {
-  id: number;
-  name: string;
-}
+
 
 export interface Classroom {
   id: number;
@@ -29,7 +26,10 @@ export interface LessonShedule {
 }
 
 export interface ScheduleEntry {
-  group: Group;
+  group: {
+    id: number | string;
+    name: string;
+  };
   lessons: LessonShedule[];
 }
 
@@ -91,22 +91,81 @@ export interface HomeworkSubmission {
 export interface GroupType {
   id: number;
   name: string;
-  created_at?: string;
   start_date: string;
   end_date: string;
+  approximate_lesson_start: string;
   is_active: boolean;
-  is_archived?: boolean;
-  course_id?: number;
-  teacher?: Teacher;
-  teacher_id?: number;
-  student_count: number | string;
-  students?: Array<{
+  student_count: number;
+}
+
+export interface PaginationType {
+  current_page_size: number;
+  current_page: number;
+  total_pages: number;
+}
+
+export interface GroupResponseType {
+  groups: GroupType[];
+  pagination: PaginationType;
+}
+
+export type GroupDetail = {
+  id: number;
+  name: string;
+  created_at: string;
+  start_date: string;
+  end_date: string;
+  approximate_lesson_start: string;
+  is_active: boolean;
+  is_archived: boolean;
+  course_id: number;
+  teacher_id: number;
+  teacher: {
     id: number;
     first_name: string;
     last_name: string;
-  }>;
-}
+    email: string;
+    phone_number: string;
+    role: string;
+    password: string | null;
+  };
+  students: {
+    id: number;
+    first_name: string;
+    last_name: string;
+  }[];
+};
+
+
 
 export interface CustomApiError {
   detail?: string;
+}
+
+
+export type CreateLessonRequest = {
+  name: string;
+  description: string;
+  link?: string;
+  day: string;
+  lesson_start: string;
+  lesson_end: string;
+  teacher_id: number;
+  classroom_id: number;
+  passed?: boolean;
+};
+
+export interface Classroom {
+  id: number;
+  name: string;
+  created_at: string;
+}
+
+
+export interface AttendanceType {
+  id: number;
+  status: "absent" | "attended";
+  created_at: string;
+  student?: UserType | null;
+  lesson_id: number | null | string;
 }

@@ -7,15 +7,24 @@ import Table from "@components/Table";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import { getShedule } from "src/store/shedule/shedule.action";
-import { LessonShedule } from "src/consts/types";
+import {
+  getUser,
+  getGroup,
+  getAttendanceByLesson,
+  editAttendance,
+} from "src/store/user/user.action";
+import { AttendanceType, LessonShedule } from "src/consts/types";
 import { formatTimeRangeShedule, getTimeInMinutes } from "src/consts/utilits";
 import { useModal } from "@context/ModalContext";
 import ProfileModal from "@components/ProfileModal";
 import InputField from "@components/Fields/InputField";
 import TextArea from "@components/Fields/TextAreaField";
 import LessonCreateModal from "./SheduleUploadModal";
+import LessonEditModal from "./LessonEditModal";
 import Close from "@icons/close.svg";
 import Succes from "@icons/succes.svg";
+import { getClassrooms } from "src/store/lesson/lesson.action";
+import LoadingSpinner from "@components/Ui/LoadingSpinner";
 
 const TableSkeleton = () => (
   <div className={styles.tableSkeleton}>
@@ -45,13 +54,27 @@ const TableSkeleton = () => (
 export default function ProfileSchedule() {
   const [activeDay, setActiveDay] = useState<DayOfWeek>("MON");
   const [role, setRole] = useState<string | null>(null);
-  const [attendanceData, setAttendanceData] = useState<{[key: number]: boolean}>({});
+  const [pendingUpdates, setPendingUpdates] = useState<number[]>([]);
+
   const { shedule, loading, error } = useAppSelector((state) => state.shedule);
+  const {
+    user,
+    groups,
+    attendance,
+     attendanceLoading,
+  } = useAppSelector((state) => state.user);
+  const { classrooms } = useAppSelector((state) => state.lesson);
+
   const dispatch = useAppDispatch();
 
   const lessonModal = useModal<LessonShedule>("lesson");
+  const lessonEditModal = useModal<LessonShedule>("lesson-edit");
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const groupModal = useModal<{groupName: string, lessonId: number, students: any[]}>("group");
+  const groupModal = useModal<{
+    title?: string;
+    lessonId?: number;
+    attendanceData?: AttendanceType[] | null;
+  }>("group");
   const createLessonModal = useModal("create-lesson");
 
   const handleDayChange = (day: DayOfWeek) => {
@@ -62,28 +85,72 @@ export default function ProfileSchedule() {
     dispatch(getShedule());
   };
 
-  const toggleAttendance = (studentId: number) => {
-    setAttendanceData(prev => ({
-      ...prev,
-      [studentId]: !prev[studentId]
-    }));
-  };
+  const toggleAttendance = async (attendanceId: number) => {
+    if (!attendance || pendingUpdates.includes(attendanceId)) {
+      return;
+    }
 
-  const mockStudentsData = [
-    { id: 1, first_name: "Иван", last_name: "Иванов" },
-    { id: 2, first_name: "Петр", last_name: "Петров" },
-    { id: 3, first_name: "Сидор", last_name: "Сидоров" },
-    { id: 4, first_name: "Анна", last_name: "Кузнецова" },
-    { id: 5, first_name: "Александр", last_name: "Смирнов" },
-  ];
+    const currentAttendance = attendance.find((att) => att.id === attendanceId);
+    if (!currentAttendance) {
+      console.error("Attendance record not found");
+      return;
+    }
+
+    const newStatus =
+      currentAttendance.status === "attended" ? "absent" : "attended";
+
+    setPendingUpdates((prev) => [...prev, attendanceId]);
+
+    try {
+      await dispatch(
+        editAttendance({
+          attendance_id: attendanceId,
+          status: { status: newStatus },
+        })
+      ).unwrap();
+    } catch (error) {
+      console.error("Failed to update attendance:", error);
+    } finally {
+      setPendingUpdates((prev) => prev.filter((id) => id !== attendanceId));
+    }
+  };
 
   useEffect(() => {
     dispatch(getShedule());
+    dispatch(getUser());
+
     const userRole = localStorage.getItem("role");
     if (userRole) {
       setRole(userRole);
+      if (userRole === "admin" || userRole === "teacher") {
+        dispatch(getGroup(userRole));
+        dispatch(getClassrooms());
+      }
     }
   }, [dispatch]);
+
+  const handleCreateLessonClick = () => {
+    if (!user) {
+      dispatch(getUser());
+    }
+    if (!classrooms) {
+      dispatch(getClassrooms());
+    }
+    if (!groups && role) {
+      dispatch(getGroup(role));
+    }
+
+    createLessonModal.openModal({});
+  };
+
+  const handleLessonClick = (lesson: LessonShedule, groupId?: number) => {
+    if (role === "admin" || role === "teacher") {
+      const lessonWithGroup = { ...lesson, group_id: groupId };
+      lessonEditModal.openModal(lessonWithGroup);
+    } else {
+      lessonModal.openModal(lesson);
+    }
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transformScheduleData = (scheduleEntries: any[]) => {
@@ -104,6 +171,10 @@ export default function ProfileSchedule() {
     return transformedData.sort((a, b) => a.sortTime - b.sortTime);
   };
 
+  useEffect(() => {
+    console.log(attendanceLoading, attendance);
+  }, [attendanceLoading, attendance]);
+
   const scheduleColumns = [
     {
       key: "group",
@@ -116,11 +187,14 @@ export default function ProfileSchedule() {
           return (
             <button
               className={styles.table__button}
-              onClick={() => groupModal.openModal({
-                groupName: rowData.group,
-                lessonId: rowData.lessons[0]?.id || 0,
-                students: mockStudentsData
-              })}
+              onClick={async () => {
+                groupModal.openModal({
+                  title: rowData.group,
+                  lessonId: rowData.lessons[0]?.id || 0,
+                  attendanceData: null,
+                });
+                dispatch(getAttendanceByLesson(rowData.lessons[0]?.id || 0));
+              }}
             >
               {rowData.group}
             </button>
@@ -152,7 +226,7 @@ export default function ProfileSchedule() {
       render: (lessons: LessonShedule[]) => (
         <button
           className={styles.table__button}
-          onClick={() => lessonModal.openModal(lessons[0])}
+          onClick={() => handleLessonClick(lessons[0])}
         >
           {lessons[0]?.name}
         </button>
@@ -206,13 +280,7 @@ export default function ProfileSchedule() {
           <div className={styles.schedule__title}>
             <h3>Расписание занятий</h3>
             {role === "admin" || role === "teacher" ? (
-              <button
-                onClick={() => {
-                  createLessonModal.openModal({});
-                }}
-              >
-                Добавить урок
-              </button>
+              <button onClick={handleCreateLessonClick}>Добавить урок</button>
             ) : null}
           </div>
 
@@ -276,10 +344,23 @@ export default function ProfileSchedule() {
         )}
       </ProfileModal>
 
+      <LessonEditModal
+        isOpen={lessonEditModal.isOpen}
+        onClose={lessonEditModal.closeModal}
+        lesson={lessonEditModal.data}
+        onSuccess={() => {
+          dispatch(getShedule());
+        }}
+      />
+
       <ProfileModal
         isOpen={groupModal.isOpen}
         onClose={groupModal.closeModal}
-        title={groupModal.data ? `Посещаемость: ${groupModal.data.groupName}` : "Посещаемость"}
+        title={
+          groupModal.data
+            ? `Посещаемость: ${groupModal.data.title}`
+            : "Посещаемость"
+        }
         size="lg"
       >
         <div className={styles.students}>
@@ -288,24 +369,39 @@ export default function ProfileSchedule() {
             <h4>Посещаемость</h4>
           </header>
           <div className={styles.students__list}>
-            {groupModal.data?.students && groupModal.data.students.length > 0 ? (
-              groupModal.data.students.map((student) => (
-                <div key={student.id} className={styles.student__item}>
+            {attendanceLoading ? (
+              <div className={styles.students__loading}>
+                <LoadingSpinner />
+                <span>Загрузка посещаемости...</span>
+              </div>
+            ) : attendance && attendance[0] ? (
+              attendance.map((attendanceRecord) => (
+                <div key={attendanceRecord.id} className={styles.student__item}>
                   <span className={styles.student__name}>
-                    {student.first_name} {student.last_name}
+                    {attendanceRecord.student?.first_name}{" "}
+                    {attendanceRecord.student?.last_name}
                   </span>
                   <button
                     className={`${styles.attendance__button} ${
-                      attendanceData[student.id] ? styles.attendance__button_active : ''
+                      attendanceRecord.status === "attended"
+                        ? styles.attendance__button_active
+                        : ""
                     }`}
-                    onClick={() => toggleAttendance(student.id)}
+                    onClick={() => toggleAttendance(attendanceRecord.id)}
+                    disabled={pendingUpdates.includes(attendanceRecord.id)}
                   >
-                    {attendanceData[student.id] ? <Succes/> : <Close strokeWidth={3} />}
+                    {pendingUpdates.includes(attendanceRecord.id) ? (
+                      <span>...</span>
+                    ) : attendanceRecord.status === "attended" ? (
+                      <Succes />
+                    ) : (
+                      <Close strokeWidth={3} />
+                    )}
                   </button>
                 </div>
               ))
             ) : (
-              <div className={styles.students__empty}>Студенты не найдены</div>
+              <div className={styles.students__empty}>Студентов нету</div>
             )}
           </div>
         </div>
@@ -314,6 +410,9 @@ export default function ProfileSchedule() {
       <LessonCreateModal
         isOpen={createLessonModal.isOpen}
         onClose={createLessonModal.closeModal}
+        onSuccess={() => {
+          dispatch(getShedule());
+        }}
       />
     </div>
   );

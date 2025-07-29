@@ -1,7 +1,7 @@
 export const formatTimeShedule = (timeString: string): string => {
   try {
     const date = new Date(`2000-01-01T${timeString.replace("Z", "")}Z`);
-    date.setHours(date.getUTCHours() + 6);
+    date.setHours(date.getUTCHours());
 
     return date.toLocaleTimeString("ru-RU", {
       hour: "2-digit",

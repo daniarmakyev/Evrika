@@ -21,7 +21,6 @@ type Props = {
 };
 
 interface CreateHomeworkForm {
-  title: string;
   description: string;
   deadline: string;
   lessonId: string;
@@ -49,7 +48,6 @@ const HomeworkCreateModal: React.FC<Props> = ({
     watch,
   } = useForm<CreateHomeworkForm>({
     defaultValues: {
-      title: "",
       description: "",
       deadline: "",
       lessonId: "",
@@ -62,7 +60,6 @@ const HomeworkCreateModal: React.FC<Props> = ({
   useEffect(() => {
     if (isOpen) {
       reset({
-        title: "",
         description: "",
         deadline: "",
         lessonId: "",
@@ -91,7 +88,6 @@ const HomeworkCreateModal: React.FC<Props> = ({
 
       await dispatch(
         createHomeworkAssignment({
-          title: formData.title,
           description: formData.description,
           deadline: formData.deadline,
           lesson_id: parseInt(formData.lessonId),
@@ -147,21 +143,6 @@ const HomeworkCreateModal: React.FC<Props> = ({
             {submissionError}
           </div>
         )}
-
-        <div>
-          <h4>Название</h4>
-          <InputField
-            {...register("title", { required: "Название обязательно" })}
-            placeholder="Введите название домашнего задания..."
-            fullWidth
-            isShadow
-          />
-          {errors.title && (
-            <span style={{ color: "red", fontSize: "14px" }}>
-              {errors.title.message}
-            </span>
-          )}
-        </div>
 
         <div>
           <h4>Описание задания</h4>

@@ -80,7 +80,7 @@ export default function TeacherHomework() {
   const editModal = useModal<TeacherHomeworkTableItem>("edit");
   const createModal = useModal<object>("create");
 
-  const reloadLessons = () => {
+  const reloadLessons = React.useCallback(() => {
     const groupsId = localStorage.getItem("groups");
     if (groupsId) {
       try {
@@ -98,7 +98,7 @@ export default function TeacherHomework() {
         setErrorMessage("Ошибка при перезагрузке групп");
       }
     }
-  };
+  }, [dispatch]);
 
   useEffect(() => {
     if (shouldRefresh) {
@@ -262,7 +262,7 @@ export default function TeacherHomework() {
       <div className={styles.homework__content}>
         <div className={styles.homework__header}>
           <div className={styles.homework__title}>
-            <h3>Домашнее задание</h3>
+            <h3 style={{fontWeight:800, fontSize:"24px"}}>Домашнее задание</h3>
           </div>
           <button
             onClick={handleOpenCreateModal}
