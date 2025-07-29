@@ -42,7 +42,7 @@ interface HomeWorkTableItem {
   homeworkData: HomeworkTask;
 }
 
-const TableSkeleton = () => (
+ const TableSkeleton = () => (
   <div className={styles.tableSkeleton}>
     <div className={styles.tableHeaderSkeleton}>
       <div className={styles.skeletonHeaderCell}></div>
