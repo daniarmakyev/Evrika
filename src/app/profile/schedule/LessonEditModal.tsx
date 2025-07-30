@@ -1,10 +1,10 @@
 import ProfileModal from "@components/ProfileModal";
 import InputField from "@components/Fields/InputField";
 import TextArea from "@components/Fields/TextAreaField";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { editLesson, getClassrooms } from "src/store/lesson/lesson.action";
+import { editLesson, getClassrooms, deleteLesson } from "src/store/lesson/lesson.action";
 import { clearError } from "src/store/lesson/lesson.slice";
 import { getUser, getGroup } from "src/store/user/user.action";
 import { LessonShedule } from "src/consts/types";
@@ -38,6 +38,8 @@ const LessonEditModal: React.FC<Props> = ({
   lesson,
 }) => {
   const dispatch = useAppDispatch();
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const { error, loading } = useAppSelector((state) => state.lesson);
   const { classrooms, loading: classroomsLoading } = useAppSelector(
@@ -100,6 +102,8 @@ const LessonEditModal: React.FC<Props> = ({
 
   const handleClose = () => {
     reset();
+    setShowDeleteConfirm(false);
+    setIsDeleting(false);
     dispatch(clearError());
     onClose();
   };
@@ -145,6 +149,30 @@ const LessonEditModal: React.FC<Props> = ({
       onClose();
     } catch (error) {
       console.error("Error updating lesson:", error);
+    }
+  };
+
+  const handleDeleteLesson = async () => {
+    if (!lesson?.id) {
+      console.error("Lesson ID not found");
+      return;
+    }
+
+    setIsDeleting(true);
+    try {
+      await dispatch(deleteLesson(lesson.id)).unwrap();
+      
+      if (onSuccess) {
+        onSuccess();
+      }
+
+      reset();
+      setShowDeleteConfirm(false);
+      onClose();
+    } catch (error) {
+      console.error("Error deleting lesson:", error);
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -272,15 +300,53 @@ const LessonEditModal: React.FC<Props> = ({
               </div>
             </div>
           </div>
+          {showDeleteConfirm && (
+            <div className={styles.deleteConfirmation}>
+              <div className={styles.confirmationMessage}>
+                <h4>Подтвердите удаление</h4>
+                <p>Вы уверены, что хотите удалить этот урок? Это действие нельзя отменить.</p>
+              </div>
+              <div className={styles.confirmationButtons}>
+                <button
+                  type="button"
+                  className={styles.cancel__button}
+                  onClick={() => setShowDeleteConfirm(false)}
+                  disabled={isDeleting}
+                >
+                  Отмена
+                </button>
+                <button
+                  type="button"
+                  className={styles.delete__confirm__button}
+                  onClick={handleDeleteLesson}
+                  disabled={isDeleting}
+                >
+                  {isDeleting ? "Удаление..." : "Удалить"}
+                </button>
+              </div>
+            </div>
+          )}
 
           <div className={styles.buttonContainer}>
-            <button
-              type="submit"
-              className={styles.save__button}
-              disabled={isSubmitting || loading || !user}
-            >
-              {isSubmitting || loading ? "Сохранение..." : "Сохранить"}
-            </button>
+            <div className={styles.leftButtons}>
+              <button
+                type="button"
+                className={styles.delete__button}
+                onClick={() => setShowDeleteConfirm(true)}
+                disabled={isSubmitting || loading || !user || showDeleteConfirm}
+              >
+                Удалить урок
+              </button>
+            </div>
+            <div className={styles.rightButtons}>
+              <button
+                type="submit"
+                className={styles.save__button}
+                disabled={isSubmitting || loading || !user || showDeleteConfirm}
+              >
+                {isSubmitting || loading ? "Сохранение..." : "Сохранить"}
+              </button>
+            </div>
           </div>
         </form>
       )}

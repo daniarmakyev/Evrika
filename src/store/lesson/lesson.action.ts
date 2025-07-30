@@ -88,7 +88,27 @@ export const editLesson = createAsyncThunk<
       dispatch(getLessons(groupId));
     } catch (err) {
       if (axios.isAxiosError<CustomApiError>(err)) {
-        return rejectWithValue(err.response?.data.detail || "Ошибка при создании урока");
+        return rejectWithValue(err.response?.data.detail || "Ошибка при изменении урока");
+      }
+      return rejectWithValue("Неизвестная ошибка!");
+    }
+  }
+);
+
+
+export const deleteLesson = createAsyncThunk<
+  void,
+  number | string,
+  { rejectValue: string }
+>(
+  "lesson/deleteLesson",
+  async (lessonId, { rejectWithValue }) => {
+    try {
+      await $apiPrivate.delete(`/lessons/${lessonId}`);
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        if (err.response?.status === 404) return rejectWithValue("");
+        return rejectWithValue(err.response?.data.detail || "Ошибка удаления урока");
       }
       return rejectWithValue("Неизвестная ошибка!");
     }
