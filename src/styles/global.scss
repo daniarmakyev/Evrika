@@ -24,71 +24,80 @@
 }
 
 [data-theme='dark'] {
-
   --datepicker-icon-filter: invert(1);
 }
 
 html {
-  --header-height: 60px;
+  --header-height: 32px;
   --header-offset: 40px;
-  --header-compensation: -40px;
+  --header-compensation: -32px;
   --container-offset: #{$container};
   --app-height: 100vh;
   --app-height: -webkit-fill-available;
-  --section-height: calc(100vh - 40px);
+  --section-height: calc(100vh - 32px);
   background-color: var(--bg);
 
   @include respond-above(md) {
+    --header-height: 41px;
+    --header-offset: 41px;
+    --header-compensation: -41px;
+    --section-height: calc(100vh - 41px);
     --container-offset: #{$containerMD};
   }
 
+  @include respond-above(lg) {
+    --header-height: 50px;
+    --header-offset: 50px;
+    --header-compensation: -50px;
+    --section-height: calc(100vh - 50px);
+  }
+
   @include respond-above(mac) {
-    --header-height: 80px;
-    --header-offset: 80px;
+    --header-height: 60px;
+    --header-offset: 60px;
     --header-compensation: -60px;
     --container-offset: #{$containerMAC};
     --app-height: 100dvh;
-    --section-height: calc(100vh - 80px);
+    --section-height: calc(100vh - 60px);
   }
 
   @include respond-above(xlg) {
-    --header-height: 63.6px;
-    --header-offset: 63.6px;
-    --header-compensation: -63.6px;
-    --section-height: calc(100vh - 63.6px);
-    --container-offset: #{$containerXLG};
-  }
-
-  @include respond-above(xlg) {
-    --header-height: 63.6px;
-    --header-offset: 63.6px;
-    --header-compensation: -63.6px;
-    --section-height: calc(100vh - 63.6px);
+    --header-height: 67px;
+    --header-offset: 67px;
+    --header-compensation: -67px;
+    --section-height: calc(100vh - 67px);
     --container-offset: #{$containerXLG};
   }
 
   @include respond-above(fhd) {
-    --header-height: 67.2px;
-    --header-offset: 67.2px;
-    --header-compensation: -67.2px;
-    --section-height: calc(100vh - 67.2px);
+    --header-height: 80px;
+    --header-offset: 80px;
+    --header-compensation: -80px;
+    --section-height: calc(100vh - 80px);
     --container-offset: #{$containerFHD};
   }
 
   @include respond-above(fhd-plus) {
-    --header-height: 72px;
-    --header-offset: 72px;
-    --header-compensation: -72px;
+    --header-height: 84px;
+    --header-offset: 84px;
+    --header-compensation: -84px;
     --container-offset: #{$containerFHD};
-    --section-height: calc(100vh - 72px);
+    --section-height: calc(100vh - 84px);
   }
 
   @include respond-above(qhd) {
-    --header-height: 78px;
-    --header-offset: 78px;
-    --header-compensation: -78px;
+    --header-height: 93px;
+    --header-offset: 93px;
+    --header-compensation: -93px;
     --container-offset: #{$containerQHD};
-    --section-height: calc(100vh - 78px);
+    --section-height: calc(100vh - 93px);
+  }
+
+  @include respond-above(uhd) {
+    --header-height: 141px;
+    --header-offset: 141px;
+    --header-compensation: -141px;
+    --section-height: calc(100vh - 141px);
   }
 }
 
@@ -167,18 +176,19 @@ main {
   flex: 1 0 auto;
   z-index: 1;
   pointer-events: auto;
-  padding-top: 40px;
-  padding: 40px 20px 0;
+  padding-top: var(--header-height);
+  padding-left: 20px;
+  padding-right: 20px;
   margin: 0 auto;
 
   @include respond-above(md) {
-    padding: 0;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   @include respond-above(lg) {
-    padding: 0;
-    // padding-top: 40px;
-    // max-width: 750px;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
