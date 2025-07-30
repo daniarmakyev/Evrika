@@ -28,6 +28,7 @@ import {
   clearError,
   clearSubmissionError,
 } from "src/store/lesson/lesson.slice";
+import TextArea from "@components/Fields/TextAreaField";
 
 interface HomeWorkTableItem {
   id: number;
@@ -355,7 +356,11 @@ export default function ProfileHomeWork() {
           return (
             <button
               className={styles.table__button}
-              style={{ color: "#8399ff", textDecoration: "underline", cursor: "pointer" }}
+              style={{
+                color: "#8399ff",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
               onClick={() =>
                 setNoteModal({ open: true, note: submission.review!.comment })
               }
@@ -490,8 +495,9 @@ export default function ProfileHomeWork() {
           title="Примечание от учителя"
           size="md"
         >
-          <div style={{ padding: 20, fontSize: 16, whiteSpace: "pre-line" }}>
-            {noteModal.note}
+          <div>
+            <h4>Комментарий:</h4>
+            <TextArea readOnly fullWidth value={noteModal.note || ""} />
           </div>
         </ProfileModal>
       </div>

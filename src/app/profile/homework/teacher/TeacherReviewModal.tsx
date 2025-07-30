@@ -157,6 +157,7 @@ const TeacherReviewModal: React.FC<Props> = ({
             className={styles.cancel__button}
             disabled={isSubmitting}
           >
+
             Отмена
           </button>
           <button
