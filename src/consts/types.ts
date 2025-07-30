@@ -169,3 +169,44 @@ export interface AttendanceType {
   student?: UserType | null;
   lesson_id: number | null | string;
 }
+
+
+export interface AttendanceResponse {
+  attendance_groups: AttendanceGroup[];
+  pagination: Pagination;
+}
+
+export interface AttendanceGroup {
+  group: {
+    id: number;
+    name: string;
+  };
+  attendance: AttendanceRecord[];
+}
+
+export interface AttendanceRecord {
+  id: number;
+  status: "attended" | "missed" | "excused" | string; // adjust as needed
+  created_at: string; // ISO datetime string
+  student_id: number;
+  lesson: Lesson;
+}
+
+export interface Lesson {
+  id: number;
+  name: string;
+  day: string; // e.g., "2025-07-30"
+  lesson_start: string; // e.g., "02:07:40.437Z"
+  lesson_end: string;
+}
+
+export interface Pagination {
+  current_page_size: number;
+  current_page: number;
+  total_pages: number;
+}
+ export type GetAttendanceStudentParams = {
+  user_id: string;
+  page?: number;
+  size?: number;
+};
