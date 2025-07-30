@@ -102,6 +102,11 @@
   flex-grow: 1;
   justify-content: flex-start;
   gap: 20px;
+  margin-top: 20px;
+  h4 {
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
 }
 
 @keyframes fadeIn {

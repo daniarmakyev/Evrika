@@ -187,10 +187,7 @@ const TeacherHomeworkEditModal: React.FC<Props> = ({
       title="Редактировать домашнее задание"
       size="lg"
     >
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.modal__form}>
         {submissionError && (
           <div
             style={{
@@ -380,7 +377,6 @@ const TeacherHomeworkEditModal: React.FC<Props> = ({
           </button>
 
           <div style={{ display: "flex", gap: "10px" }}>
-
             <button
               type="submit"
               className={styles.save__button}

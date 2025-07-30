@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { LessonListItem, HomeworkSubmission, HomeworkTask, Classroom } from "src/consts/types";
+import { LessonListItem, HomeworkSubmission, HomeworkTask, Classroom, StudentByTeacherResponseType } from "src/consts/types";
 import {
   getLessons,
   getHomeworkSubmissions,
@@ -11,6 +11,9 @@ import {
   deleteHomeworkAssignment,
   updateHomeworkAssignment,
   getClassrooms,
+  getStudentHomeWorkByTeacher,
+  updateHomeworkReview,
+  createHomeworkReview,
 
 } from "./lesson.action";
 
@@ -25,6 +28,7 @@ interface LessonState {
   selectedSubmissions: HomeworkSubmission[] | null;
   shouldRefresh: boolean;
   classrooms: Classroom[] | null;
+  studentHomeworks: StudentByTeacherResponseType | null;
 }
 
 const INIT_LESSON_STATE: LessonState = {
@@ -38,6 +42,8 @@ const INIT_LESSON_STATE: LessonState = {
   selectedSubmissions: null,
   shouldRefresh: false,
   classrooms: null,
+  studentHomeworks: null,
+
 };
 
 export const lessonSlice = createSlice({
@@ -236,6 +242,72 @@ export const lessonSlice = createSlice({
       .addCase(getClassrooms.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload as string;
+      }).addCase(getStudentHomeWorkByTeacher.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.studentHomeworks = null;
+      })
+      .addCase(getStudentHomeWorkByTeacher.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.studentHomeworks = payload;
+        state.error = null;
+      })
+      .addCase(getStudentHomeWorkByTeacher.rejected, (state, { payload }) => {
+        state.loading = false;
+        state.error = payload as string;
+        state.studentHomeworks = null;
+      })
+      .addCase(createHomeworkReview.pending, (state) => {
+        state.submissionLoading = true;
+        state.submissionError = null;
+      })
+      .addCase(createHomeworkReview.fulfilled, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = null;
+
+        if (state.selectedSubmissions) {
+          state.selectedSubmissions = state.selectedSubmissions.map((submission) =>
+            submission.id === payload.submission_id
+              ? {
+                ...submission,
+                review: {
+                  id: payload.id,
+                  comment: payload.comment
+                }
+              }
+              : submission
+          );
+        }
+      })
+      .addCase(createHomeworkReview.rejected, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = payload as string;
+      })
+
+      .addCase(updateHomeworkReview.pending, (state) => {
+        state.submissionLoading = true;
+        state.submissionError = null;
+      })
+      .addCase(updateHomeworkReview.fulfilled, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = null;
+        if (state.selectedSubmissions) {
+          state.selectedSubmissions = state.selectedSubmissions.map((submission) =>
+            submission.id === payload.submission_id
+              ? {
+                ...submission,
+                review: {
+                  id: payload.id,
+                  comment: payload.comment
+                }
+              }
+              : submission
+          );
+        }
+      })
+      .addCase(updateHomeworkReview.rejected, (state, { payload }) => {
+        state.submissionLoading = false;
+        state.submissionError = payload as string;
       });
   },
 });

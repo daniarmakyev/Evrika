@@ -355,14 +355,14 @@ export default function ProfileHomeWork() {
           return (
             <button
               className={styles.table__button}
-              style={{ color: "#1976d2", textDecoration: "underline" }}
+              style={{ color: "#8399ff", textDecoration: "underline", cursor: "pointer" }}
               onClick={() =>
-                setNoteModal({ open: true, note: submission.review })
+                setNoteModal({ open: true, note: submission.review!.comment })
               }
             >
-              {submission.review.length > 30
-                ? submission.review.substring(0, 30) + "..."
-                : submission.review}
+              {submission.review.comment.length > 30
+                ? submission.review.comment.substring(0, 30) + "..."
+                : submission.review.comment}
             </button>
           );
         }
