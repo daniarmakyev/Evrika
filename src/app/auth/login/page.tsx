@@ -1,13 +1,16 @@
 "use client";
-
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 import InputField from "@components/Fields/InputField";
 import Overlay from "@components/Ui/Overlay";
 import FormButton from "@components/Ui/FormButton";
 import UserIcon from "../../../../public/assets/icons/user.svg";
 import LockPasswordIcon from "../../../../public/assets/icons/lock-password.svg";
 import styles from "./styles.module.scss";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { clearError } from "src/store/user/user.slice";
+import { authLogin, getUser } from "src/store/user/user.action";
 
 interface LoginFormData {
   email: string;
@@ -15,6 +18,12 @@ interface LoginFormData {
 }
 
 const Login: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { loginLoading, isAuthenticated, error, user } = useAppSelector(
+    (state) => state.user
+  );
+
   const {
     register,
     handleSubmit,
@@ -27,8 +36,34 @@ const Login: React.FC = () => {
     },
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log("Форма отправлена", data);
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role) {
+        localStorage.setItem("role", user.role);
+      }
+      router.push("/");
+    }
+  }, [isAuthenticated, user, router]);
+
+  useEffect(() => {
+    dispatch(clearError());
+  }, [dispatch]);
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const result = await dispatch(
+        authLogin({
+          username: data.email,
+          password: data.password,
+        })
+      );
+
+      if (authLogin.fulfilled.match(result)) {
+        await dispatch(getUser());
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   return (
@@ -41,11 +76,13 @@ const Login: React.FC = () => {
           </p>
         </div>
         <form
+          method="POST"
           className={styles.overlay__wrapper__form}
           onSubmit={handleSubmit(onSubmit)}
         >
           <div className={styles.overlay__wrapper__form__inputs}>
             <InputField
+              autoComplete="username"
               placeholder="почта"
               label="Почта"
               {...register("email", {
@@ -59,7 +96,9 @@ const Login: React.FC = () => {
               leftIcon={<UserIcon />}
               fullWidth
             />
+
             <InputField
+              autoComplete="current-password"
               placeholder="пароль"
               label="Пароль"
               type="password"
@@ -75,8 +114,15 @@ const Login: React.FC = () => {
               fullWidth
             />
           </div>
-          <FormButton type="submit" disabled={!isValid} fullWidth>
-            ВОЙТИ
+
+          {error && <div className={styles.error}>{error}</div>}
+
+          <FormButton
+            type="submit"
+            disabled={!isValid || loginLoading}
+            fullWidth
+          >
+            {loginLoading ? "ВХОД..." : "ВОЙТИ"}
           </FormButton>
         </form>
       </div>

@@ -1,61 +1,68 @@
 "use client";
-
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import classNames from "classnames";
-// import PopupHeader from "@components/Ui/Popup";
+import PopupHeader from "@components/Ui/Popup";
 import Logo from "@icons/logo.svg";
-// import Profile from "@icons/user-profile.svg";
+import Profile from "@icons/user-profile.svg";
 import styles from "./styles.module.scss";
+import { initializeAuth, logout } from "src/store/user/user.slice";
+import { getUser } from "src/store/user/user.action";
+import { useAppDispatch, useAppSelector } from "src/store/store";
 
 const menu = [
-  {
-    id: 1,
-    name: "Главная",
-    link: "/",
-  },
-  {
-    id: 2,
-    name: "Курсы",
-    link: "/courses",
-  },
-  {
-    id: 3,
-    name: "Контакты",
-    link: "/contacts",
-  },
-  {
-    id: 4,
-    name: "Расписание",
-    link: "/schedule",
-  },
+  { id: 1, name: "Главная", link: "/" },
+  { id: 2, name: "Курсы", link: "/courses" },
+  { id: 3, name: "Контакты", link: "/contacts" },
+  { id: 4, name: "Расписание", link: "/schedule" },
 ];
 
-const Header = ({}) => {
-  const [user, setUser] = React.useState<string | null>(null);
+const Header = () => {
+  const pathname = usePathname();
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { isAuthenticated, user, loading } = useAppSelector(
+    (state) => state.user
+  );
+
+  const [isOpen, setIsOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("evrika-access-token", user);
+    dispatch(initializeAuth());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isAuthenticated && !user && !loading) {
+      dispatch(getUser());
     }
-  }, [user]);
+  }, [isAuthenticated, user, loading, dispatch]);
 
-  // const profileRef = React.useRef<HTMLDivElement>(null);
-  // const [isOpen, setIsOpen] = React.useState(false);
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
-  // React.useEffect(() => {
-  //   const handleClickOutside = (e: MouseEvent) => {
-  //     if (profileRef.current && !profileRef.current.contains(e.target as Node)) {
-  //       setIsOpen(false);
-  //     };
-  //   };
+  const handleLogout = () => {
+    dispatch(logout());
+    setIsOpen(false);
+    router.push("/");
+  };
 
-  //   document.addEventListener("mousedown", handleClickOutside);
-
-  //   return () => {
-  //     document.removeEventListener("mousedown", handleClickOutside);
-  //   }
-  // }, []);
+  const setTestUser = (token: string) => {
+    localStorage.setItem("evrika-access-token", token);
+    dispatch(initializeAuth());
+    dispatch(getUser());
+  };
 
   return (
     <header className={styles.header}>
@@ -65,31 +72,28 @@ const Header = ({}) => {
             <Logo />
           </Link>
         </div>
-        <div className={styles.header__menu}>
+
+        <nav className={styles.header__menu}>
           <ul>
             {menu.map((item) => (
               <li key={item.id}>
-                <Link href={item.link}>{item.name}</Link>
+                <Link
+                  href={item.link}
+                  className={classNames({
+                    [styles.active]: pathname === item.link,
+                  })}
+                >
+                  {item.name}
+                </Link>
               </li>
             ))}
           </ul>
-        </div>
-        {/* <div
-          ref={profileRef}
-          onClick={() => setIsOpen((prev) => !prev)}
-          className={styles.header__profile}
-        >
-          <Profile />
-          <PopupHeader isOpen={isOpen} />
-        </div> */}
-        {/* <div className={styles.header__login}>
-          <Link href="/auth/login">Войти</Link>
-        </div> */}
+        </nav>
 
         <div className={styles.buttons}>
           <button
             onClick={() =>
-              setUser(
+              setTestUser(
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0IiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTUzNDQ1NzB9.gla_5czweUhBXBLL5OHArEf54d1ms9IZzAGUZS9VY6A"
               )
             }
@@ -98,7 +102,7 @@ const Header = ({}) => {
           </button>
           <button
             onClick={() =>
-              setUser(
+              setTestUser(
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTU4OTU2NzN9.D-ND4Ygj9uTz8pzoKQ9ctxI9UicyZMnHvLUA6rXBQlc"
               )
             }
@@ -106,6 +110,26 @@ const Header = ({}) => {
             Учитель
           </button>
         </div>
+
+        {isAuthenticated ? (
+          <div
+            ref={profileRef}
+            onClick={() => setIsOpen((prev) => !prev)}
+            className={styles.header__profile}
+          >
+            <Profile />
+            <PopupHeader
+              isOpen={isOpen}
+              user={user}
+              onLogout={handleLogout}
+              isAuthenticated={isAuthenticated}
+            />
+          </div>
+        ) : (
+          <Link style={{ color: "#fff" }} href="/auth/login">
+            Войти
+          </Link>
+        )}
       </div>
     </header>
   );

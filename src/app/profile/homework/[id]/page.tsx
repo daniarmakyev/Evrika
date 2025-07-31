@@ -345,7 +345,7 @@ export default function StudentProfileByTeacher() {
             <Table
               columns={studentHomeworkColumns}
               data={tableData}
-              emptyMessage="У студента нет домашних заданий"
+              emptyMessage=""
             />
           </div>
         )}

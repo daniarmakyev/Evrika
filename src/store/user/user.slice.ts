@@ -1,5 +1,5 @@
 import { AttendanceType, GroupDetail, GroupResponseType, UserType } from "src/consts/types";
-import { editAttendance, getAttendanceByLesson, getGroup, getGroupById, getUser, getUserById } from "./user.action";
+import { editAttendance, getAttendanceByLesson, getGroup, getGroupById, getUser, getUserById, authLogin } from "./user.action";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface UserState {
@@ -13,6 +13,9 @@ interface UserState {
   groupsLoading: boolean;
   groupLoading: boolean;
   anotherUser: UserType | null;
+  isAuthenticated: boolean;
+  loginLoading: boolean;
+  token: string | null;
 }
 
 const INIT_STATE: UserState = {
@@ -26,14 +29,55 @@ const INIT_STATE: UserState = {
   groupsLoading: false,
   group: null,
   attendance: null,
+  isAuthenticated: false,
+  loginLoading: false,
+  token: null,
 };
 
 export const userSlice = createSlice({
   name: "user",
   initialState: INIT_STATE,
-  reducers: {},
+  reducers: {
+    initializeAuth: (state) => {
+      const token = localStorage.getItem("evrika-access-token");
+      if (token) {
+        state.token = token;
+        state.isAuthenticated = true;
+      }
+    },
+    logout: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isAuthenticated = false;
+      state.groups = null;
+      state.group = null;
+      state.attendance = null;
+      localStorage.removeItem("evrika-access-token");
+      localStorage.removeItem("role");
+    },
+    clearError: (state) => {
+      state.error = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
+      .addCase(authLogin.pending, (state) => {
+        state.loginLoading = true;
+        state.error = null;
+      })
+      .addCase(authLogin.fulfilled, (state) => {
+        state.loginLoading = false;
+        state.isAuthenticated = true;
+        state.error = null;
+        const token = localStorage.getItem("evrika-access-token");
+        state.token = token;
+      })
+      .addCase(authLogin.rejected, (state, { payload }) => {
+        state.loginLoading = false;
+        state.error = payload || "Failed to login";
+        state.isAuthenticated = false;
+        state.token = null;
+      })
       .addCase(getUser.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -47,6 +91,10 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = payload || "Failed to get user";
         state.user = null;
+        state.isAuthenticated = false;
+        state.token = null;
+        localStorage.removeItem("evrika-access-token");
+        localStorage.removeItem("role");
       })
       .addCase(getGroup.pending, (state) => {
         state.groupsLoading = true;
@@ -74,7 +122,7 @@ export const userSlice = createSlice({
       .addCase(getUserById.rejected, (state, { payload }) => {
         state.loading = false;
         state.error = payload || "Failed to get user";
-        state.user = null;
+        state.anotherUser = null;
       })
       .addCase(getGroupById.pending, (state) => {
         state.groupLoading = true;
@@ -120,4 +168,5 @@ export const userSlice = createSlice({
   },
 });
 
+export const { initializeAuth, logout, clearError } = userSlice.actions;
 export default userSlice.reducer;

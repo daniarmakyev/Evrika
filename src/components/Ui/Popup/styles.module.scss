@@ -1,4 +1,4 @@
-@import "../../../styles//varibles";
+@import "../../../styles/varibles";
 @import "../../../styles/mixins/";
 
 .popup {
@@ -15,13 +15,24 @@
   border-radius: 10px;
   pointer-events: none;
   overflow: hidden;
-  border: 0px solid $dark;
   z-index: 9999;
+  right: 0;
 
   &.header__popup_isOpen {
     pointer-events: auto;
-    height: 42px;
-    border: 1px solid $dark;
+
+    &.authenticated {
+      height: auto;
+      min-height: 168px;
+    }
+
+    &.unauthenticated {
+      height: 42px;
+    }
+
+    height: auto;
+    max-height: 200px;
+    box-shadow: 0 0 10px rgba($dark, 0.1);
   }
 
   ul {
@@ -31,20 +42,52 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    padding: 0 15px;
+    padding: 0 10px;
 
-    li, a {
+    li {
       width: 100%;
-      font-size: 18px;
-      line-height: 100%;
-      color: $primary;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-      padding: 12px 0;
 
-      &:hover {
-        color: #A8B8FF;
+      a {
+        width: 100%;
+        font-size: 16px;
+        line-height: 100%;
+        color: $primary;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        padding: 10px 0;
+        display: block;
+        text-decoration: none;
+
+        &:hover {
+          color: #a8b8ff;
+        }
       }
+    }
+  }
+
+  &__userInfo {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba($dark, 0.1);
+    margin-bottom: 5px;
+
+    p {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 0 0 4px 0;
+      color: $primary;
+    }
+
+    span {
+      color: rgba($primary, 0.7);
+      font-size: 14px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    small {
+      color: rgba($primary, 0.5);
+      font-size: 12px;
+      text-transform: capitalize;
     }
   }
 }

@@ -222,3 +222,9 @@ export type GetAttendanceStudentParams = {
   page?: number;
   size?: number;
 };
+
+
+export type AuthLoginResponse = {
+    access_token: string;
+    token_type: string;
+}

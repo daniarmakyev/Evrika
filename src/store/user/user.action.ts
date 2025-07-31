@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { $apiPrivate } from "src/consts/api";
-import { AttendanceType, GroupDetail, GroupResponseType, UserType } from "src/consts/types";
+import { AttendanceType, AuthLoginResponse, GroupDetail, GroupResponseType, UserType } from "src/consts/types";
 
 interface CustomApiError {
     detail?: string;
@@ -46,6 +46,7 @@ export const getGroup = createAsyncThunk<
         }
     }
 );
+
 export const getGroupById = createAsyncThunk<
     GroupDetail,
     number | string,
@@ -126,3 +127,34 @@ export const editAttendance = createAsyncThunk<
     }
 );
 
+export const authLogin = createAsyncThunk<
+    void,
+    { username: string, password: string },
+    { rejectValue: string }
+>(
+    "user/authLogin",
+    async ({ username, password }, { rejectWithValue }) => {
+        const formData = new FormData();
+        if (username && password) {
+            formData.append("username", username);
+            formData.append("password", password);
+        }
+        try {
+            const { data } = await $apiPrivate.post<AuthLoginResponse>(`/auth/login`, formData);
+            if (!data.access_token) {
+                return rejectWithValue("Не удалось войти в систему");
+            } else {
+                localStorage.setItem("evrika-access-token", data.access_token);
+            }
+        } catch (err) {
+            if (axios.isAxiosError<CustomApiError>(err)) {
+                if (err.response?.data.detail === "LOGIN_BAD_CREDENTIALS") {
+                    return rejectWithValue("Неверные учетные данные");
+                } else {
+                    return rejectWithValue(err.response?.data.detail || "Не удалось войти в систему");
+                }
+            }
+            return rejectWithValue("Неизвестная ошибка");
+        }
+    }
+);
