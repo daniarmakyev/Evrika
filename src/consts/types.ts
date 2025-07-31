@@ -1,10 +1,9 @@
 export type DayCode = "MON" | "TUE" | "WED" | "THU" | "FRI" | "SAT" | "SUN";
 
-
-
 export interface Classroom {
   id: number;
   name: string;
+  created_at?: string;
 }
 
 export interface Teacher {
@@ -139,12 +138,9 @@ export type GroupDetail = {
   }[];
 };
 
-
-
 export interface CustomApiError {
   detail?: string;
 }
-
 
 export type CreateLessonRequest = {
   name: string;
@@ -158,13 +154,6 @@ export type CreateLessonRequest = {
   passed?: boolean;
 };
 
-export interface Classroom {
-  id: number;
-  name: string;
-  created_at: string;
-}
-
-
 export interface AttendanceType {
   id: number;
   status: "absent" | "attended";
@@ -173,6 +162,25 @@ export interface AttendanceType {
   lesson_id: number | null | string;
 }
 
+export type StudentByTeacherResponseType = {
+  items: Array<{
+    id: number;
+    homework_id: number;
+    student_id: number;
+    file_path: string | null;
+    content: string;
+    submitted_at: string;
+    review: {
+      id: number;
+      comment: string;
+    } | null;
+  }>;
+  pagination: {
+    current_page_size: number;
+    current_page: number;
+    total_pages: number;
+  };
+};
 
 export interface AttendanceResponse {
   attendance_groups: AttendanceGroup[];
@@ -189,8 +197,8 @@ export interface AttendanceGroup {
 
 export interface AttendanceRecord {
   id: number;
-  status: "attended" | "missed" | "excused" | string; // adjust as needed
-  created_at: string; // ISO datetime string
+  status: "attended" | "missed" | "excused" | string;
+  created_at: string;
   student_id: number;
   lesson: Lesson;
 }
@@ -198,8 +206,8 @@ export interface AttendanceRecord {
 export interface Lesson {
   id: number;
   name: string;
-  day: string; // e.g., "2025-07-30"
-  lesson_start: string; // e.g., "02:07:40.437Z"
+  day: string;
+  lesson_start: string;
   lesson_end: string;
 }
 
@@ -208,7 +216,8 @@ export interface Pagination {
   current_page: number;
   total_pages: number;
 }
- export type GetAttendanceStudentParams = {
+
+export type GetAttendanceStudentParams = {
   user_id: string;
   page?: number;
   size?: number;
