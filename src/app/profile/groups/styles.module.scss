@@ -28,13 +28,8 @@
     line-height: 100%;
   }
   &__header {
-    background-color: $primary;
-    color: $White;
     display: flex;
     justify-content: space-between;
-    padding: 14px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
     h4 {
       font-weight: 600;
       font-size: 16px;

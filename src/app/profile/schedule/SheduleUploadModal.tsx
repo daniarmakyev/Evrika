@@ -77,7 +77,7 @@ const LessonCreateModal: React.FC<Props> = ({
       if (!groupId && !groups) {
         const userRole = localStorage.getItem("role");
         if (userRole) {
-          dispatch(getGroup(userRole));
+          dispatch(getGroup({}));
         }
       }
     }

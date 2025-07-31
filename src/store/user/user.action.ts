@@ -28,13 +28,15 @@ export const getUser = createAsyncThunk<
 
 export const getGroup = createAsyncThunk<
     GroupResponseType,
-    string,
+    { page?: number; size?: number },
     { rejectValue: string }
 >(
     "user/getGroup",
-    async (role, { rejectWithValue }) => {
+    async ({ page = 1, size = 5 }, { rejectWithValue }) => {
         try {
-            const { data } = await $apiPrivate.get<GroupResponseType>(`/group/my`);
+            const { data } = await $apiPrivate.get<GroupResponseType>(
+                `/group/my?page=${page}&size=${size}`
+            );
             return data;
         } catch (err) {
             if (axios.isAxiosError<CustomApiError>(err)) {
@@ -44,7 +46,6 @@ export const getGroup = createAsyncThunk<
         }
     }
 );
-
 export const getGroupById = createAsyncThunk<
     GroupDetail,
     number | string,
@@ -124,3 +125,4 @@ export const editAttendance = createAsyncThunk<
         }
     }
 );
+

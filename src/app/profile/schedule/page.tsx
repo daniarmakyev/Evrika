@@ -123,7 +123,7 @@ export default function ProfileSchedule() {
     if (userRole) {
       setRole(userRole);
       if (userRole === "admin" || userRole === "teacher") {
-        dispatch(getGroup(userRole));
+        dispatch(getGroup({}));
         dispatch(getClassrooms());
       }
     }
@@ -137,7 +137,7 @@ export default function ProfileSchedule() {
       dispatch(getClassrooms());
     }
     if (!groups && role) {
-      dispatch(getGroup(role));
+      dispatch(getGroup({}));
     }
 
     createLessonModal.openModal({});

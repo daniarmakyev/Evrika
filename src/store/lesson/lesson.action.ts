@@ -386,26 +386,28 @@ export const getClassrooms = createAsyncThunk<
   }
 );
 
-
 export const getStudentHomeWorkByTeacher = createAsyncThunk<
   StudentByTeacherResponseType,
-  number | string,
+  { userId: number | string; page?: number; size?: number },
   { rejectValue: string }
 >(
   "lesson/getStudentHomeWorkByTeacher",
-  async (user_id, { rejectWithValue }) => {
+  async ({ userId, page = 1, size = 10 }, { rejectWithValue }) => {
     try {
-      const { data } = await $apiPrivate.get<StudentByTeacherResponseType>(`submissions/user/${user_id}?page=1&size=10`);
+      const { data } = await $apiPrivate.get<StudentByTeacherResponseType>(
+        `submissions/user/${userId}?page=${page}&size=${size}`
+      );
       return data;
     } catch (err) {
       if (axios.isAxiosError<CustomApiError>(err)) {
-        return rejectWithValue(err.response?.data.detail || "Ошибка получения аудиторий");
+        return rejectWithValue(
+          err.response?.data.detail || "Ошибка получения домашних заданий"
+        );
       }
       return rejectWithValue("Неизвестная ошибка!");
     }
   }
 );
-
 
 export const createHomeworkReview = createAsyncThunk<
   { id: number; submission_id: number; teacher_id: number; comment: string; reviewed_at: string },

@@ -3,9 +3,10 @@ import classNames from "classnames";
 import styles from "./styles.module.scss";
 import Table from "@components/Table";
 import ProfileModal from "@components/ProfileModal";
+import Pagination from "@components/Pagination"; // Import the Pagination component
 import { useModal } from "@context/ModalContext";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getGroup, getGroupById } from "src/store/user/user.action";
 import { GroupType } from "src/consts/types";
 import Link from "next/link";
@@ -18,9 +19,11 @@ export default function Groups() {
   );
   const dispatch = useAppDispatch();
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   useEffect(() => {
-    dispatch(getGroup("teacher"));
-  }, [dispatch]);
+    dispatch(getGroup({ page: currentPage, size: 5 }));
+  }, [dispatch, currentPage, ]);
 
   useEffect(() => {
     if (groupModal.isOpen && groupModal.data?.id) {
@@ -29,6 +32,7 @@ export default function Groups() {
   }, [groupModal.isOpen, groupModal.data?.id, dispatch]);
 
   const groupsArray = groups?.groups || [];
+  const pagination = groups?.pagination;
 
   const groupsTableData = groupsArray.map((g) => ({
     group: g.name,
@@ -76,20 +80,38 @@ export default function Groups() {
     console.log(`Открыть профиль студента: ${studentName} (ID: ${studentId})`);
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const currentStudents = group?.students || [];
 
   return (
     <div className={styles.groups}>
       <div className={classNames(styles.groups__container, "container")}>
         <div className={styles.groups__content}>
-          <h2 className={styles.groups__title}>Группы</h2>
+          <div className={styles.groups__header}>
+            <h2 className={styles.groups__title}>Группы</h2>
+          </div>
+
           <Table
             columns={groupsColums}
             data={groupsTableData}
             emptyMessage="Нет групп"
           />
+
+          {pagination && pagination.total_pages > 1 && (
+            <div className={styles.groups__pagination}>
+              <Pagination
+                totalPages={pagination.total_pages}
+                currentPage={currentPage}
+                handlePageChange={handlePageChange}
+              />
+            </div>
+          )}
         </div>
       </div>
+
       <ProfileModal
         isOpen={groupModal.isOpen}
         onClose={groupModal.closeModal}

@@ -43,7 +43,7 @@ export default function ProfileLayout({
 
   useEffect(() => {
     if (user?.role) {
-      dispatch(getGroup(user.role));
+      dispatch(getGroup({page: 1, size: 100}));
       localStorage.setItem("role", user.role);
     }
   }, [user, dispatch]);

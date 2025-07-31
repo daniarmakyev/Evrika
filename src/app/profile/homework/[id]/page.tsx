@@ -12,6 +12,7 @@ import { HomeworkTask, LessonListItem, GroupDetail } from "src/consts/types";
 import { useModal } from "@context/ModalContext";
 import { HomeworkTaskModal } from "@components/HomeworkModals";
 import ProfileModal from "@components/ProfileModal";
+import Pagination from "@components/Pagination"; // Import Pagination component
 import { clearError } from "src/store/lesson/lesson.slice";
 import StudentHomeworkViewModal from "./StudentHomeworkViewModal";
 import { useParams } from "next/navigation";
@@ -88,6 +89,8 @@ export default function StudentProfileByTeacher() {
     >
   >(new Map());
 
+  const [currentPage, setCurrentPage] = useState(1);
+
   const studentId = String(useParams().id);
 
   const taskModal = useModal<HomeworkTask>("task");
@@ -113,9 +116,15 @@ export default function StudentProfileByTeacher() {
 
   useEffect(() => {
     if (studentId) {
-      dispatch(getStudentHomeWorkByTeacher(studentId));
+      dispatch(
+        getStudentHomeWorkByTeacher({
+          userId: studentId,
+          page: currentPage,
+          size: 10,
+        })
+      );
     }
-  }, [dispatch, studentId]);
+  }, [dispatch, studentId, currentPage]);
 
   const fetchHomeworkDetails = useCallback(
     async (homeworkId: number) => {
@@ -228,6 +237,10 @@ export default function StudentProfileByTeacher() {
     dispatch(clearError());
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const studentHomeworkColumns = [
     {
       key: "group",
@@ -266,8 +279,11 @@ export default function StudentProfileByTeacher() {
           return (
             <button
               className={styles.table__button}
-              style={{ color: "#8399ff", textDecoration: "underline" , cursor: "pointer" }}
-
+              style={{
+                color: "#8399ff",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
               onClick={() => setNoteModal({ open: true, note: value })}
             >
               {value.length > 30 ? value.substring(0, 30) + "..." : value}
@@ -301,11 +317,13 @@ export default function StudentProfileByTeacher() {
     },
   ];
 
+  const pagination = studentHomeworks?.pagination;
+
   return (
     <div className={classNames(styles.homework__container, "container")}>
       <div className={styles.homework__content}>
-        <div className={styles.homework__title}>
-          <h3>Домашние задания студента</h3>
+        <div className={styles.homework__header}>
+          <h3 className={styles.homework__title}>Домашние задания студента</h3>
         </div>
 
         {errorMessage && (
@@ -328,6 +346,16 @@ export default function StudentProfileByTeacher() {
               columns={studentHomeworkColumns}
               data={tableData}
               emptyMessage="У студента нет домашних заданий"
+            />
+          </div>
+        )}
+
+        {pagination && pagination.total_pages > 1 && (
+          <div className={styles.homework__pagination}>
+            <Pagination
+              totalPages={pagination.total_pages}
+              currentPage={currentPage}
+              handlePageChange={handlePageChange}
             />
           </div>
         )}
