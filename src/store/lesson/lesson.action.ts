@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { $apiPrivate } from "src/consts/api";
-import { LessonListItem, HomeworkSubmission, CustomApiError, HomeworkTask, CreateLessonRequest, Classroom, LessonShedule } from "src/consts/types";
+import { LessonListItem, HomeworkSubmission, CustomApiError, HomeworkTask, CreateLessonRequest, Classroom, LessonShedule, StudentByTeacherResponseType } from "src/consts/types";
 
 export const getLessons = createAsyncThunk<
   LessonListItem[],
@@ -88,7 +88,27 @@ export const editLesson = createAsyncThunk<
       dispatch(getLessons(groupId));
     } catch (err) {
       if (axios.isAxiosError<CustomApiError>(err)) {
-        return rejectWithValue(err.response?.data.detail || "Ошибка при создании урока");
+        return rejectWithValue(err.response?.data.detail || "Ошибка при изменении урока");
+      }
+      return rejectWithValue("Неизвестная ошибка!");
+    }
+  }
+);
+
+
+export const deleteLesson = createAsyncThunk<
+  void,
+  number | string,
+  { rejectValue: string }
+>(
+  "lesson/deleteLesson",
+  async (lessonId, { rejectWithValue }) => {
+    try {
+      await $apiPrivate.delete(`/lessons/${lessonId}`);
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        if (err.response?.status === 404) return rejectWithValue("");
+        return rejectWithValue(err.response?.data.detail || "Ошибка удаления урока");
       }
       return rejectWithValue("Неизвестная ошибка!");
     }
@@ -362,6 +382,89 @@ export const getClassrooms = createAsyncThunk<
         return rejectWithValue(err.response?.data.detail || "Ошибка получения аудиторий");
       }
       return rejectWithValue("Неизвестная ошибка!");
+    }
+  }
+);
+
+
+export const getStudentHomeWorkByTeacher = createAsyncThunk<
+  StudentByTeacherResponseType,
+  number | string,
+  { rejectValue: string }
+>(
+  "lesson/getStudentHomeWorkByTeacher",
+  async (user_id, { rejectWithValue }) => {
+    try {
+      const { data } = await $apiPrivate.get<StudentByTeacherResponseType>(`submissions/user/${user_id}?page=1&size=10`);
+      return data;
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        return rejectWithValue(err.response?.data.detail || "Ошибка получения аудиторий");
+      }
+      return rejectWithValue("Неизвестная ошибка!");
+    }
+  }
+);
+
+
+export const createHomeworkReview = createAsyncThunk<
+  { id: number; submission_id: number; teacher_id: number; comment: string; reviewed_at: string },
+  {
+    submission_id: number;
+    comment: string;
+  },
+  { rejectValue: string }
+>(
+  "lesson/createHomeworkReview",
+  async ({ submission_id, comment }, { rejectWithValue }) => {
+    try {
+      const { data } = await $apiPrivate.post<{
+        id: number;
+        submission_id: number;
+        teacher_id: number;
+        comment: string;
+        reviewed_at: string;
+      }>(`/homework_review/submission/${submission_id}`, {
+        comment,
+      });
+      return data;
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        if (err.response?.status === 404) return rejectWithValue("Домашнее задание не найдено");
+        return rejectWithValue(err.response?.data.detail || "Не удалось создать Коментарий");
+      }
+      return rejectWithValue("Неизвестная ошибка");
+    }
+  }
+);
+
+export const updateHomeworkReview = createAsyncThunk<
+  { id: number; submission_id: number; teacher_id: number; comment: string; reviewed_at: string },
+  {
+    review_id: number;
+    comment: string;
+  },
+  { rejectValue: string }
+>(
+  "lesson/updateHomeworkReview",
+  async ({ review_id, comment }, { rejectWithValue }) => {
+    try {
+      const { data } = await $apiPrivate.patch<{
+        id: number;
+        submission_id: number;
+        teacher_id: number;
+        comment: string;
+        reviewed_at: string;
+      }>(`/homework_review/${review_id}`, {
+        comment,
+      });
+      return data;
+    } catch (err) {
+      if (axios.isAxiosError<CustomApiError>(err)) {
+        if (err.response?.status === 404) return rejectWithValue("Коментарий не найден");
+        return rejectWithValue(err.response?.data.detail || "Не удалось обновить Коментарий");
+      }
+      return rejectWithValue("Неизвестная ошибка");
     }
   }
 );

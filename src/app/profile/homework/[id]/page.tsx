@@ -1,44 +1,45 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import styles from "./styles.module.scss";
 import Table from "@components/Table";
-import UploadIcon from "@icons/upload-file.svg";
-import EditPen from "@icons/edit-pen.svg";
+import ViewIcon from "@icons/upload-file.svg";
 import Close from "@icons/close.svg";
 import classNames from "classnames";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import {
-  getHomeworkSubmissions,
-  getLessons,
-} from "src/store/lesson/lesson.action";
-import {
-  HomeworkSubmission,
-  HomeworkTask,
-  LessonListItem,
-} from "src/consts/types";
+import { getStudentHomeWorkByTeacher } from "src/store/lesson/lesson.action";
+import { $apiPrivate } from "src/consts/api";
+import { HomeworkTask, LessonListItem, GroupDetail } from "src/consts/types";
 import { useModal } from "@context/ModalContext";
-import {
-  HomeworkTaskModal,
-  LessonInfoModal,
-  HomeworkSubmissionModal,
-  HomeworkUploadModal,
-} from "@components/HomeworkModals";
+import { HomeworkTaskModal } from "@components/HomeworkModals";
 import ProfileModal from "@components/ProfileModal";
-import {
-  clearError,
-  clearSubmissionError,
-} from "src/store/lesson/lesson.slice";
+import { clearError } from "src/store/lesson/lesson.slice";
+import StudentHomeworkViewModal from "./StudentHomeworkViewModal";
+import { useParams } from "next/navigation";
 
-interface HomeWorkTableItem {
+interface StudentHomeworkTableItem {
   id: number;
   group: string;
   lesson: string;
   task: string;
-  deadline: string;
-  upload: string;
+  note: string;
+  submittedAt: string;
   homeworkId: number;
   lessonId: number;
+  groupId: number;
   homeworkData: HomeworkTask;
+  lessonData: LessonListItem;
+  submissionData: {
+    id: number;
+    homework_id: number;
+    student_id: number;
+    file_path: string | null;
+    content: string;
+    submitted_at: string;
+    review: {
+      id: number;
+      comment: string;
+    } | null;
+  };
 }
 
 const TableSkeleton = () => (
@@ -49,8 +50,6 @@ const TableSkeleton = () => (
       <div className={styles.skeletonHeaderCell}></div>
       <div className={styles.skeletonHeaderCell}></div>
       <div className={styles.skeletonHeaderCell}></div>
-      <div className={styles.skeletonHeaderCell}></div>
-
       <div className={styles.skeletonHeaderCell}></div>
     </div>
     <div className={styles.tableBodySkeleton}>
@@ -68,32 +67,33 @@ const TableSkeleton = () => (
   </div>
 );
 
-export default function ProfileHomeWork() {
+export default function StudentProfileByTeacher() {
   const dispatch = useAppDispatch();
-  const { homework, lessons, loading, error, submissionError } = useAppSelector(
+  const { studentHomeworks, loading, error } = useAppSelector(
     (state) => state.lesson
   );
-  const [homeworkState, setHomeworkState] = useState<HomeworkSubmission[]>([]);
-  const [lessonState, setLessonState] = useState<LessonListItem[]>([]);
-  const [tableData, setTableData] = useState<HomeWorkTableItem[]>([]);
+  const [tableData, setTableData] = useState<StudentHomeworkTableItem[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loadingHomeworks, setLoadingHomeworks] = useState<Set<number>>(
+    new Set()
+  );
+  const [dataCache, setDataCache] = useState<
+    Map<
+      number,
+      {
+        homework: HomeworkTask;
+        lesson: LessonListItem;
+        group: GroupDetail;
+      }
+    >
+  >(new Map());
 
-  const [, setUploadForm] = useState({
-    answer: "",
-    file: null as File | null,
-  });
+  const studentId = String(useParams().id);
 
   const taskModal = useModal<HomeworkTask>("task");
-  const lessonModal = useModal<LessonListItem>("lesson");
-  const submissionModal = useModal<{
-    homework: HomeWorkTableItem;
-    submission: HomeworkSubmission;
-  }>("submission");
-  const uploadModal = useModal<{
-    homework: HomeWorkTableItem;
-    submission?: HomeworkSubmission;
-    isEdit?: boolean;
-  }>("upload");
+  const viewModal = useModal<{
+    homework: StudentHomeworkTableItem;
+  }>("view");
 
   const [noteModal, setNoteModal] = useState<{
     open: boolean;
@@ -112,227 +112,139 @@ export default function ProfileHomeWork() {
   }, [error, dispatch]);
 
   useEffect(() => {
-    if (submissionError) {
-      setErrorMessage(submissionError);
-      const timer = setTimeout(() => {
-        setErrorMessage(null);
-        dispatch(clearSubmissionError());
-      }, 5000);
-      return () => clearTimeout(timer);
+    if (studentId) {
+      dispatch(getStudentHomeWorkByTeacher(studentId));
     }
-  }, [submissionError, dispatch]);
+  }, [dispatch, studentId]);
 
-  useEffect(() => {
-    if (uploadModal.isOpen && uploadModal.data) {
-      const submissionId = uploadModal.data.submission?.id;
-      if (submissionId) {
-        const updatedSubmission = homeworkState.find(
-          (s) => s.id === submissionId
-        );
-        if (
-          updatedSubmission &&
-          updatedSubmission !== uploadModal.data.submission
-        ) {
-          uploadModal.openModal({
-            ...uploadModal.data,
-            submission: updatedSubmission,
-          });
-        }
-      } else if (uploadModal.data && uploadModal.data.homework) {
-        const newSubmission = homeworkState.find(
-          (s) => s.homework_id === uploadModal.data!.homework.homeworkId
-        );
-        if (newSubmission) {
-          uploadModal.openModal({
-            ...uploadModal.data,
-            submission: newSubmission,
-          });
-        }
+  const fetchHomeworkDetails = useCallback(
+    async (homeworkId: number) => {
+      if (dataCache.has(homeworkId) || loadingHomeworks.has(homeworkId)) {
+        return dataCache.get(homeworkId);
       }
-    }
-    if (submissionModal.isOpen && submissionModal.data) {
-      const submissionId = submissionModal.data.submission?.id;
-      if (submissionId) {
-        const updatedSubmission = homeworkState.find(
-          (s) => s.id === submissionId
-        );
-        if (updatedSubmission) {
-          submissionModal.openModal({
-            ...submissionModal.data,
-            submission: updatedSubmission,
-          });
-        }
-      }
-    }
-  }, [homeworkState, submissionModal, uploadModal]);
 
-  useEffect(() => {
-    const groupsId = localStorage.getItem("groups");
+      setLoadingHomeworks((prev) => new Set(prev).add(homeworkId));
 
-    if (groupsId) {
       try {
-        const parsedIds: string[] = JSON.parse(groupsId);
-        if (parsedIds && Array.isArray(parsedIds)) {
-          parsedIds.forEach((id) => {
-            dispatch(getLessons(id));
-          });
-        }
-      } catch (error) {
-        console.error("Ошибка вставки груп с локал стореджа:", error);
-        setErrorMessage("Ошибка при загрузке групп");
-      }
-    }
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (lessons && lessons.length > 0) {
-      lessons.forEach((lesson) => {
-        if (lesson && lesson.homework && lesson.homework.id) {
-          dispatch(getHomeworkSubmissions(lesson.homework.id));
-        }
-      });
-    }
-  }, [lessons, dispatch]);
-
-  useEffect(() => {
-    if (homework) {
-      if (homework.length > 0) {
-        setHomeworkState((prev) => {
-          const map = new Map<number, (typeof homework)[0]>();
-
-          prev.forEach((item) => {
-            map.set(item.id, item);
-          });
-
-          homework.forEach((item) => {
-            map.set(item.id, item);
-          });
-
-          return Array.from(map.values());
-        });
-      } else {
-        setHomeworkState((prev) => {
-          const currentIds = new Set(homework.map((item) => item.id));
-
-          return prev.filter((item) => currentIds.has(item.id));
-        });
-      }
-    }
-  }, [homework]);
-
-  useEffect(() => {
-    if (lessons && lessons.length > 0) {
-      setLessonState((prev) => {
-        const newLessons = lessons.filter(
-          (lesson) => !prev.some((item) => item.id === lesson.id)
+        const homeworkResponse = await $apiPrivate.get(
+          `/homeworks/${homeworkId}`
         );
-        return [...prev, ...newLessons];
-      });
-    }
-  }, [lessons]);
+        const homeworkData = homeworkResponse.data;
+
+        const lessonResponse = await $apiPrivate.get(
+          `/lessons/${homeworkData.lesson_id}`
+        );
+        const lessonData = lessonResponse.data;
+
+        const groupResponse = await $apiPrivate.get(
+          `/group-students/${lessonData.group_id}`
+        );
+        const groupData = groupResponse.data;
+
+        const result = {
+          homework: {
+            id: homeworkData.id,
+            deadline: homeworkData.deadline,
+            description: homeworkData.description,
+            file_path: homeworkData.file_path,
+          },
+          lesson: lessonData,
+          group: groupData,
+        };
+
+        setDataCache((prev) => new Map(prev).set(homeworkId, result));
+        return result;
+      } catch (error) {
+        console.error(
+          `Ошибка при получении данных для домашнего задания ${homeworkId}:`,
+          error
+        );
+        return null;
+      } finally {
+        setLoadingHomeworks((prev) => {
+          const newSet = new Set(prev);
+          newSet.delete(homeworkId);
+          return newSet;
+        });
+      }
+    },
+    [dataCache, loadingHomeworks]
+  );
 
   useEffect(() => {
-    if (lessonState.length > 0) {
-      const formattedData: HomeWorkTableItem[] = lessonState
-        .filter((lesson) => lesson.homework)
-        .map((lesson) => ({
-          id: lesson.id,
-          group: lesson.group_name,
-          lesson: lesson.name,
-          task: lesson.homework?.description || "",
-          deadline: lesson.homework?.deadline
-            ? new Date(lesson.homework.deadline).toLocaleDateString()
-            : "",
-          upload: "",
-          homeworkId: lesson.homework?.id || 0,
-          lessonId: lesson.id,
-          homeworkData: lesson.homework!,
-        }));
+    const processHomeworks = async () => {
+      if (studentHomeworks?.items && studentHomeworks.items.length > 0) {
+        const promises = studentHomeworks.items.map(async (submission) => {
+          const details = await fetchHomeworkDetails(submission.homework_id);
 
-      setTableData(formattedData);
-    }
-  }, [lessonState, homeworkState]);
+          if (details) {
+            return {
+              id: submission.id,
+              group: details.group.name,
+              lesson: details.lesson.name,
+              task: details.homework.description,
+              note: submission.review?.comment || "",
+              submittedAt: new Date(
+                submission.submitted_at
+              ).toLocaleDateString(),
+              homeworkId: submission.homework_id,
+              lessonId: details.lesson.id,
+              groupId: details.group.id,
+              homeworkData: details.homework,
+              lessonData: details.lesson,
+              submissionData: submission,
+            };
+          }
+          return null;
+        });
 
-  const handleOpenTaskModal = (homework: HomeWorkTableItem) => {
+        const results = await Promise.all(promises);
+        const validResults = results.filter(
+          (item): item is StudentHomeworkTableItem => item !== null
+        );
+        setTableData(validResults);
+      } else {
+        setTableData([]);
+      }
+    };
+
+    processHomeworks();
+  }, [studentHomeworks, dataCache, fetchHomeworkDetails]);
+
+  const handleOpenTaskModal = (homework: StudentHomeworkTableItem) => {
     if (homework?.homeworkData) {
       taskModal.openModal(homework.homeworkData);
     }
   };
 
-  const handleOpenLessonModal = (homework: HomeWorkTableItem) => {
-    const lesson = lessonState.find((l) => l.id === homework.lessonId);
-    if (lesson) {
-      lessonModal.openModal(lesson);
-    }
-  };
-
-  const handleOpenUploadModal = (
-    homework: HomeWorkTableItem,
-    submission?: HomeworkSubmission,
-    isEdit?: boolean
-  ) => {
+  const handleOpenViewModal = (homework: StudentHomeworkTableItem) => {
     if (homework) {
-      setUploadForm({
-        answer: submission?.content || "",
-        file: null,
-      });
-      uploadModal.openModal({ homework, submission, isEdit });
+      viewModal.openModal({ homework });
     }
-  };
-
-  const handleOpenSubmissionModal = (
-    homework: HomeWorkTableItem,
-    submission: HomeworkSubmission
-  ) => {
-    if (homework && submission) {
-      submissionModal.openModal({ homework, submission });
-    }
-  };
-
-  const getSubmissionForHomework = (
-    homeworkId: number
-  ): HomeworkSubmission | undefined => {
-    return homeworkState.find(
-      (submission) => submission.homework_id === homeworkId
-    );
   };
 
   const handleDismissError = () => {
     setErrorMessage(null);
     dispatch(clearError());
-    dispatch(clearSubmissionError());
   };
 
-  const homeWorkColumns = [
+  const studentHomeworkColumns = [
     {
       key: "group",
       title: "Группа",
-      width: "230px",
+      width: "180px",
     },
     {
       key: "lesson",
       title: "Урок",
-      width: "220px",
-      isButton: true,
-      render: (value: string, row: HomeWorkTableItem) => {
-        return (
-          <button
-            onClick={() => handleOpenLessonModal(row)}
-            className={styles.table__button}
-          >
-            <span>
-              {value.length > 50 ? value.substring(0, 50) + "..." : value}
-            </span>
-          </button>
-        );
-      },
+      width: "200px",
     },
     {
       key: "task",
       title: "Задание",
       width: "220px",
       isButton: true,
-      render: (value: string, row: HomeWorkTableItem) => {
+      render: (value: string, row: StudentHomeworkTableItem) => {
         return (
           <button
             onClick={() => handleOpenTaskModal(row)}
@@ -349,89 +261,41 @@ export default function ProfileHomeWork() {
       key: "note",
       title: "Примечание",
       width: "180px",
-      render: (_: string, row: HomeWorkTableItem) => {
-        const submission = getSubmissionForHomework(row.homeworkId);
-        if (submission && submission.review) {
+      render: (value: string) => {
+        if (value && value.trim()) {
           return (
             <button
               className={styles.table__button}
-              style={{ color: "#1976d2", textDecoration: "underline" }}
-              onClick={() =>
-                setNoteModal({ open: true, note: submission.review })
-              }
+              style={{ color: "#8399ff", textDecoration: "underline" , cursor: "pointer" }}
+
+              onClick={() => setNoteModal({ open: true, note: value })}
             >
-              {submission.review.length > 30
-                ? submission.review.substring(0, 30) + "..."
-                : submission.review}
+              {value.length > 30 ? value.substring(0, 30) + "..." : value}
             </button>
           );
         }
-        return null;
+        return <span>-</span>;
       },
     },
     {
-      key: "deadline",
-      title: "Срок сдачи",
+      key: "submittedAt",
+      title: "Дата отправки",
       width: "140px",
     },
     {
-      key: "status",
-      title: "Статус",
+      key: "view",
+      title: "Открыть д/з",
       width: "140px",
-      render: (_: string, row: HomeWorkTableItem) => {
-        const submission = getSubmissionForHomework(row.homeworkId);
-        return (
-          <span
-            style={{
-              color: submission ? "green" : "red",
-              fontWeight: 600,
-              borderRadius: "6px",
-              fontSize: "13px",
-              display: "inline-block",
-            }}
-          >
-            {submission ? "Отправлено" : "В ожидании"}
-          </span>
-        );
-      },
-    },
-    {
-      key: "upload",
-      title: "Загрузить д/з",
-      width: "220px",
       isButton: true,
-      render: (value: string, row: HomeWorkTableItem) => {
-        const submission = getSubmissionForHomework(row.homeworkId);
-
+      render: (value: string, row: StudentHomeworkTableItem) => {
         return (
-          <div style={{ display: "flex", gap: "10px", flexDirection: "row" }}>
-            {!submission ? (
-              <button
-                onClick={() => handleOpenUploadModal(row)}
-                className={styles.upload__button}
-                title="Загрузить домашнее задание"
-              >
-                <UploadIcon />
-              </button>
-            ) : (
-              <div style={{ display: "flex", gap: "30px" }}>
-                <button
-                  onClick={() => handleOpenSubmissionModal(row, submission)}
-                  className={styles.upload__button}
-                  title="Просмотреть загруженное задание"
-                >
-                  <UploadIcon />
-                </button>
-                <button
-                  onClick={() => handleOpenUploadModal(row, submission, true)}
-                  className={styles.upload__button}
-                  title="Редактировать задание"
-                >
-                  <EditPen />
-                </button>
-              </div>
-            )}
-          </div>
+          <button
+            onClick={() => handleOpenViewModal(row)}
+            className={styles.upload__button}
+            title="Просмотреть домашнее задание"
+          >
+            <ViewIcon />
+          </button>
         );
       },
     },
@@ -441,8 +305,9 @@ export default function ProfileHomeWork() {
     <div className={classNames(styles.homework__container, "container")}>
       <div className={styles.homework__content}>
         <div className={styles.homework__title}>
-          <h3>Домашнее задание</h3>
+          <h3>Домашние задания студента</h3>
         </div>
+
         {errorMessage && (
           <div className={styles.errorNotification}>
             <span>{errorMessage}</span>
@@ -455,11 +320,15 @@ export default function ProfileHomeWork() {
           </div>
         )}
 
-        {loading || !lessons ? (
+        {loading ? (
           <TableSkeleton />
         ) : (
           <div className={styles.homework__table}>
-            <Table columns={homeWorkColumns} data={tableData} emptyMessage="" />
+            <Table
+              columns={studentHomeworkColumns}
+              data={tableData}
+              emptyMessage="У студента нет домашних заданий"
+            />
           </div>
         )}
 
@@ -468,22 +337,14 @@ export default function ProfileHomeWork() {
           onClose={taskModal.closeModal}
           data={taskModal.data}
         />
-        <LessonInfoModal
-          isOpen={lessonModal.isOpen}
-          onClose={lessonModal.closeModal}
-          data={lessonModal.data}
-        />
-        <HomeworkSubmissionModal
-          isOpen={submissionModal.isOpen}
-          onClose={submissionModal.closeModal}
-          data={submissionModal.data}
+
+        <StudentHomeworkViewModal
+          isOpen={viewModal.isOpen}
+          onClose={viewModal.closeModal}
+          data={viewModal.data}
           modalLinkClass={styles.modal__link}
         />
-        <HomeworkUploadModal
-          isOpen={uploadModal.isOpen}
-          onClose={uploadModal.closeModal}
-          data={uploadModal.data}
-        />
+
         <ProfileModal
           isOpen={noteModal.open}
           onClose={() => setNoteModal({ open: false, note: null })}

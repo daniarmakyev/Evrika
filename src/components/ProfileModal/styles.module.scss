@@ -10,12 +10,10 @@
   background: rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(5px);
   display: flex;
-  align-items: center;
   justify-content: center;
   box-sizing: border-box;
   overflow: auto;
-  padding-top: 90px;
-
+  padding-top: var(--header-height);
   &.fade {
     animation: fadeIn 0.3s ease-out;
   }
@@ -37,16 +35,15 @@
   background: $White;
   border-radius: 10px;
   box-shadow: 0 0 30px rgba(219, 219, 219, 1);
-  overflow-y: auto;
   position: relative;
-  overflow-y: auto;
   width: 100%;
   max-width: 100%;
   padding: 40px;
-  max-height: 95vh;
-  margin-top: auto;
-  margin-bottom: auto;
-
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  margin-top: 20px;
+  margin-bottom: 20px;
   &.sm {
     max-width: 400px;
   }
@@ -100,7 +97,16 @@
 }
 
 .content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: flex-start;
+  gap: 20px;
   margin-top: 20px;
+  h4 {
+    font-weight: 700;
+    margin-bottom: 5px;
+  }
 }
 
 @keyframes fadeIn {

@@ -12,6 +12,7 @@ interface UserState {
   attendance: AttendanceType[] | null;
   groupsLoading: boolean;
   groupLoading: boolean;
+  anotherUser: UserType | null;
 }
 
 const INIT_STATE: UserState = {
@@ -19,6 +20,7 @@ const INIT_STATE: UserState = {
   loading: false,
   attendanceLoading: false,
   groupLoading: false,
+  anotherUser: null,
   user: null,
   groups: null,
   groupsLoading: false,
@@ -66,7 +68,7 @@ export const userSlice = createSlice({
       })
       .addCase(getUserById.fulfilled, (state, { payload }) => {
         state.loading = false;
-        state.user = payload;
+        state.anotherUser = payload;
         state.error = null;
       })
       .addCase(getUserById.rejected, (state, { payload }) => {

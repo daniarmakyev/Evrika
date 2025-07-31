@@ -67,12 +67,6 @@
   flex-direction: column;
   gap: 8px;
 
-  h4 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #333;
-    margin: 0;
-  }
 }
 
 .selectField {
@@ -113,22 +107,58 @@
 
 .buttonContainer {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  gap: 20px;
+}
+
+.leftButtons {
+  display: flex;
+  align-items: center;
+}
+
+.rightButtons {
+  display: flex;
+  align-items: center;
+}
+
+.delete__button {
+  background-color: $danger;
+  color: $White;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: darken($danger, 8%);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
 }
 
 .save__button {
   background-color: $primary;
   color: $White;
-  padding: 10px 24px;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 500;
+  padding: 12px 24px;
+  border-radius: 8px;
   border: none;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
   transition: all 0.2s ease;
   min-width: 120px;
 
-  &:hover {
+  &:hover:not(:disabled) {
     background-color: darken($primary, 8%);
     transform: translateY(-1px);
   }
@@ -138,8 +168,96 @@
   }
 
   &:disabled {
-    background-color: #ccc;
+    opacity: 0.6;
     cursor: not-allowed;
     transform: none;
+  }
+}
+
+.deleteConfirmation {
+  background-color: #fff5f5;
+  border: 2px solid $danger;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  animation: slideDown 0.3s ease-out;
+}
+
+.confirmationMessage {
+  margin-bottom: 20px;
+
+  h4 {
+    color: $danger;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  p {
+    color: #666;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+}
+
+.confirmationButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancel__button {
+  background-color: transparent;
+  color: #666;
+  border: 2px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #f5f5f5;
+    border-color: #bbb;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.delete__confirm__button {
+  background-color: $danger;
+  color: $White;
+  border: 2px solid $danger;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: darken($danger, 10%);
+    border-color: darken($danger, 10%);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

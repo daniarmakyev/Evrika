@@ -8,6 +8,7 @@ import classNames from "classnames";
 import { useGetAttendanceStudentQuery } from "src/store/attendance/attendance";
 import Pagination from "@components/Pagination";
 import { formatTimeShedule } from "src/consts/utilits";
+import SelectField from "@components/Fields/SelectField";
 interface HomeWorkTableItem {
   id: number;
   group: string;
@@ -19,18 +20,18 @@ interface HomeWorkTableItem {
 export default function AttendanceStudent() {
   const params = useParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const [selectedGroup, setSelectedGroup] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
-  const size = 5; // items per page
+  const size = 20; // items per page
 
   console.log(id);
 
-  const { data, error, isLoading } = useGetAttendanceStudentQuery({
+  const { data, error, isLoading, refetch } = useGetAttendanceStudentQuery({
     user_id: id,
     page: currentPage,
     size,
   });
-  console.log("ATTENDANCE", data);
   const attendanceData: HomeWorkTableItem[] = data?.attendance_groups?.length
     ? data.attendance_groups.flatMap((group) =>
         group.attendance.map((att) => ({
@@ -44,16 +45,21 @@ export default function AttendanceStudent() {
           status: att.status,
         }))
       )
-    : [
-        {
-          id: 0,
-          group: "—",
-          lesson: "—",
-          date: "—",
-          time: "—",
-          status: "absent",
-        },
-      ];
+    : [];
+
+  const groupOptions = [
+    { value: "", label: "Все группы" }, // default "All"
+    ...Array.from(new Set(attendanceData.map((item) => item.group))).map(
+      (groupName) => ({
+        value: groupName,
+        label: groupName,
+      })
+    ),
+  ];
+
+  const filteredAttendances = selectedGroup
+    ? attendanceData.filter((item) => item.group === selectedGroup)
+    : attendanceData;
 
   const homeWorkColumns = [
     {
@@ -123,26 +129,29 @@ export default function AttendanceStudent() {
       <div className={styles.homework__content}>
         <div className={styles.homework__title}>
           <h3>Посещаемость</h3>
+           <div style={{ width: "210px", position: "relative" }}>
+              <SelectField
+                value={selectedGroup}
+                onChange={(e) => setSelectedGroup(e.target.value)}
+                options={groupOptions}
+              />
+            </div>
         </div>
-        {/* {errorMessage && (
-          <div className={styles.errorNotification}>
-            <span>{errorMessage}</span>
-            <button
-              onClick={handleDismissError}
-              className={styles.dismissButton}
-            >
-              <Close />
+        {error ? (
+          <div className={styles.errorMessage}>
+            <p>Произошла ошибка при загрузке посещаемости.</p>
+            <pre>{JSON.stringify(error, null, 2)}</pre>
+            <button onClick={() => refetch()} className={styles.retryButton}>
+              Повторить попытку
             </button>
           </div>
-        )} */}
-
-        {isLoading ? (
+        ) : isLoading ? (
           <TableSkeleton />
         ) : (
           <div className={styles.homework__table}>
             <Table
               columns={homeWorkColumns}
-              data={attendanceData}
+              data={filteredAttendances}
               emptyMessage="Нет данных о посещаемости"
             />
           </div>

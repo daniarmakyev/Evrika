@@ -5,6 +5,9 @@ import { HomeworkSubmission } from "src/consts/types";
 import styles from "./styles.module.scss";
 import { getUserById } from "src/store/user/user.action";
 import { useAppDispatch } from "src/store/store";
+import { useModal } from "@context/ModalContext";
+import TeacherReviewModal from "src/app/profile/homework/teacher/TeacherReviewModal";
+import InputField from "@components/Fields/InputField";
 
 type Props = {
   isOpen: boolean;
@@ -26,6 +29,8 @@ const HomeworkViewModal: React.FC<Props> = ({
   const [students, setStudents] = useState<
     Record<number, { first_name: string; last_name: string }>
   >({});
+
+  const reviewModal = useModal<{ submission: HomeworkSubmission }>("review");
 
   useEffect(() => {
     if (isOpen && submissions && submissions.length > 0) {
@@ -66,14 +71,22 @@ const HomeworkViewModal: React.FC<Props> = ({
     document.body.removeChild(link);
   };
 
+  const handleOpenReviewModal = (submission: HomeworkSubmission) => {
+    reviewModal.openModal({ submission });
+  };
+
+  const handleReviewSuccess = () => {
+    reviewModal.closeModal();
+  };
+
   return (
-    <ProfileModal
-      isOpen={isOpen}
-      onClose={onClose}
-      title="Просмотр домашнего задания"
-      size="lg"
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+    <>
+      <ProfileModal
+        isOpen={isOpen}
+        onClose={onClose}
+        title="Просмотр домашнего задания"
+        size="lg"
+      >
         <div>
           <h4>Задание</h4>
           <TextArea
@@ -89,14 +102,24 @@ const HomeworkViewModal: React.FC<Props> = ({
         <div>
           <h4>Группа</h4>
           <div className={styles.info__field}>
-            {homework?.group || "Не указана"}
+            <InputField
+              readOnly
+              value={homework?.group || "Не указана"}
+              isShadow
+              fullWidth
+            />
           </div>
         </div>
 
         <div>
           <h4>Дедлайн</h4>
           <div className={styles.info__field}>
-            {homework?.deadline || "Не указан"}
+            <InputField
+              readOnly
+              value={homework?.deadline || "Не указан"}
+              isShadow
+              fullWidth
+            />
           </div>
         </div>
 
@@ -109,11 +132,7 @@ const HomeworkViewModal: React.FC<Props> = ({
               {submissions.map((submission) => (
                 <div
                   key={submission.id}
-                  style={{
-                    border: "1px solid #eee",
-                    borderRadius: 8,
-                    padding: 16,
-                  }}
+                  className={styles.submission__card}
                 >
                   <div style={{ marginBottom: 8 }}>
                     <b>Студент:</b>{" "}
@@ -159,29 +178,34 @@ const HomeworkViewModal: React.FC<Props> = ({
                       ? new Date(submission.submitted_at).toLocaleString()
                       : "Не отправлено"}
                   </div>
-                  {/* <div style={{ marginBottom: 8 }}>
-                    <b>Статус:</b>{" "}
-                    <span
-                      style={{
-                        color: submission ? "green" : "red",
-                        fontWeight: 600,
-                        fontSize: "14px",
-                      }}
+
+                  <div style={{ marginBottom: 8 }}>
+                    <b>Коментарии:</b>
+                    {submission.review ? (
+                      <div style={{ marginTop: 8 }}>
+                        <TextArea
+                          value={submission.review.comment}
+                          readOnly
+                          isShadow
+                          fullWidth
+                        />
+                      </div>
+                    ) : (
+                      <div>Коментарий не добавлен</div>
+                    )}
+                  </div>
+
+                  <div style={{ marginTop: 12 }}>
+                    <button
+                      onClick={() => handleOpenReviewModal(submission)}
+                      className={styles.save__button}
+                      style={{ fontSize: "14px", padding: "8px 16px" }}
                     >
-                      {submission ? "Отправлено" : "В ожидании"}
-                    </span>
-                  </div> */}
-                  {submission.review && (
-                    <div>
-                      <b>Комментарий:</b>
-                      <TextArea
-                        value={submission.review}
-                        readOnly
-                        isShadow
-                        fullWidth
-                      />
-                    </div>
-                  )}
+                      {submission.review
+                        ? "Редактировать коментарий"
+                        : "Добавить коментарий"}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -201,8 +225,15 @@ const HomeworkViewModal: React.FC<Props> = ({
             Закрыть
           </button>
         </div>
-      </div>
-    </ProfileModal>
+      </ProfileModal>
+
+      <TeacherReviewModal
+        isOpen={reviewModal.isOpen}
+        onClose={reviewModal.closeModal}
+        submission={reviewModal.data?.submission}
+        onSuccess={handleReviewSuccess}
+      />
+    </>
   );
 };
 

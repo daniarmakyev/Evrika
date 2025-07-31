@@ -128,7 +128,7 @@ const HomeworkCreateModal: React.FC<Props> = ({
     >
       <form
         onSubmit={handleSubmit(onSubmit)}
-        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        className={styles.modal__form}
       >
         {submissionError && (
           <div
