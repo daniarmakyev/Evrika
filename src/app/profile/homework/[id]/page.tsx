@@ -120,7 +120,7 @@ export default function StudentProfileByTeacher() {
         getStudentHomeWorkByTeacher({
           userId: studentId,
           page: currentPage,
-          size: 10,
+          size: 2,
         })
       );
     }
