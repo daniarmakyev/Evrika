@@ -1,5 +1,5 @@
 import { AttendanceType, GroupDetail, GroupResponseType, UserType } from "src/consts/types";
-import { editAttendance, getAttendanceByLesson, getGroup, getGroupById, getUser, getUserById, authLogin } from "./user.action";
+import { editAttendance, getAttendanceByLesson, getGroup, getGroupById, getUser, getUserById, authLogin, getGroupsTeacher } from "./user.action";
 import { createSlice } from "@reduxjs/toolkit";
 
 interface UserState {
@@ -16,6 +16,7 @@ interface UserState {
   isAuthenticated: boolean;
   loginLoading: boolean;
   token: string | null;
+  groupsTeacher: GroupResponseType | null;
 }
 
 const INIT_STATE: UserState = {
@@ -32,6 +33,7 @@ const INIT_STATE: UserState = {
   isAuthenticated: false,
   loginLoading: false,
   token: null,
+  groupsTeacher: null
 };
 
 export const userSlice = createSlice({
@@ -164,7 +166,20 @@ export const userSlice = createSlice({
       })
       .addCase(editAttendance.rejected, (state, { payload }) => {
         state.error = payload || "Failed to edit attendance";
-      });
+      }).addCase(getGroupsTeacher.pending, (state) => {
+        state.groupsLoading = true;
+        state.error = null;
+      })
+      .addCase(getGroupsTeacher.fulfilled, (state, { payload }) => {
+        state.groupsLoading = false;
+        state.groupsTeacher = payload;
+        state.error = null;
+      })
+      .addCase(getGroupsTeacher.rejected, (state, { payload }) => {
+        state.groupsLoading = false;
+        state.error = payload || "Failed to get group";
+        state.groups = null;
+      })
   },
 });
 

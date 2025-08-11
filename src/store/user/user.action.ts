@@ -28,15 +28,21 @@ export const getUser = createAsyncThunk<
 
 export const getGroup = createAsyncThunk<
     GroupResponseType,
-    { page?: number; size?: number },
+    { page?: number; size?: number } | void,
     { rejectValue: string }
 >(
     "user/getGroup",
-    async ({ page = 1, size = 5 }, { rejectWithValue }) => {
+    async (args, { rejectWithValue }) => {
         try {
-            const { data } = await $apiPrivate.get<GroupResponseType>(
-                `/group/my?page=${page}&size=${size}`
-            );
+            const page = args && args.page;
+            const size = args && args.size;
+
+            let url = "/group/my";
+            if (page !== undefined && size !== undefined) {
+                url += `?page=${page}&size=${size}`;
+            }
+
+            const { data } = await $apiPrivate.get<GroupResponseType>(url);
             return data;
         } catch (err) {
             if (axios.isAxiosError<CustomApiError>(err)) {
@@ -46,6 +52,36 @@ export const getGroup = createAsyncThunk<
         }
     }
 );
+
+
+
+export const getGroupsTeacher = createAsyncThunk<
+    GroupResponseType,
+    { page?: number; size?: number } | void,
+    { rejectValue: string }
+>(
+    "user/getGroupsTeacher",
+    async (args, { rejectWithValue }) => {
+        try {
+            const page = args && args.page;
+            const size = args && args.size;
+
+            let url = "/group/my";
+            if (page !== undefined && size !== undefined) {
+                url += `?page=${page}&size=${size}`;
+            }
+
+            const { data } = await $apiPrivate.get<GroupResponseType>(url);
+            return data;
+        } catch (err) {
+            if (axios.isAxiosError<CustomApiError>(err)) {
+                return rejectWithValue(err.response?.data.detail || "Ошибка получения групп");
+            }
+            return rejectWithValue("Неизвестная ошибка!");
+        }
+    }
+);
+
 
 export const getGroupById = createAsyncThunk<
     GroupDetail,

@@ -7,14 +7,14 @@ import Pagination from "@components/Pagination"; // Import the Pagination compon
 import { useModal } from "@context/ModalContext";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import { useEffect, useState } from "react";
-import { getGroup, getGroupById } from "src/store/user/user.action";
+import { getGroupsTeacher, getGroupById } from "src/store/user/user.action";
 import { GroupType } from "src/consts/types";
 import Link from "next/link";
 import LoadingSpinner from "@components/Ui/LoadingSpinner";
 
 export default function Groups() {
   const groupModal = useModal<GroupType>("groups");
-  const { groups, group, loading, error, groupLoading } = useAppSelector(
+  const { groupsTeacher, group, loading, error, groupLoading } = useAppSelector(
     (state) => state.user
   );
   const dispatch = useAppDispatch();
@@ -22,7 +22,7 @@ export default function Groups() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    dispatch(getGroup({ page: currentPage, size: 1 }));
+    dispatch(getGroupsTeacher({ page: currentPage, size: 1 }));
   }, [dispatch, currentPage, ]);
 
   useEffect(() => {
@@ -31,8 +31,8 @@ export default function Groups() {
     }
   }, [groupModal.isOpen, groupModal.data?.id, dispatch]);
 
-  const groupsArray = groups?.groups || [];
-  const pagination = groups?.pagination;
+  const groupsArray = groupsTeacher?.groups || [];
+  const pagination = groupsTeacher?.pagination;
 
   const groupsTableData = groupsArray.map((g) => ({
     group: g.name,
