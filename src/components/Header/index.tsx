@@ -98,7 +98,16 @@ const Header = () => {
               )
             }
           >
-            Ученик
+            <Link href={"/profile/personal-info"}>Ученик</Link>
+          </button>
+          <button
+            onClick={() =>
+              setTestUser(
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI0NCIsImF1ZCI6WyJmYXN0YXBpLXVzZXJzOmF1dGgiXSwiZXhwIjoxNzU3NDkyODAwfQ.hD38M-q13TPbis8cK9M52STSVknxicWGIvo_Rz2at94"
+              )
+            }
+          >
+            <Link href={"/profile/personal-info"}>Учитель</Link>
           </button>
           <button
             onClick={() =>
@@ -107,7 +116,7 @@ const Header = () => {
               )
             }
           >
-            Учитель
+            <Link href={"/profile/admin/teacher-list"}>Админ</Link>
           </button>
         </div>
 

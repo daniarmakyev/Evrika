@@ -21,11 +21,23 @@ const TabBar: React.FC<TabBarProps> = ({ items }) => {
   return (
     <nav className={styles.tabBar}>
       {items.map((item) => {
-        const isActive = "/profile" + item.link === pathname;
-        return item.link ? (
+        if (!item.link) {
+          return (
+            <button key={item.tab} type="button" className={styles.tab}>
+              {item.icon && <span className={styles.tab__icon}>{item.icon}</span>}
+              <span className={styles.tab__text}>{item.tab}</span>
+              {item.isUnderline && <span className={styles.tab__underline} />}
+            </button>
+          );
+        }
+
+        const fullLink = `/profile${item.link.startsWith("/") ? item.link : `/${item.link}`}`;
+        const isActive = pathname === fullLink || pathname.startsWith(fullLink + "/");
+
+        return (
           <Link
             key={item.tab}
-            href={`/profile/${item.link}`}
+            href={fullLink}
             className={classNames(styles.tab, {
               [styles.tab_active]: isActive,
             })}
@@ -40,12 +52,6 @@ const TabBar: React.FC<TabBarProps> = ({ items }) => {
               />
             )}
           </Link>
-        ) : (
-          <button key={item.tab} type="button" className={styles.tab}>
-            {item.icon && <span className={styles.tab__icon}>{item.icon}</span>}
-            <span className={styles.tab__text}>{item.tab}</span>
-            {item.isUnderline && <span className={styles.tab__underline} />}
-          </button>
         );
       })}
     </nav>

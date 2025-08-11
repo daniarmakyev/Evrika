@@ -57,12 +57,9 @@ export default function ProfileSchedule() {
   const [pendingUpdates, setPendingUpdates] = useState<number[]>([]);
 
   const { shedule, loading, error } = useAppSelector((state) => state.shedule);
-  const {
-    user,
-    groups,
-    attendance,
-     attendanceLoading,
-  } = useAppSelector((state) => state.user);
+  const { user, groups, attendance, attendanceLoading } = useAppSelector(
+    (state) => state.user
+  );
   const { classrooms } = useAppSelector((state) => state.lesson);
 
   const dispatch = useAppDispatch();
@@ -122,7 +119,7 @@ export default function ProfileSchedule() {
     const userRole = localStorage.getItem("role");
     if (userRole) {
       setRole(userRole);
-      if (userRole === "admin" || userRole === "teacher") {
+      if (userRole === "teacher") {
         dispatch(getGroup({}));
         dispatch(getClassrooms());
       }
@@ -144,7 +141,7 @@ export default function ProfileSchedule() {
   };
 
   const handleLessonClick = (lesson: LessonShedule, groupId?: number) => {
-    if (role === "admin" || role === "teacher") {
+    if (role === "teacher") {
       const lessonWithGroup = { ...lesson, group_id: groupId };
       lessonEditModal.openModal(lessonWithGroup);
     } else {
@@ -180,10 +177,10 @@ export default function ProfileSchedule() {
       key: "group",
       title: "Группа",
       width: "230px",
-      isButton: role === "admin" || role === "teacher",
+      isButton: role === "teacher",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (value: any, rowData: any) => {
-        if (role === "admin" || role === "teacher") {
+        if (role === "teacher") {
           return (
             <button
               className={styles.table__button}
@@ -279,7 +276,7 @@ export default function ProfileSchedule() {
         <div className={styles.schedule__content}>
           <div className={styles.schedule__title}>
             <h3>Расписание занятий</h3>
-            {role === "admin" || role === "teacher" ? (
+            {role === "teacher" ? (
               <button onClick={handleCreateLessonClick}>Добавить урок</button>
             ) : null}
           </div>

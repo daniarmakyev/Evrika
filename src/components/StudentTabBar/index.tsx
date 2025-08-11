@@ -5,63 +5,30 @@ import UserIcon from "public/assets/icons/user-outline.svg";
 import CalendarIcon from "public/assets/icons/calendar-outline.svg";
 import HomeIcon from "public/assets/icons/home-outline.svg";
 import GroupsIcon from "public/assets/icons/groups-outline.svg";
+import DollatIcon from "public/assets/icons/dollarIcon.svg";
+import GroupsAdminIcon from "public/assets/icons/groupsAdminIcon.svg";
+
 import styles from "./styles.module.scss";
 import classNames from "classnames";
 
 const studentData = [
-  {
-    tab: "Личная информация",
-    icon: <UserIcon />,
-    link: "/personal-info",
-  },
-  {
-    tab: "Расписание",
-    icon: <CalendarIcon />,
-    link: "/schedule",
-  },
-  {
-    tab: "Домашнее задание",
-    icon: <HomeIcon />,
-    link: "/homework",
-  },
-  // {
-  //   tab: "Уроки",
-  //   icon: <LessonIcon />,
-  //   link: "/lessons",
-  // },
-  // {
-  //   tab: "Статус оплаты",
-  //   icon: <DollarIcon />,
-  //   link: "/payment-status",
-  // },
-  // {
-  //   tab: "Чеки",
-  //   icon: <CheksIcon />,
-  //   link: "/cheques",
-  // },
+  { tab: "Личная информация", icon: <UserIcon />, link: "/personal-info" },
+  { tab: "Расписание", icon: <CalendarIcon />, link: "/schedule" },
+  { tab: "Домашнее задание", icon: <HomeIcon />, link: "/homework" },
 ];
 
 const teacherData = [
-  {
-    tab: "Личная информация",
-    icon: <UserIcon />,
-    link: "/personal-info",
-  },
-  {
-    tab: "Расписание",
-    icon: <CalendarIcon />,
-    link: "/schedule",
-  },
-  {
-    tab: "Группы",
-    icon: <GroupsIcon />,
-    link: "/groups",
-  },
-  {
-    tab: "Домашнее задание",
-    icon: <HomeIcon />,
-    link: "/homework/teacher",
-  },
+  { tab: "Личная информация", icon: <UserIcon />, link: "/personal-info" },
+  { tab: "Расписание", icon: <CalendarIcon />, link: "/schedule" },
+  { tab: "Группы", icon: <GroupsIcon />, link: "/groups" },
+  { tab: "Домашнее задание", icon: <HomeIcon />, link: "/homework/teacher" },
+];
+
+const adminData = [
+  { tab: "Преподаватели", icon: <UserIcon />, link: "admin/teacher-list" },
+  { tab: "Студенты", icon: <UserIcon />, link: "admin/student-list" },
+  { tab: "Курсы и группы", icon: <GroupsAdminIcon />, link: "admin/courses-groups/courses-list" },
+  { tab: "Финансы", icon: <DollatIcon />, link: "admin/payments-list" },
 ];
 
 export default function StudentTabBar({
@@ -73,7 +40,7 @@ export default function StudentTabBar({
   isProfileStudent?: boolean;
   studentId?: string | number | null;
 }) {
-  if (!role) return null; 
+  if (!role) return null;
 
   const studentProfileWithId = studentId
     ? [
@@ -90,34 +57,22 @@ export default function StudentTabBar({
       ]
     : [];
 
+  const getTabs = () => {
+    if (isProfileStudent) {
+      if (role === "teacher" || role === "admin") return studentProfileWithId;
+      return studentData.map((tab) => ({ ...tab, isUnderline: true }));
+    }
+
+    if (role === "teacher") return teacherData;
+    if (role === "admin") return adminData;
+    return studentData.map((tab) => ({ ...tab, isUnderline: true }));
+  };
+
   return (
     <div className={styles.tabBarWrapper}>
       <div className={classNames(styles.tabBarContainer, "container")}>
-        {isProfileStudent ? (
-          <TabBar
-            items={
-              role === "teacher" || role === "admin"
-                ? studentProfileWithId
-                : studentData.map((tab) => ({
-                    ...tab,
-                    isUnderline: true,
-                  }))
-            }
-          />
-        ) : (
-          <TabBar
-            items={
-              role === "teacher" || role === "admin"
-                ? teacherData
-                : studentData.map((tab) => ({
-                    ...tab,
-                    isUnderline: true,
-                  }))
-            }
-          />
-        )}
+        <TabBar items={getTabs()} />
       </div>
     </div>
   );
 }
-

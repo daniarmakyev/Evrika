@@ -101,7 +101,7 @@ const PersonalInfo: React.FC = () => {
                   {...field}
                   value={user.courses.map((course) => course.name).join(", ")}
                   label={
-                    user.role === "admin" || user.role === "teacher"
+                    user.role === "teacher"
                       ? "Курсы преподавания"
                       : "Курсы"
                   }
