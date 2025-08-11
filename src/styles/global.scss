@@ -23,7 +23,7 @@
   --White: #{$White};
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   --datepicker-icon-filter: invert(1);
 }
 
@@ -200,7 +200,6 @@ main {
 
 a {
   text-decoration: none;
-  color: $primary;
   line-height: 100%;
   padding: 0;
   margin: 0;
@@ -234,7 +233,7 @@ a {
   @include respond-above(md) {
     padding: 0 34px;
   }
-  
+
   @include respond-above(lg) {
     padding: 0 42px;
   }

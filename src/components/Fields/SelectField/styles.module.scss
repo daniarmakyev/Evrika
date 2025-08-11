@@ -1,6 +1,15 @@
 @import "../../../styles/varibles.scss";
 @import "../../../styles/mixins/";
 
+.inputContainer {
+  position: relative;
+}
+
+.shadow {
+  box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+  border-radius: 10px;
+}
+
 .select {
   padding: 6px 8px;
   padding-right: 30px;
@@ -14,6 +23,7 @@
   width: 100%;
   appearance: none;
   cursor: pointer;
+  position: relative;
 
   &.withLeftIcon {
     padding-left: 21px;
@@ -50,7 +60,7 @@
 
 .selectArrow {
   position: absolute;
-  right: 8px;
+  right: 10%;
   top: 50%;
   transform: translateY(-50%);
   pointer-events: none;
@@ -70,10 +80,6 @@
       padding-left: 30px;
     }
   }
-
-  .selectArrow {
-    right: 10px;
-  }
 }
 
 @include respond-above(sm) {
@@ -88,8 +94,6 @@
   }
 
   .selectArrow {
-    right: 15px;
-
     svg {
       width: 14px;
       height: 9px;
@@ -110,8 +114,6 @@
   }
 
   .selectArrow {
-    right: 17px;
-
     svg {
       width: 16px;
       height: 10px;
@@ -132,8 +134,6 @@
   }
 
   .selectArrow {
-    right: 20px;
-
     svg {
       width: 18px;
       height: 12px;
@@ -154,8 +154,6 @@
   }
 
   .selectArrow {
-    right: 24px;
-
     svg {
       width: 23px;
       height: 15px;
@@ -176,8 +174,6 @@
   }
 
   .selectArrow {
-    right: 27px;
-
     svg {
       width: 25px;
       height: 16px;
@@ -199,8 +195,6 @@
   }
 
   .selectArrow {
-    right: 35px;
-
     svg {
       width: 33px;
       height: 21px;

@@ -15,10 +15,14 @@
     align-items: flex-start;
     justify-content: space-between;
     border-bottom: 1px solid $white-ligth;
-    padding: 20px 0px;
+    padding: 20px 20px;
   }
   &__row:first-child {
     padding-top: 0px;
+    background: $primary;
+    color: $White;
+    padding-bottom: 15px;
+    padding-top: 15px;
   }
 
   &__cell:first-child {

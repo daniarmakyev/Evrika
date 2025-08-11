@@ -422,6 +422,7 @@ const TeacherHomeworkEditModal: React.FC<Props> = ({
                 display: "flex",
                 gap: "10px",
                 justifyContent: "flex-end",
+                marginTop:"10px"
               }}
             >
               <button

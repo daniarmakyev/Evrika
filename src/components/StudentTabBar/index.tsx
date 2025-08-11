@@ -25,10 +25,15 @@ const teacherData = [
 ];
 
 const adminData = [
-  { tab: "Преподаватели", icon: <UserIcon />, link: "admin/teacher-list" },
-  { tab: "Студенты", icon: <UserIcon />, link: "admin/student-list" },
-  { tab: "Курсы и группы", icon: <GroupsAdminIcon />, link: "admin/courses-groups/courses-list" },
-  { tab: "Финансы", icon: <DollatIcon />, link: "admin/payments-list" },
+  { tab: "Преподаватели", icon: <UserIcon />, link: "/admin/teacher-list" },
+  { tab: "Студенты", icon: <UserIcon />, link: "/admin/student-list" },
+  {
+    tab: "Курсы и группы",
+    icon: <GroupsAdminIcon />,
+    link: "/admin/courses-groups/courses-list",
+    matchPattern: "/admin/courses-groups",
+  },
+  { tab: "Финансы", icon: <DollatIcon />, link: "/admin/payments-list" },
 ];
 
 export default function StudentTabBar({

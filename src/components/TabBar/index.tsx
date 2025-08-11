@@ -9,6 +9,7 @@ interface TabItem {
   icon?: React.ReactNode;
   link?: string;
   isUnderline?: boolean;
+  matchPattern?: string;
 }
 
 interface TabBarProps {
@@ -24,15 +25,28 @@ const TabBar: React.FC<TabBarProps> = ({ items }) => {
         if (!item.link) {
           return (
             <button key={item.tab} type="button" className={styles.tab}>
-              {item.icon && <span className={styles.tab__icon}>{item.icon}</span>}
+              {item.icon && (
+                <span className={styles.tab__icon}>{item.icon}</span>
+              )}
               <span className={styles.tab__text}>{item.tab}</span>
               {item.isUnderline && <span className={styles.tab__underline} />}
             </button>
           );
         }
 
-        const fullLink = `/profile${item.link.startsWith("/") ? item.link : `/${item.link}`}`;
-        const isActive = pathname === fullLink || pathname.startsWith(fullLink + "/");
+        const fullLink = `/profile/${
+          item.link.startsWith("/") ? item.link.slice(1) : item.link
+        }`;
+
+        const isActive = item.matchPattern
+          ? pathname.startsWith(
+              `/profile/${
+                item.matchPattern.startsWith("/")
+                  ? item.matchPattern.slice(1)
+                  : item.matchPattern
+              }`
+            )
+          : pathname === fullLink || pathname.startsWith(fullLink + "/");
 
         return (
           <Link
