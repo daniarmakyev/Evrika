@@ -10,34 +10,48 @@
 
   margin-bottom: 100px;
 
-  .courseGroupSwitch {
+  .coursesHeader {
     display: flex;
-    background-color: $primary;
-    border-radius: 8px;
-    padding: 4px;
-    gap: 4px;
-    width: fit-content;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    .courseGroupSwitch {
+      display: flex;
+      background-color: $primary;
+      border-radius: 8px;
+      padding: 4px;
+      gap: 4px;
+      width: fit-content;
+      margin-top: 20px;
+      margin-bottom: 20px;
 
-    .switchItem {
-      padding: 8px 24px;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: 500;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      color: #ffffff;
-      background-color: transparent;
+      .switchItem {
+        padding: 8px 24px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        color: #ffffff;
+        background-color: transparent;
 
-      &:hover {
-        background-color: rgba(255, 255, 255, 0.5);
+        &:hover {
+          background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        &.active {
+          background-color: #ffffff;
+          color: $primary;
+        }
       }
-
-      &.active {
-        background-color: #ffffff;
-        color: $primary;
-      }
+    }
+    .addCourse {
+      background-color: $primary;
+      color: $White;
+      padding: 8px 20px;
+      height: fit-content;
+      width: auto;
+      border-radius: 8px;
     }
   }
 
@@ -54,11 +68,12 @@
     .contentHeader {
       display: flex;
       justify-content: space-between;
+      align-items: center;
+      align-content: center;
       .title {
         font-size: 24px;
         font-weight: 800;
         line-height: 100%;
-        margin-bottom: 20px;
       }
     }
 

@@ -187,7 +187,8 @@ export default function CoursesList() {
   return (
     <div>
       <div className={classNames(styles.courses__container, "container")}>
-        <div className={styles.courseGroupSwitch}>
+    <div className={styles.coursesHeader}>
+              <div className={styles.courseGroupSwitch}>
           <Link
             href={"/profile/admin/courses-groups/courses-list"}
             className={classNames(styles.switchItem, {
@@ -205,6 +206,10 @@ export default function CoursesList() {
             Группы
           </Link>
         </div>
+        <button className={styles.addCourse}>
+            Добавить
+        </button>
+    </div>
 
         <div className={styles.content}>
           <div className={styles.contentHeader}>
