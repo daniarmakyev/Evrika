@@ -52,6 +52,7 @@ const TeacherHomeworkEditModal: React.FC<Props> = ({
     formState: { isSubmitting },
     watch,
   } = useForm<EditHomeworkForm>({
+    mode: "onBlur",
     defaultValues: {
       description: "",
       deadline: "",
@@ -422,7 +423,7 @@ const TeacherHomeworkEditModal: React.FC<Props> = ({
                 display: "flex",
                 gap: "10px",
                 justifyContent: "flex-end",
-                marginTop:"10px"
+                marginTop: "10px",
               }}
             >
               <button

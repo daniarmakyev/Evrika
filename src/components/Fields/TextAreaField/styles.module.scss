@@ -6,7 +6,6 @@
   flex-direction: column;
   gap: 3px;
   width: fit-content;
-  margin-bottom: 11px;
 
   &:last-child {
     margin-bottom: 0;
@@ -102,7 +101,6 @@
 @include respond-above(xs) {
   .textareaWrapper {
     gap: 3px;
-    margin-bottom: 12px;
   }
 
   .label {
@@ -134,7 +132,6 @@
 @include respond-above(sm) {
   .textareaWrapper {
     gap: 5px;
-    margin-bottom: 20px;
   }
 
   .label {
@@ -166,7 +163,6 @@
 @include respond-above(xlg) {
   .textareaWrapper {
     gap: 6px;
-    margin-bottom: 22px;
   }
 
   .label {
@@ -199,7 +195,6 @@
 @include respond-above(fhd) {
   .textareaWrapper {
     gap: 7px;
-    margin-bottom: 26px;
   }
 
   .label {
@@ -232,7 +227,6 @@
 @include respond-above(fhd-plus) {
   .textareaWrapper {
     gap: 8px;
-    margin-bottom: 33px;
   }
 
   .label {
@@ -265,7 +259,6 @@
 @include respond-above(qhd) {
   .textareaWrapper {
     gap: 9px;
-    margin-bottom: 35px;
   }
 
   .label {
@@ -298,7 +291,6 @@
 @include respond-above(uhd) {
   .textareaWrapper {
     gap: 12px;
-    margin-bottom: 47px;
   }
 
   .label {

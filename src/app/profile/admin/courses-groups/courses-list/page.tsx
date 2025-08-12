@@ -14,6 +14,9 @@ import TextArea from "@components/Fields/TextAreaField";
 import InputField from "@components/Fields/InputField";
 import UploadIcon from "@icons/upload-file.svg";
 import SearchIcon from "@icons/searchIcon.svg";
+import EditModal from "./EditModal";
+import CreateCourseModal from "./CreateModal";
+
 interface Course {
   id: number;
   name: string;
@@ -65,15 +68,17 @@ export default function CoursesList() {
 
   const viewModal = useModal<Course>("view");
   const editModal = useModal<Course>("edit");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const languageOptions = [
     { value: "", label: "Все языки" },
-    { value: "english", label: "Английский" },
-    { value: "spanish", label: "Испанский" },
-    { value: "french", label: "Французский" },
+    { value: "Английский", label: "Английский" },
+    { value: "Испанский", label: "Испанский" },
+    { value: "Французский", label: "Французский" },
   ];
 
-  useEffect(() => {
+  const loadCourses = () => {
+    setLoading(true);
     setTimeout(() => {
       const mockData: Course[] = [
         {
@@ -94,7 +99,7 @@ export default function CoursesList() {
           description: "Курс бизнес английского для профессионалов",
           language_id: 1,
           level_id: 2,
-          language_name: "Английский",
+          language_name: "Испанский",
           level_code: "B2",
           created_at: "2025-01-02T10:00:00.000Z",
         },
@@ -102,6 +107,10 @@ export default function CoursesList() {
       setCourses(mockData);
       setLoading(false);
     }, 1000);
+  };
+
+  useEffect(() => {
+    loadCourses();
   }, []);
 
   useEffect(() => {
@@ -146,6 +155,22 @@ export default function CoursesList() {
     }
   };
 
+  const handleCreateCourse = () => {
+    setIsCreateModalOpen(true);
+  };
+
+  const handleCreateSuccess = () => {
+    setIsCreateModalOpen(false);
+    // Здесь будет перезагрузка данных после создания
+    loadCourses();
+  };
+
+  const handleEditSuccess = () => {
+    editModal.closeModal();
+
+    loadCourses();
+  };
+
   const coursesColumns = [
     {
       key: "name",
@@ -187,29 +212,29 @@ export default function CoursesList() {
   return (
     <div>
       <div className={classNames(styles.courses__container, "container")}>
-    <div className={styles.coursesHeader}>
-              <div className={styles.courseGroupSwitch}>
-          <Link
-            href={"/profile/admin/courses-groups/courses-list"}
-            className={classNames(styles.switchItem, {
-              [styles.active]: pathname.endsWith("/courses-list"),
-            })}
-          >
-            Курсы
-          </Link>
-          <Link
-            href={"/profile/admin/courses-groups/groups-list"}
-            className={classNames(styles.switchItem, {
-              [styles.active]: pathname.endsWith("/groups-list"),
-            })}
-          >
-            Группы
-          </Link>
-        </div>
-        <button className={styles.addCourse}>
+        <div className={styles.coursesHeader}>
+          <div className={styles.courseGroupSwitch}>
+            <Link
+              href={"/profile/admin/courses-groups/courses-list"}
+              className={classNames(styles.switchItem, {
+                [styles.active]: pathname.endsWith("/courses-list"),
+              })}
+            >
+              Курсы
+            </Link>
+            <Link
+              href={"/profile/admin/courses-groups/groups-list"}
+              className={classNames(styles.switchItem, {
+                [styles.active]: pathname.endsWith("/groups-list"),
+              })}
+            >
+              Группы
+            </Link>
+          </div>
+          <button className={styles.addCourse} onClick={handleCreateCourse}>
             Добавить
-        </button>
-    </div>
+          </button>
+        </div>
 
         <div className={styles.content}>
           <div className={styles.contentHeader}>
@@ -293,57 +318,20 @@ export default function CoursesList() {
         )}
       </ProfileModal>
 
-      <ProfileModal
+      <EditModal
+        data={editModal.data}
         isOpen={editModal.isOpen}
         onClose={editModal.closeModal}
-        title="Редактировать курс"
-        size="lg"
-      >
-        {editModal.data && (
-          <div className={styles.editForm}>
-            <div className={styles.formRow}>
-              <InputField
-                label="Название курса"
-                defaultValue={editModal.data.name}
-                fullWidth
-              />
-            </div>
-            <div className={styles.formRow}>
-              <InputField
-                label="Цена за месяц"
-                type="number"
-                defaultValue={editModal.data.price.toString()}
-                fullWidth
-              />
-            </div>
-            <div className={styles.formRow}>
-              <SelectField
-                label="Язык"
-                options={languageOptions.slice(1)}
-                defaultValue={editModal.data.language_name.toLowerCase()}
-                fullWidth
-              />
-            </div>
-            <div className={styles.formRow}>
-              <TextArea
-                label="Описание"
-                defaultValue={editModal.data.description}
-                fullWidth
-                rows={4}
-              />
-            </div>
-            <div className={styles.formActions}>
-              <button className={styles.saveButton}>Сохранить</button>
-              <button
-                className={styles.cancelButton}
-                onClick={editModal.closeModal}
-              >
-                Отмена
-              </button>
-            </div>
-          </div>
-        )}
-      </ProfileModal>
+        languageOptions={languageOptions}
+        onSuccess={handleEditSuccess}
+      />
+
+      <CreateCourseModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        languageOptions={languageOptions}
+        onSuccess={handleCreateSuccess}
+      />
     </div>
   );
 }

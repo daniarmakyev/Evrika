@@ -6,7 +6,6 @@
   flex-direction: column;
   gap: 3px;
   width: fit-content;
-  margin-bottom: 11px;
 
   &:last-child {
     margin-bottom: 0;
@@ -40,7 +39,7 @@
   top: 4px;
   height: 13px;
   width: 13px;
-  
+
   img,
   svg {
     width: 100%;
@@ -101,7 +100,6 @@
 @include respond-above(xs) {
   .inputWrapper {
     gap: 3px;
-    margin-bottom: 12px;
   }
 
   .label {
@@ -132,7 +130,6 @@
 @include respond-above(sm) {
   .inputWrapper {
     gap: 5px;
-    margin-bottom: 20px;
   }
 
   .label {
@@ -163,7 +160,6 @@
 @include respond-above(xlg) {
   .inputWrapper {
     gap: 6px;
-    margin-bottom: 22px;
   }
 
   .label {
@@ -195,7 +191,6 @@
 @include respond-above(fhd) {
   .inputWrapper {
     gap: 7px;
-    margin-bottom: 26px;
   }
 
   .label {
@@ -227,7 +222,6 @@
 @include respond-above(fhd-plus) {
   .inputWrapper {
     gap: 8px;
-    margin-bottom: 33px;
   }
 
   .label {
@@ -259,7 +253,6 @@
 @include respond-above(qhd) {
   .inputWrapper {
     gap: 9px;
-    margin-bottom: 35px;
   }
 
   .label {
@@ -291,7 +284,6 @@
 @include respond-above(uhd) {
   .inputWrapper {
     gap: 12px;
-    margin-bottom: 47px;
   }
 
   .label {
