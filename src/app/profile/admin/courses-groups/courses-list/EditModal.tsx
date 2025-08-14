@@ -5,33 +5,25 @@ import ProfileModal from "@components/ProfileModal";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
-
-interface Course {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  language_id: number;
-  level_id: number;
-  language_name: string;
-  level_code: string;
-  created_at: string;
-}
+import { Course, Language, Level } from "src/consts/types";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { updateCourse } from "src/store/courseGroup/courseGroup.action";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   data: Course | null;
-  languageOptions: { value: string; label: string }[];
+  languageOptions: Language[];
+  levelOptions: Level[];
   onSuccess?: () => void;
 };
 
 interface EditCourseForm {
   name: string;
   price: number;
-  language_name: string;
-  level_code: string;
-  description: string;
+  language_id: number | string;
+  level_id: number | string;
+  description: string | null;
 }
 
 const EditModal = ({
@@ -39,50 +31,57 @@ const EditModal = ({
   onClose,
   data,
   languageOptions,
+  levelOptions,
   onSuccess,
 }: Props) => {
+  const dispatch = useAppDispatch();
+  const { updatingCourse, error } = useAppSelector(
+    (state) => state.groupsCourses
+  );
+
   const {
     register,
     handleSubmit,
     reset,
-    formState: { isSubmitting, errors },
+    formState: { errors },
   } = useForm<EditCourseForm>({
     mode: "onBlur",
     defaultValues: {
       name: "",
       price: 0,
-      language_name: "",
-      level_code: "",
+      language_id: "",
+      level_id: "",
       description: "",
     },
   });
 
-  const levelOptions = [
-    { value: "A1", label: "A1 - Начинающий" },
-    { value: "A2", label: "A2 - Элементарный" },
-    { value: "B1", label: "B1 - Средний" },
-    { value: "B2", label: "B2 - Выше среднего" },
-    { value: "C1", label: "C1 - Продвинутый" },
-    { value: "C2", label: "C2 - Профессиональный" },
-  ];
-
   useEffect(() => {
     if (isOpen && data) {
+      const language = languageOptions.find(
+        (lang) => lang.name === data.language_name
+      );
+      const level = levelOptions.find((lvl) => lvl.code === data.level_code);
+
       reset({
         name: data.name,
         price: data.price,
-        language_name: data.language_name,
-        level_code: data.level_code,
-        description: data.description,
+        language_id: language ? language.id : "",
+        level_id: level ? level.id : "",
+        description: data.description || null,
       });
     }
-  }, [isOpen, data, reset]);
+  }, [isOpen, data, reset, languageOptions, levelOptions]);
 
   const onSubmit = async (formData: EditCourseForm) => {
     if (!data) return;
 
     try {
-      console.log("Данные для обновления курса:", { id: data.id, ...formData });
+      await dispatch(
+        updateCourse({
+          id: data.id,
+          ...formData,
+        })
+      ).unwrap();
 
       if (onSuccess) {
         onSuccess();
@@ -146,52 +145,47 @@ const EditModal = ({
               </span>
             )}
           </div>
-
           <div className={styles.formRow}>
             <SelectField
-              {...register("language_name", {
-                required: "Выберите язык",
-              })}
+              {...register("language_id", { required: "Выберите язык" })}
               label="Язык"
-              options={languageOptions.slice(1)}
+              options={languageOptions.map((lang) => ({
+                label: lang.name,
+                value: lang.id,
+              }))}
               placeholder="Выберите язык"
               fullWidth
               isShadow
             />
-            {errors.language_name && (
+            {errors.language_id && (
               <span style={{ color: "red", fontSize: "14px" }}>
-                {errors.language_name.message}
+                {errors.language_id.message}
               </span>
             )}
           </div>
 
           <div className={styles.formRow}>
             <SelectField
-              {...register("level_code", {
-                required: "Выберите уровень",
-              })}
+              {...register("level_id", { required: "Выберите уровень" })}
               label="Уровень"
-              options={levelOptions}
+              options={levelOptions.map((lvl) => ({
+                label: lvl.code,
+                value: lvl.id,
+              }))}
               placeholder="Выберите уровень"
               fullWidth
               isShadow
             />
-            {errors.level_code && (
+            {errors.level_id && (
               <span style={{ color: "red", fontSize: "14px" }}>
-                {errors.level_code.message}
+                {errors.level_id.message}
               </span>
             )}
           </div>
 
           <div className={styles.formRowTextArea}>
             <TextArea
-              {...register("description", {
-                required: "Описание обязательно",
-                minLength: {
-                  value: 10,
-                  message: "Описание должно содержать минимум 10 символов",
-                },
-              })}
+              {...register("description")}
               label="Описание"
               placeholder="Введите описание курса..."
               fullWidth
@@ -205,19 +199,27 @@ const EditModal = ({
             )}
           </div>
 
+          {error && (
+            <div
+              style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}
+            >
+              {error}
+            </div>
+          )}
+
           <div className={styles.formActions}>
             <button
               type="submit"
               className={styles.saveButton}
-              disabled={isSubmitting}
+              disabled={updatingCourse}
             >
-              {isSubmitting ? "Сохранение..." : "Сохранить"}
+              {updatingCourse ? "Сохранение..." : "Сохранить"}
             </button>
             <button
               type="button"
               className={styles.cancelButton}
               onClick={onClose}
-              disabled={isSubmitting}
+              disabled={updatingCourse}
             >
               Отмена
             </button>

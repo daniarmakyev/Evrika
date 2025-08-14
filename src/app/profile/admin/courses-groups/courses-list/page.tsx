@@ -16,27 +16,13 @@ import UploadIcon from "@icons/upload-file.svg";
 import SearchIcon from "@icons/searchIcon.svg";
 import EditModal from "./EditModal";
 import CreateCourseModal from "./CreateModal";
-
-interface Course {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  language_id: number;
-  level_id: number;
-  language_name: string;
-  level_code: string;
-  created_at: string;
-}
-
-interface CourseTableItem {
-  id: number;
-  name: string;
-  price: number;
-  language_name: string;
-  level_code: string;
-  description: string;
-}
+import { Course, CourseTableItem } from "src/consts/types";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import {
+  getCourses,
+  getLanguages,
+  getLevels,
+} from "src/store/courseGroup/courseGroup.action";
 
 const TableSkeleton = () => (
   <div className={styles.tableSkeleton}>
@@ -60,98 +46,69 @@ const TableSkeleton = () => (
 export default function CoursesList() {
   const pathname = usePathname();
 
-  const [courses, setCourses] = useState<Course[]>([]);
   const [filteredCourses, setFilteredCourses] = useState<CourseTableItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("");
-
+  const { courses, loadingCourses, languages, levels } = useAppSelector(
+    (state) => state.groupsCourses
+  );
   const viewModal = useModal<Course>("view");
   const editModal = useModal<Course>("edit");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-
-  const languageOptions = [
-    { value: "", label: "Все языки" },
-    { value: "Английский", label: "Английский" },
-    { value: "Испанский", label: "Испанский" },
-    { value: "Французский", label: "Французский" },
-  ];
-
-  const loadCourses = () => {
-    setLoading(true);
-    setTimeout(() => {
-      const mockData: Course[] = [
-        {
-          id: 1,
-          name: "Английский",
-          price: 15000,
-          description: "Курс разговорного английского языка для начинающих",
-          language_id: 1,
-          level_id: 1,
-          language_name: "Английский",
-          level_code: "A1",
-          created_at: "2025-01-01T10:00:00.000Z",
-        },
-        {
-          id: 2,
-          name: "Испанский",
-          price: 20000,
-          description: "Курс бизнес английского для профессионалов",
-          language_id: 1,
-          level_id: 2,
-          language_name: "Испанский",
-          level_code: "B2",
-          created_at: "2025-01-02T10:00:00.000Z",
-        },
-      ];
-      setCourses(mockData);
-      setLoading(false);
-    }, 1000);
-  };
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    loadCourses();
-  }, []);
+    dispatch(getCourses());
+    dispatch(getLanguages());
+    dispatch(getLevels());
+  }, [dispatch]);
 
   useEffect(() => {
-    let filtered = courses;
+    if (courses) {
+      let filtered = courses;
 
-    if (searchTerm) {
-      filtered = filtered.filter((course) =>
-        course.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      if (searchTerm) {
+        filtered = filtered.filter((course) =>
+          course.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+      }
+
+      if (selectedLanguage) {
+        filtered = filtered.filter(
+          (course) =>
+            course.language_name.toLowerCase() ===
+            selectedLanguage.toLowerCase()
+        );
+      }
+
+      const tableData = filtered.map((course) => ({
+        id: course.id,
+        name: course.name,
+        price: course.price,
+        language_name: course.language_name,
+        level_code: course.level_code,
+        description: course.description,
+      }));
+
+      setFilteredCourses(tableData);
     }
-
-    if (selectedLanguage) {
-      filtered = filtered.filter(
-        (course) =>
-          course.language_name.toLowerCase() === selectedLanguage.toLowerCase()
-      );
-    }
-
-    const tableData = filtered.map((course) => ({
-      id: course.id,
-      name: course.name,
-      price: course.price,
-      language_name: course.language_name,
-      level_code: course.level_code,
-      description: course.description,
-    }));
-
-    setFilteredCourses(tableData);
   }, [courses, searchTerm, selectedLanguage]);
 
   const handleViewCourse = (course: CourseTableItem) => {
-    const fullCourse = courses.find((c) => c.id === course.id);
-    if (fullCourse) {
-      viewModal.openModal(fullCourse);
+    if (courses) {
+      const fullCourse = courses.find((c) => c.id === course.id);
+      if (fullCourse) {
+        viewModal.openModal(fullCourse);
+      }
     }
   };
 
   const handleEditCourse = (course: CourseTableItem) => {
-    const fullCourse = courses.find((c) => c.id === course.id);
-    if (fullCourse) {
-      editModal.openModal(fullCourse);
+    if (courses) {
+      const fullCourse = courses.find((c) => c.id === course.id);
+      if (fullCourse) {
+        editModal.openModal(fullCourse);
+      }
     }
   };
 
@@ -161,14 +118,12 @@ export default function CoursesList() {
 
   const handleCreateSuccess = () => {
     setIsCreateModalOpen(false);
-    // Здесь будет перезагрузка данных после создания
-    loadCourses();
+    dispatch(getCourses());
   };
 
   const handleEditSuccess = () => {
     editModal.closeModal();
-
-    loadCourses();
+    dispatch(getCourses());
   };
 
   const coursesColumns = [
@@ -249,20 +204,28 @@ export default function CoursesList() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-
-            <div className={styles.selectField}>
-              <SelectField
-                options={languageOptions}
-                isShadow
-                value={selectedLanguage}
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-                placeholder="Выберите язык"
-              />
-            </div>
+            {languages && (
+              <div className={styles.selectField}>
+                <SelectField
+                  options={languages.map((lang) => ({
+                    label: lang.name,
+                    value: lang.id,
+                  }))}
+                  isShadow
+                  value={selectedLanguage}
+                  onChange={(e) => {
+                    setSelectedLanguage(
+                      e.target.options[e.target.selectedIndex].text
+                    );
+                  }}
+                  placeholder="Выберите язык"
+                />
+              </div>
+            )}
           </div>
 
           <div className={styles.tableContainer}>
-            {loading ? (
+            {loadingCourses ? (
               <TableSkeleton />
             ) : (
               <Table
@@ -305,33 +268,41 @@ export default function CoursesList() {
                 {new Date(viewModal.data.created_at).toLocaleDateString()}
               </span>
             </div>
-            <div className={styles.detailColumn}>
-              <strong>Описание:</strong>
-              <TextArea
-                value={viewModal.data.description}
-                readOnly
-                fullWidth
-                rows={4}
-              />
-            </div>
+            {viewModal.data.description && (
+              <div className={styles.detailColumn}>
+                <strong>Описание:</strong>
+                <TextArea
+                  value={viewModal.data.description}
+                  readOnly
+                  fullWidth
+                  rows={4}
+                />
+              </div>
+            )}
           </div>
         )}
       </ProfileModal>
 
-      <EditModal
-        data={editModal.data}
-        isOpen={editModal.isOpen}
-        onClose={editModal.closeModal}
-        languageOptions={languageOptions}
-        onSuccess={handleEditSuccess}
-      />
+      {languages && levels && (
+        <>
+          <EditModal
+            data={editModal.data}
+            isOpen={editModal.isOpen}
+            onClose={editModal.closeModal}
+            languageOptions={languages}
+            levelOptions={levels}
+            onSuccess={handleEditSuccess}
+          />
 
-      <CreateCourseModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        languageOptions={languageOptions}
-        onSuccess={handleCreateSuccess}
-      />
+          <CreateCourseModal
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            languageOptions={languages}
+            levelOptions={levels}
+            onSuccess={handleCreateSuccess}
+          />
+        </>
+      )}
     </div>
   );
 }

@@ -3,8 +3,8 @@ import styles from "./styles.module.scss";
 import classNames from "classnames";
 
 interface SelectOption {
-  value: string;
-  label: string;
+  value: string | number;
+  label: string | number;
 }
 
 interface SelectFieldProps

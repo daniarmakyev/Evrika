@@ -125,8 +125,6 @@
 
 @include respond-below(sm) {
   .header {
-
-
     padding: 0 8px;
 
     &__container {
@@ -177,8 +175,6 @@
 
 @include respond-below(sm) {
   .header {
-
-
     &__logo {
       svg {
         width: 18px;
@@ -197,7 +193,6 @@
 @include respond-above(md) {
   .header {
     width: 100%;
-
 
     position: fixed;
     top: 0;
@@ -311,8 +306,6 @@
 
 @include respond-above(lg) {
   .header {
-
-
     &__logo {
       svg {
         width: 30px;
@@ -345,8 +338,6 @@
 
 @include respond-above(mac) {
   .header {
-
-
     &__logo {
       svg {
         width: 36px;
@@ -379,8 +370,6 @@
 
 @include respond-above(xlg) {
   .header {
-
-
     &__logo {
       svg {
         width: 40px;
@@ -413,8 +402,6 @@
 
 @include respond-above(fhd) {
   .header {
-
-
     &__logo {
       svg {
         width: 48px;
@@ -447,8 +434,6 @@
 
 @include respond-above(fhd-plus) {
   .header {
-
-
     &__logo {
       svg {
         width: 50px;
@@ -481,8 +466,6 @@
 
 @include respond-above(qhd) {
   .header {
-
-
     &__logo {
       svg {
         width: 56px;
@@ -515,7 +498,6 @@
 
 @include respond-above(uhd) {
   .header {
-
     &__logo {
       svg {
         width: 85px;
@@ -553,6 +535,9 @@
   gap: 10px;
   margin-right: 40px;
   button {
+    a {
+      color: #fff;
+    }
     background-color: $primary-button;
     color: $White;
     padding: 6px 12px;
