@@ -4,6 +4,14 @@ import classNames from "classnames";
 import styles from "./styles.module.scss";
 import Attendance from "./Attendance";
 import Homework from "./Homework";
+type GroupTableItem = {
+  id: number;
+  group: string;
+  course: string;
+  startDate: string; // or Date if you store actual Date objects
+  endDate: string;   // same here
+  status: "active" | "non-active";
+};
 
 const StudentGroups = () => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
@@ -46,7 +54,7 @@ const StudentGroups = () => {
       title: "Успеваемость",
       width: "220px",
       isButton: true,
-      render: (_: string, row: any) => {
+      render: (_: string, row: GroupTableItem) => {
         return (
           <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
             <span
@@ -140,10 +148,9 @@ const StudentGroups = () => {
         groupName={selectedGroup}
       />
       <Homework
-  isOpen={isHomeworkOpen}
-  onClose={() => setIsHomeworkOpen(false)}
-
-/>
+        isOpen={isHomeworkOpen}
+        onClose={() => setIsHomeworkOpen(false)}
+      />
     </div>
   );
 };

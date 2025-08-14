@@ -1,5 +1,5 @@
 import ProfileModal from "@components/ProfileModal";
-import TextArea from "@components/Fields/TextAreaField";
+// import TextArea from "@components/Fields/TextAreaField";
 import InputField from "@components/Fields/InputField";
 import React from "react";
 import styles from './styles.module.scss'
@@ -99,7 +99,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
 };
 
 export default AddStudent;
-const groups = [
+export const groups = [
   {
     label: "Английский язык",
     baseColor: "#4a90e2",

@@ -11,6 +11,15 @@ import { Search } from "lucide-react";
 import SelectField from "@components/Fields/SelectField";
 import { Download } from "lucide-react";
 import AddStudent from "./components/add-student";
+type TableDataItem = {
+  id: number;
+  name: string;
+  group: string;
+  course?: string;
+  email: string;
+  phone: string;
+  status: "active" | "non-active"; // restrict to possible values
+};
 
 export default function StudentList() {
   const [openRowId, setOpenRowId] = useState<number | null>(null);
@@ -25,7 +34,7 @@ export default function StudentList() {
       title: "ФИО",
       width: "230px",
       isButton: true,
-      render: (value: string, row: HomeWorkTableItem) => {
+      render: (value: string, row: TableDataItem) => {
         const isMenuOpen = openRowId === row.id;
         return (
           <div className={styles.noUnderline} style={{ position: "relative" }}>
