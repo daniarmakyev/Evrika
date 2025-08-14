@@ -1,0 +1,506 @@
+@import "../../../../../styles/varibles.scss";
+@import "../../../../../styles/mixins";
+
+.personalInfoContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  margin-bottom: 100px;
+  
+  .personalInfoWrapper {
+    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    border-radius: 10px;
+    padding: 16px;
+    position: relative;
+
+    h2 {
+      font-weight: 800;
+      font-size: 18px;
+      line-height: 100%;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .form {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      justify-content: space-around;
+      align-items: center;
+
+      input {
+        box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+        width: 100%;
+        min-width: 0;
+        max-width: 100%;
+        width: 400px;
+      }
+    }
+
+    .buttonContainer {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+    }
+
+    .button {
+      width: fit-content;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: $primary-button;
+      border-radius: 10px;
+      transition: all 0.3s ease-in-out;
+      cursor: pointer;
+      padding: 10px 22px;
+      height: 40px;
+      color: white;
+
+      &:hover {
+        background: $primary;
+      }
+
+      span {
+        font-size: 13px;
+        line-height: 100%;
+        color: white;
+      }
+    }
+  }
+
+  .inputSkeleton {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    width: 290px;
+  }
+
+  .skeletonLabel {
+    height: 16px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    width: 80px;
+  }
+
+  .skeletonInput {
+    height: 48px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 10px;
+  }
+
+  .skeletonTitle {
+    height: 24px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .errorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .errorIcon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+
+  .errorTitle {
+    font-size: 24px;
+    font-weight: 700;
+    color: $danger;
+    margin-bottom: 12px;
+  }
+
+  .errorMessage {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .retryButton {
+    background: $primary-button;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+      background: $primary;
+    }
+
+    span {
+      color: white;
+    }
+  }
+}
+
+.status {
+  background: green;
+  color: white;
+  font-weight: 600;
+  border-radius: 6px;
+  font-size: 13px;
+  display:flex;
+  justify-content:center;
+  align-items: center;
+  height: 30px;
+  position: absolute;
+  right:50px;
+  top:20px;
+}
+
+ .add__button {
+      background-color: $primary;
+      display: flex;
+      align-items: center;
+      color: $White;
+      gap: 5px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      width:'160px'
+    }
+ .white__button {
+      background-color:white;
+      display: flex;
+      align-items: center;
+      color:rgb(158, 149, 149);
+      gap: 5px;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      width:'160px';
+      box-shadow: 0px 3px 3px 0px rgba(0,0, 0,0.25);
+      border:1px solid #E0E6ED
+    }
+
+    
+    .button_container{
+      display: flex;
+      gap:50px;
+      justify-content: end;
+      margin-bottom:20px
+    }
+
+
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@include respond-above(sm) {
+  .personalInfoContainer {
+    margin-top: 32px;
+    .personalInfoWrapper {
+      padding: 24px;
+      h2 {
+        font-size: 20px;
+        margin-bottom: 32px;
+        justify-content: flex-start;
+      }
+      form {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        flex-direction: row;
+        input {
+          width: 320px;
+        }
+      }
+      .buttonContainer {
+        justify-content: flex-end;
+        align-items: flex-end;
+      }
+      button {
+        padding: 12px 28px;
+        span {
+          font-size: 14px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 320px;
+    }
+    .skeletonTitle {
+      margin-left: 0;
+      margin-right: auto;
+    }
+  }
+}
+
+@include respond-above(sm-plus) {
+  .personalInfoContainer {
+    margin-top: 34px;
+    .personalInfoWrapper {
+      padding: 24px;
+      h2 {
+        font-size: 20px;
+        margin-bottom: 32px;
+        justify-content: flex-start;
+      }
+      form {
+        flex-wrap: wrap;
+        justify-content: space-between;
+        input {
+          width: 360px;
+        }
+      }
+      .buttonContainer {
+        justify-content: flex-end;
+        align-items: flex-end;
+      }
+      button {
+        padding: 12px 30px;
+        span {
+          font-size: 14px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 360px;
+    }
+  }
+}
+
+@include respond-above(md) {
+  .personalInfoContainer {
+    margin-top: 36px;
+    .personalInfoWrapper {
+      padding: 32px;
+      h2 {
+        font-size: 22px;
+        margin-bottom: 36px;
+      }
+      form {
+        input {
+          width: 400px;
+        }
+      }
+      button {
+        padding: 13px 34px;
+        span {
+          font-size: 15px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 400px;
+    }
+  }
+}
+
+@include respond-above(lg) {
+  .personalInfoContainer {
+    margin-top: 40px;
+    .personalInfoWrapper {
+      padding: 36px;
+      h2 {
+        font-size: 23px;
+        margin-bottom: 38px;
+      }
+      form {
+        input {
+          width: 500px;
+        }
+      }
+      button {
+        padding: 14px 36px;
+        span {
+          font-size: 16px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 500px;
+    }
+  }
+}
+
+@include respond-above(mac) {
+  .personalInfoContainer {
+    margin-top: 40px;
+    .personalInfoWrapper {
+      padding: 40px;
+      h2 {
+        font-size: 24px;
+        margin-bottom: 40px;
+      }
+      form {
+        input {
+          width: 550px;
+        }
+      }
+      button {
+        padding: 14px 40px;
+        span {
+          font-size: 16px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 550px;
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .personalInfoContainer {
+    margin-top: 50px;
+    .personalInfoWrapper {
+      padding: 50px;
+      h2 {
+        font-size: 28px;
+        margin-bottom: 50px;
+      }
+      form {
+        input {
+          width: 650px;
+        }
+      }
+      button {
+        padding: 16px 50px;
+        span {
+          font-size: 18px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 650px;
+    }
+  }
+}
+
+@include respond-above(fhd) {
+  .personalInfoContainer {
+    margin-top: 60px;
+    .personalInfoWrapper {
+      padding: 60px;
+      h2 {
+        font-size: 32px;
+        margin-bottom: 60px;
+      }
+      form {
+        input {
+          width: 700px;
+        }
+      }
+      button {
+        padding: 18px 60px;
+        span {
+          font-size: 20px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 700px;
+    }
+  }
+}
+
+@include respond-above(fhd-plus) {
+  .personalInfoContainer {
+    margin-top: 70px;
+    .personalInfoWrapper {
+      padding: 70px;
+      h2 {
+        font-size: 36px;
+        margin-bottom: 70px;
+      }
+      form {
+        input {
+          width: 850px;
+        }
+      }
+      button {
+        padding: 20px 70px;
+        span {
+          font-size: 22px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 850px;
+    }
+  }
+}
+
+@include respond-above(qhd) {
+  .personalInfoContainer {
+    margin-top: 80px;
+    .personalInfoWrapper {
+      padding: 80px;
+      h2 {
+        font-size: 40px;
+        margin-bottom: 80px;
+      }
+      form {
+        input {
+          width: 950px;
+        }
+      }
+      button {
+        padding: 22px 80px;
+        span {
+          font-size: 25px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 950px;
+    }
+  }
+}
+
+@include respond-above(uhd) {
+  .personalInfoContainer {
+    margin-top: 120px;
+    .personalInfoWrapper {
+      padding: 120px;
+      h2 {
+        font-size: 60px;
+        margin-bottom: 120px;
+      }
+      form {
+        input {
+          width: 1250px;
+        }
+      }
+      button {
+        padding: 33px 120px;
+        span {
+          font-size: 38px;
+        }
+      }
+    }
+    .inputSkeleton {
+      width: 1250px;
+    }
+  }
+}
