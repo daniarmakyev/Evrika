@@ -225,6 +225,94 @@ export type GetAttendanceStudentParams = {
 
 
 export type AuthLoginResponse = {
-    access_token: string;
-    token_type: string;
+  access_token: string;
+  token_type: string;
+}
+
+export interface Course {
+  id: number;
+  name: string;
+  price: number;
+  description: string;
+  language_id: number;
+  level_id: number;
+  language_name: string;
+  level_code: string;
+  created_at: string;
+}
+
+export interface CourseTableItem {
+  id: number;
+  name: string;
+  price: number;
+  language_name: string;
+  level_code: string;
+  description: string;
+}
+
+
+export type Level = {
+  id: number | string
+  code: string
+  description: string
+}
+
+export type Language = {
+  id: number | string;
+  name: string;
+}
+
+
+export interface Group {
+  id: number;
+  name: string;
+  created_at: string;
+  start_date: string;
+  end_date: string;
+  approximate_lesson_start: string;
+  is_active: boolean;
+  is_archived: boolean;
+  course_id: number;
+  teacher_id: number;
+  teacher: Teacher;
+  course?: Course; 
+}
+
+export interface GroupTableItem {
+  id: number;
+  name: string;
+  course_name: string;
+  status: string;
+  teacher_name: string;
+  start_date: string;
+}
+
+export interface CreateGroupForm {
+  name: string;
+  start_date: string;
+  end_date: string;
+  approximate_lesson_start: string;
+  is_active: boolean;
+  is_archived: boolean;
+  course_id: number;
+  teacher_id: number;
+}
+
+export interface UpdateGroupForm extends CreateGroupForm {
+  id: number;
+}
+
+export interface GroupsResponse {
+  groups: Group[];
+  pagination?: PaginationType;
+}
+
+export interface Teacher {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  role: string;
+  password: string | null;
 }

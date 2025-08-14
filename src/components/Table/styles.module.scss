@@ -36,7 +36,6 @@
     text-align: left;
     font-size: 14px;
     display: block;
-    // overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     margin-left: 10px;
@@ -57,7 +56,7 @@
         color: inherit;
         cursor: pointer;
         text-decoration: inherit;
-
+        width: 15px;
         &:hover {
           text-decoration: none;
         }

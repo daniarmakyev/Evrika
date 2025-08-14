@@ -47,6 +47,7 @@ const HomeworkCreateModal: React.FC<Props> = ({
     formState: { isSubmitting, errors },
     watch,
   } = useForm<CreateHomeworkForm>({
+    mode: "onBlur",
     defaultValues: {
       description: "",
       deadline: "",
@@ -126,10 +127,7 @@ const HomeworkCreateModal: React.FC<Props> = ({
       title="Создать домашнее задание"
       size="lg"
     >
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className={styles.modal__form}
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className={styles.modal__form}>
         {submissionError && (
           <div
             style={{

@@ -51,6 +51,7 @@ const HomeworkUploadModal: React.FC<Props> = ({ isOpen, onClose, data }) => {
     content: string;
     file: FileList | undefined;
   }>({
+    mode:"onBlur",
     defaultValues: {
       content: data?.submission?.content || "",
       file: undefined,
