@@ -1,3 +1,6 @@
+@import "../../../../../styles/varibles";
+@import "../../../../../styles/mixins/";
+
 .cancel__button {
   background: #f5f5f5;
   color: #666;
@@ -16,7 +19,7 @@
 }
 
 .save__button {
-  background: #6782ff;
+  background: $primary;
   color: white;
   border: none;
   padding: 12px 24px;
@@ -37,14 +40,7 @@
   flex-wrap: wrap;
   width: 100%;
   justify-content: space-between;
-
-  input {
-    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
-    width: 100%;
-    min-width: 0;
-    max-width: 100%;
-    width: 290px;
-  }
+  row-gap: 10px;
 }
 
 .button_container {
@@ -52,7 +48,5 @@
   gap: 50px;
   justify-content: end;
   margin: 20px 20px;
- width: 100%;
+  width: 100%;
 }
-
-

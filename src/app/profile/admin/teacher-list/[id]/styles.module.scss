@@ -8,12 +8,19 @@
   margin-right: auto;
   width: 100%;
   margin-bottom: 100px;
-  
+
   .personalInfoWrapper {
     box-shadow: 0 0 30px rgba(219, 219, 219, 1);
     border-radius: 10px;
     padding: 16px;
     position: relative;
+
+    .personalInfoHeader {
+      display: flex;
+      justify-content: space-between;
+      align-content: center;
+      align-items: center;
+    }
 
     h2 {
       font-weight: 800;
@@ -27,16 +34,13 @@
     .form {
       display: flex;
       flex-wrap: wrap;
-      width: 100%;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
-
-      input {
-        box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+      row-gap: 10px;
+      .innerForm {
         width: 100%;
-        min-width: 0;
-        max-width: 100%;
-        width: 400px;
+        display: flex;
+        justify-content: space-between;
       }
     }
 
@@ -51,7 +55,7 @@
       width: fit-content;
       display: flex;
       align-items: center;
-      justify-content: center;
+      margin-left: auto;
       background: $primary-button;
       border-radius: 10px;
       transition: all 0.3s ease-in-out;
@@ -59,6 +63,7 @@
       padding: 10px 22px;
       height: 40px;
       color: white;
+      margin-top: 40px;
 
       &:hover {
         background: $primary;
@@ -159,53 +164,47 @@
 }
 
 .status {
-  background: green;
-  color: white;
-  font-weight: 600;
+  background: $success;
+  color: $White;
   border-radius: 6px;
-  font-size: 13px;
-  display:flex;
-  justify-content:center;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
   align-items: center;
   height: 30px;
-  position: absolute;
-  right:50px;
-  top:20px;
 }
 
- .add__button {
-      background-color: $primary;
-      display: flex;
-      align-items: center;
-      color: $White;
-      gap: 5px;
-      padding: 10px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      width:'160px'
-    }
- .white__button {
-      background-color:white;
-      display: flex;
-      align-items: center;
-      color:rgb(158, 149, 149);
-      gap: 5px;
-      padding: 10px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      width:'160px';
-      box-shadow: 0px 3px 3px 0px rgba(0,0, 0,0.25);
-      border:1px solid #E0E6ED
-    }
+.add__button {
+  background-color: $primary;
+  display: flex;
+  align-items: center;
+  color: $White;
+  gap: 5px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: "160px";
+}
+.white__button {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  color: rgb(158, 149, 149);
+  gap: 5px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: "160px";
+  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.25);
+  border: 1px solid #e0e6ed;
+}
 
-    
-    .button_container{
-      display: flex;
-      gap:50px;
-      justify-content: end;
-      margin-bottom:20px
-    }
-
+.button_container {
+  display: flex;
+  gap: 50px;
+  justify-content: end;
+  margin-bottom: 20px;
+}
 
 @keyframes skeleton-loading {
   0% {

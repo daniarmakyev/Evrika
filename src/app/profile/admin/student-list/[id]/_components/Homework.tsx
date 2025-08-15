@@ -6,12 +6,8 @@ import ProfileModal from "@components/ProfileModal";
 interface AttendanceProps {
   isOpen: boolean;
   onClose: () => void;
- 
 }
-const Homework: React.FC<AttendanceProps> = ({
-  isOpen,
-  onClose,
-}) => {
+const Homework: React.FC<AttendanceProps> = ({ isOpen, onClose }) => {
   const homeWorkColumns = [
     {
       key: "group",
@@ -58,20 +54,17 @@ const Homework: React.FC<AttendanceProps> = ({
       key: "note",
       title: "Примечание",
       width: "180px",
-     render: () => {
+      isButton:true,
+      render: () => {
         return (
           <button
             // onClick={() => handleOpenTaskModal(row)}
             className={styles.table__button}
           >
-            <span>
-            Посмотреть
-            </span>
+            <span>Посмотреть</span>
           </button>
         );
       },
-       
-      
     },
     {
       key: "deadline",
@@ -86,40 +79,37 @@ const Homework: React.FC<AttendanceProps> = ({
         const isSubmitted = value === "submitted";
         return (
           <span
-            style={{
-              color: isSubmitted ? "green" : "red",
-              fontWeight: 600,
-              borderRadius: "6px",
-              fontSize: "13px",
-              display: "inline-block",
-            }}
+            className={classNames(styles.status, {
+              [styles.active]: isSubmitted === true,
+              [styles.inactive]: isSubmitted === false,
+            })}
           >
-            {isSubmitted? "Отправлено" : "В ожидании"}
+            {isSubmitted ? "Отправлено" : "В ожидании"}
           </span>
         );
       },
     },
   ];
   const tableData = [
-  {
-    id: 1,
-    group: "Английский A1-0925",
-    lesson: "Чтение",
-    task: "Прочитать текст №3",
-    note: "Обратить внимание на произношение",
-    deadline: "15.09.2025",
-    status: "submitted"
-  },
-  {
-    id: 2,
-    group: "Английский A1-0925",
-    lesson: "Письмо",
-    task: "Написать эссе",
-    note: "Использовать лексику урока 5",
-    deadline: "20.09.2025",
-    status: "waiting"
-  }
-];
+    {
+      id: 1,
+      group: "Английский A1-0925",
+      lesson: "Чтение",
+      task: "Прочитать текст №3",
+      note: "Обратить внимание на произношение",
+      deadline: "15.09.2025",
+      status: "submitted",
+    },
+    {
+      id: 2,
+      group: "Английский A1-0925",
+      lesson: "Письмо",
+      task: "Написать эссе",
+      note: "Использовать лексику урока 5",
+      deadline: "20.09.2025",
+      status: "waiting",
+    },
+  ];
   return (
     <ProfileModal
       isOpen={isOpen}

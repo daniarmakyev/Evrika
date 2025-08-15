@@ -1,4 +1,3 @@
-
 // Исправленный ProfileLayout
 "use client";
 
@@ -7,7 +6,7 @@ import Header from "@components/Header";
 import ProfileHeroBanner from "@components/ProfileHeroBanner";
 import StudentTabBar from "@components/StudentTabBar";
 import { ModalProvider } from "@context/ModalContext";
-import { useParams } from "next/navigation";
+import { useParams, usePathname } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import { getGroup, getUser } from "src/store/user/user.action";
@@ -20,14 +19,17 @@ export default function ProfileLayout({
   const dispatch = useAppDispatch();
   const { groups, user } = useAppSelector((state) => state.user);
   const params = useParams();
-
+  const pathname = usePathname();
   const studentId = useMemo(() => {
-    if (params) {
-      const id = params.id ? params.id[0] : null;
-      return id;
+    const isHomework = pathname?.startsWith("/profile/homework/");
+    const isAttendance = pathname?.startsWith("/profile/attendance/");
+
+    if ((isHomework || isAttendance) && params?.id) {
+      return params.id[0] || null;
     }
+
     return null;
-  }, [params]);
+  }, [params, pathname]);
 
   useEffect(() => {
     if (params) {

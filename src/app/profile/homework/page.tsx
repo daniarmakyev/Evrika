@@ -322,7 +322,7 @@ export default function ProfileHomeWork() {
             className={styles.table__button}
           >
             <span>
-              {value.length > 50 ? value.substring(0, 50) + "..." : value}
+              {value.length > 20 ? value.substring(0, 20) + "..." : value}
             </span>
           </button>
         );
@@ -340,7 +340,7 @@ export default function ProfileHomeWork() {
             className={styles.table__button}
           >
             <span>
-              {value.length > 50 ? value.substring(0, 50) + "..." : value}
+              {value.length > 20 ? value.substring(0, 20) + "..." : value}
             </span>
           </button>
         );

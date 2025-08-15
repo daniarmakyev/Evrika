@@ -233,7 +233,6 @@ export const courseGroupSlice = createSlice({
                 state.error = payload || "Failed to create language";
             })
 
-        // НОВЫЕ reducers для групп
         builder
             .addCase(getGroups.pending, (state) => {
                 state.loadingGroups = true;

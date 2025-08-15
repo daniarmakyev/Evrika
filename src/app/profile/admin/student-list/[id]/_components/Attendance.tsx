@@ -6,9 +6,13 @@ import ProfileModal from "@components/ProfileModal";
 interface AttendanceProps {
   isOpen: boolean;
   onClose: () => void;
-  groupName: string|null;
+  groupName: string | null;
 }
-const Attendance : React.FC<AttendanceProps> = ({ isOpen, onClose, groupName }) => {
+const Attendance: React.FC<AttendanceProps> = ({
+  isOpen,
+  onClose,
+  groupName,
+}) => {
   const attendanceColumns = [
     {
       key: "group",
@@ -61,13 +65,22 @@ const Attendance : React.FC<AttendanceProps> = ({ isOpen, onClose, groupName }) 
       render: (value: string) => {
         const translatedStatus =
           value === "attended"
-            ? "Присутствовал"
+            ? "Присутсвовал"
             : value === "absent"
             ? "Не присутствовал"
             : "—";
-        const color =
-          value === "attended" ? "green" : value === "absent" ? "red" : "gray";
-        return <span style={{ color }}>{translatedStatus}</span>;
+
+        return (
+          <span
+            className={classNames(styles.status, {
+              [styles.active]: value === "attended",
+              [styles.inactive]: value === "absent",
+              [styles.unknowActive]: value !== "absent" && value !== "attended",
+            })}
+          >
+            {translatedStatus}
+          </span>
+        );
       },
     },
   ];
@@ -78,7 +91,7 @@ const Attendance : React.FC<AttendanceProps> = ({ isOpen, onClose, groupName }) 
       lesson: "Чтение",
       date: "09.09.2025",
       time: "09.11.2025",
-      status: "attended",
+      status: "absent",
     },
     {
       id: 2,
@@ -88,7 +101,7 @@ const Attendance : React.FC<AttendanceProps> = ({ isOpen, onClose, groupName }) 
       time: "09.11.2025",
       status: "attended",
     },
-  ].filter((item) => item.group === groupName)
+  ].filter((item) => item.group === groupName);
 
   return (
     <ProfileModal
@@ -99,7 +112,6 @@ const Attendance : React.FC<AttendanceProps> = ({ isOpen, onClose, groupName }) 
     >
       <div className={classNames(styles.homework__container)}>
         <div className={styles.homework__content}>
-
           <div className={styles.homework__table}>
             <Table
               columns={attendanceColumns}

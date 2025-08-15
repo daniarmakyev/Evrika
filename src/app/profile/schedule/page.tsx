@@ -168,10 +168,6 @@ export default function ProfileSchedule() {
     return transformedData.sort((a, b) => a.sortTime - b.sortTime);
   };
 
-  useEffect(() => {
-    console.log(attendanceLoading, attendance);
-  }, [attendanceLoading, attendance]);
-
   const scheduleColumns = [
     {
       key: "group",

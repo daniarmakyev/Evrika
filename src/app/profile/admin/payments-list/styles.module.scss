@@ -1,0 +1,250 @@
+@import "../../../../styles/varibles";
+@import "../../../../styles/mixins";
+
+.courses__container {
+  display: flex;
+  flex-direction: column;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  margin-bottom: 100px;
+  margin-top: 40px;
+
+  .coursesHeader {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+    .pageTitle {
+      font-size: 32px;
+      font-weight: 800;
+      color: $primary;
+      margin: 0;
+    }
+  }
+
+  .content {
+    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    padding: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-direction: column;
+    gap: 20px;
+
+    .contentHeader {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+
+      .title {
+        font-size: 24px;
+        font-weight: 800;
+        line-height: 100%;
+      }
+
+      .filtersContainer {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        width: 100%;
+
+        .searchField {
+          input {
+            min-width: 250px;
+          }
+        }
+      }
+    }
+
+    .tableContainer {
+      width: 100%;
+    }
+  }
+}
+
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.actionButton {
+  background: $primary-button;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+  }
+}
+
+.statusBadge {
+  display: inline-block;
+  padding: 6px 18px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none !important;
+
+  &.paid {
+    background-color: $success;
+    color: $White;
+  }
+
+  &.unpaid {
+    background-color: $danger;
+    color: $White;
+  }
+}
+
+.checksModalContent {
+  .tableContainer {
+    width: 100%;
+  }
+}
+
+// Skeleton loader styles
+@keyframes skeleton-loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.tableSkeleton {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+}
+
+.tableHeaderSkeleton {
+  display: flex;
+  background-color: #f5f5f5;
+  padding: 16px 0;
+  border-bottom: 1px solid #e0e0e0;
+  justify-content: space-between;
+}
+
+.skeletonHeaderCell {
+  height: 20px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+  margin: 0 8px;
+
+  &:nth-child(1) {
+    width: 200px;
+  }
+  &:nth-child(2) {
+    width: 200px;
+  }
+  &:nth-child(3) {
+    width: 150px;
+  }
+  &:nth-child(4) {
+    width: 100px;
+  }
+}
+
+.tableBodySkeleton {
+  background-color: white;
+}
+
+.tableRowSkeletonDiv {
+  display: flex;
+  padding: 16px 0;
+  border-bottom: 1px solid #f0f0f0;
+  justify-content: space-between;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.skeletonCell {
+  height: 30px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 4px;
+  margin: 0 8px;
+
+  &:nth-child(1) {
+    width: 200px;
+  }
+  &:nth-child(2) {
+    width: 200px;
+  }
+  &:nth-child(3) {
+    width: 150px;
+  }
+}
+
+.skeletonButtonCell {
+  height: 40px;
+  width: 100px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: 8px;
+  margin: 0 8px;
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .courses__container {
+    .content {
+      padding: 20px;
+
+      .contentHeader {
+        flex-direction: column;
+        align-items: stretch;
+
+        .filtersContainer {
+          flex-direction: column;
+
+          .searchField,
+          .selectField {
+            min-width: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  .skeletonHeaderCell,
+  .skeletonCell {
+    &:nth-child(1) {
+      width: 120px;
+    }
+    &:nth-child(2) {
+      width: 120px;
+    }
+    &:nth-child(3) {
+      width: 100px;
+    }
+    &:nth-child(4) {
+      width: 80px;
+    }
+  }
+}

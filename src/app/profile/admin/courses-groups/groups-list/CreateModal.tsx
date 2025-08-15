@@ -14,9 +14,16 @@ type Props = {
   onClose: () => void;
   onSuccess?: () => void;
   teachers: Teacher[];
+  courseOptions: { label: string; value: number | string }[];
 };
 
-const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
+const CreateGroupModal = ({
+  isOpen,
+  onClose,
+  onSuccess,
+  teachers,
+  courseOptions,
+}: Props) => {
   const dispatch = useAppDispatch();
   const { creatingGroup, error } = useAppSelector(
     (state) => state.groupsCourses
@@ -38,12 +45,12 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
       approximate_lesson_start: "",
       is_active: true,
       is_archived: false,
-      course_id: 1,
-      teacher_id: 1,
+      course_id: courseOptions.length > 0 ? Number(courseOptions[0].value) : 1,
+      teacher_id: teachers.length > 0 ? teachers[0].id : 1,
     },
   });
 
-  const teacherOptions = teachers.map(teacher => ({
+  const teacherOptions = teachers.map((teacher) => ({
     value: teacher.id.toString(),
     label: `${teacher.first_name} ${teacher.last_name}`,
   }));
@@ -66,12 +73,13 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
         approximate_lesson_start: "",
         is_active: true,
         is_archived: false,
-        course_id: 1,
-        teacher_id: 1,
+        course_id:
+          courseOptions.length > 0 ? Number(courseOptions[0].value) : 1,
+        teacher_id: teachers.length > 0 ? teachers[0].id : 1,
       });
       dispatch(clearError());
     }
-  }, [isOpen, reset, dispatch]);
+  }, [isOpen, reset, dispatch, courseOptions, teachers]);
 
   useEffect(() => {
     return () => {
@@ -86,17 +94,20 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
 
   const onSubmit = async (formData: CreateGroupForm) => {
     try {
-      const timeWithSeconds = `${formData.approximate_lesson_start}:00.000Z`;
+      let formattedTime = formData.approximate_lesson_start;
+      if (formattedTime && !formattedTime.includes(":")) {
+        formattedTime = "09:00";
+      }
 
       const submitData = {
-        name: formData.name,
+        name: formData.name.trim(),
         start_date: formData.start_date,
         end_date: formData.end_date,
-        approximate_lesson_start: timeWithSeconds,
+        approximate_lesson_start: formattedTime,
         is_active: formData.is_active,
         is_archived: formData.is_archived,
-        course_id: formData.course_id,
-        teacher_id: formData.teacher_id,
+        course_id: Number(formData.course_id),
+        teacher_id: Number(formData.teacher_id),
       };
 
       await dispatch(createGroup(submitData)).unwrap();
@@ -110,6 +121,7 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
       }
     } catch (error) {
       console.error("Ошибка создания группы:", error);
+      // Error is already handled by Redux, so we don't need to set it here
     }
   };
 
@@ -121,7 +133,7 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const status = e.target.value;
-    
+
     switch (status) {
       case "active":
         setValue("is_active", true);
@@ -136,6 +148,15 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
         setValue("is_archived", false);
         break;
     }
+  };
+
+  // Validate date range
+  const validateDateRange = (endDate: string, startDate: string) => {
+    if (!startDate || !endDate) return true;
+    return (
+      new Date(endDate) >= new Date(startDate) ||
+      "Дата окончания должна быть не раньше даты начала"
+    );
   };
 
   return (
@@ -169,16 +190,39 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
                 value: 2,
                 message: "Название должно содержать минимум 2 символа",
               },
+              maxLength: {
+                value: 100,
+                message: "Название не должно превышать 100 символов",
+              },
             })}
             label="Название группы"
             placeholder="Например: Английский-B1-0825-1"
             fullWidth
             isShadow
-            style={{width:"250px"}}
+            style={{ width: "250px" }}
           />
           {errors.name && (
             <span style={{ color: "red", fontSize: "14px" }}>
               {errors.name.message}
+            </span>
+          )}
+        </div>
+
+        <div className={styles.formRow}>
+          <SelectField
+            {...register("course_id", {
+              required: "Выберите курс",
+              valueAsNumber: true,
+            })}
+            label="Курс"
+            options={courseOptions}
+            placeholder="Выберите курс"
+            fullWidth
+            isShadow
+          />
+          {errors.course_id && (
+            <span style={{ color: "red", fontSize: "14px" }}>
+              {errors.course_id.message}
             </span>
           )}
         </div>
@@ -206,6 +250,10 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
           <InputField
             {...register("start_date", {
               required: "Дата начала обязательна",
+              validate: (value) => {
+                const today = new Date().toISOString().split("T")[0];
+                return value >= today || "Дата начала не может быть в прошлом";
+              },
             })}
             label="Дата начала"
             type="date"
@@ -223,6 +271,8 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
           <InputField
             {...register("end_date", {
               required: "Дата окончания обязательна",
+              validate: (value) =>
+                validateDateRange(value, watch("start_date")),
             })}
             label="Дата окончания"
             type="date"
@@ -240,6 +290,10 @@ const CreateGroupModal = ({ isOpen, onClose, onSuccess, teachers }: Props) => {
           <InputField
             {...register("approximate_lesson_start", {
               required: "Время начала занятий обязательно",
+              pattern: {
+                value: /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/,
+                message: "Введите время в формате ЧЧ:ММ",
+              },
             })}
             label="Время начала занятий"
             type="time"

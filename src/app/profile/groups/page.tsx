@@ -23,7 +23,7 @@ export default function Groups() {
 
   useEffect(() => {
     dispatch(getGroupsTeacher({ page: currentPage, size: 1 }));
-  }, [dispatch, currentPage, ]);
+  }, [dispatch, currentPage]);
 
   useEffect(() => {
     if (groupModal.isOpen && groupModal.data?.id) {
@@ -75,10 +75,6 @@ export default function Groups() {
       ),
     },
   ];
-
-  const handleOpenProfile = (studentId: number, studentName: string) => {
-    console.log(`Открыть профиль студента: ${studentName} (ID: ${studentId})`);
-  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -143,12 +139,6 @@ export default function Groups() {
                     <Link
                       href={`/profile/homework/${student.id}`}
                       className={styles.student__button}
-                      onClick={() =>
-                        handleOpenProfile(
-                          student.id,
-                          `${student.last_name} ${student.first_name}`
-                        )
-                      }
                     >
                       Открыть
                     </Link>

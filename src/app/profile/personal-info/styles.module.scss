@@ -30,14 +30,9 @@
       align-items: center;
       width: 100%;
       justify-content: center;
+      row-gap: 10px;
 
-      input {
-        box-shadow: 0 0 30px rgba(219, 219, 219, 1);
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-        width: 290px;
-      }
+
     }
 
     .buttonContainer {

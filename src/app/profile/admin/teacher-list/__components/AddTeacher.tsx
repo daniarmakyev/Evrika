@@ -5,6 +5,7 @@ import React from "react";
 import styles from "./styles.module.scss";
 
 import { useForm, Controller } from "react-hook-form";
+import SelectField from "@components/Fields/SelectField";
 
 type Props = {
   isOpen: boolean;
@@ -45,6 +46,9 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose }) => {
           render={({ field }) => (
             <InputField
               {...field}
+              isShadow
+              fullWidth
+              style={{ maxWidth: "45%" }}
               label="Имя и фамилия"
               placeholder="Введите имя и фамилию"
             />
@@ -57,6 +61,9 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose }) => {
           render={({ field }) => (
             <InputField
               {...field}
+              fullWidth
+              style={{ maxWidth: "45%" }}
+              isShadow
               // value={user.phone_number || ""}
               label="Телефон"
               placeholder="+7 (999) 999-99-99"
@@ -70,6 +77,9 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose }) => {
           render={({ field }) => (
             <InputField
               {...field}
+              isShadow
+              fullWidth
+              style={{ maxWidth: "45%" }}
               // value={user.email}
               label="Почта"
               type="email"
@@ -81,7 +91,17 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose }) => {
           name="groups"
           control={control}
           render={({ field }) => (
-            <InputField {...field} label="Выберите курс" />
+            <SelectField
+              {...field}
+              label="Выберите курс"
+              isShadow
+              fullWidth
+              style={{ maxWidth: "45%" }}
+              options={groups.map((group) => ({
+                label: group.label,
+                value: group.label,
+              }))}
+            />
           )}
         />
         <div style={{ width: "100%" }}>
@@ -91,9 +111,10 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose }) => {
             render={({ field }) => (
               <TextArea
                 {...field}
-                label="Добавить описание"
                 fullWidth
                 isShadow
+                label="Добавить описание"
+
               />
             )}
           />

@@ -33,7 +33,6 @@ export default function StudentList() {
       key: "name",
       title: "ФИО",
       width: "230px",
-      isButton: true,
       render: (value: string, row: TableDataItem) => {
         const isMenuOpen = openRowId === row.id;
         return (
@@ -43,7 +42,7 @@ export default function StudentList() {
               onClick={() => setOpenRowId(isMenuOpen ? null : row.id)}
             >
               {/* <div style={{position:'relative'}}> */}
-              <Ellipsis />
+              <Ellipsis style={{ cursor: "pointer" }} />
               {/* </div> */}
               {isMenuOpen && (
                 <DropdownMenu
@@ -114,17 +113,10 @@ export default function StudentList() {
       render: (value: string) => {
         return (
           <div
-            style={{
-              backgroundColor: value === "active" ? "green" : "red",
-              color: "white",
-              fontWeight: 600,
-              borderRadius: "6px",
-              fontSize: "13px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "30px",
-            }}
+            className={classNames(styles.status, {
+              [styles.active]: value === "active",
+              [styles.inactive]: value === "non-active",
+            })}
           >
             {value === "active" ? "Активен" : "Не активен"}
           </div>
@@ -204,7 +196,11 @@ export default function StudentList() {
               />
             </div> */}
           <div>
-            <InputField leftIcon={<Search />} placeholder="Поиск по имени" />
+            <InputField
+              isShadow
+              leftIcon={<Search />}
+              placeholder="Поиск по имени"
+            />
           </div>
           <div>
             <button className={styles.white__button}>
@@ -214,6 +210,7 @@ export default function StudentList() {
           <div className={styles.filter_container}>
             <div style={{ width: "210px", position: "relative" }}>
               <SelectField
+                isShadow
                 // value={selectedGroup}
                 // onChange={(e) => setSelectedGroup(e.target.value)}
                 options={courseOptions}
@@ -221,6 +218,7 @@ export default function StudentList() {
             </div>
             <div style={{ width: "210px", position: "relative" }}>
               <SelectField
+                isShadow
                 // value={selectedGroup}
                 // onChange={(e) => setSelectedGroup(e.target.value)}
                 options={groupOptions}
@@ -245,10 +243,10 @@ export default function StudentList() {
           />
         )} */}
       </div>
-        <AddStudent 
-      isOpen={isAddModalOpen} 
-      onClose={() => setIsAddModalOpen(false)} 
-    />
+      <AddStudent
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+      />
     </div>
   );
 }

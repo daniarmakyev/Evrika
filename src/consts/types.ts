@@ -275,7 +275,7 @@ export interface Group {
   course_id: number;
   teacher_id: number;
   teacher: Teacher;
-  course?: Course; 
+  course?: Course;
 }
 
 export interface GroupTableItem {
@@ -315,4 +315,41 @@ export interface Teacher {
   phone_number: string;
   role: string;
   password: string | null;
+}
+
+export interface FinanceItem {
+  student_id: number;
+  student_first_name: string;
+  student_last_name: string;
+  group_id: number;
+  payment_detail_id: number;
+  months_paid: number;
+  current_month_number: number;
+  payment_status: string;
+  group: Group;
+  checks: Check[];
+  group_course_name: string;
+}
+
+export interface Check {
+  id: number;
+  check: string;
+  student_id: number;
+  group_id: number;
+  uploaded_at: string;
+}
+
+export interface FinanceTableItem {
+  id: number;
+  student_name: string;
+  group_name: string;
+  payment_status: string;
+  checks: Check[];
+  group_id: number;
+  student_id: number;
+}
+
+export interface FinanceResponse {
+  items: FinanceItem[];
+  pagination: PaginationType;
 }

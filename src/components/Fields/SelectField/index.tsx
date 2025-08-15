@@ -52,6 +52,7 @@ const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
   ) => {
     return (
       <div
+        style={style}
         className={`${styles.inputWrapper} ${
           fullWidth ? styles.fullWidth : ""
         }`}
@@ -70,7 +71,6 @@ const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
           <select
             id={id}
             ref={ref}
-            style={style}
             className={`${styles.select} ${error ? styles.error : ""} ${
               leftIcon ? styles.withLeftIcon : ""
             } ${!value ? styles.placeholder : ""}`}

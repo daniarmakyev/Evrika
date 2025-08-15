@@ -221,7 +221,7 @@ export default function TeacherHomework() {
       render: (value: string) => {
         return (
           <span>
-            {value.length > 60 ? value.substring(0, 60) + "..." : value}
+            {value.length > 30 ? value.substring(0, 30) + "..." : value}
           </span>
         );
       },
@@ -240,14 +240,14 @@ export default function TeacherHomework() {
         <div style={{ display: "flex", gap: "10px", flexDirection: "row" }}>
           <button
             onClick={() => handleOpenViewModal(row)}
-            className={styles.action__button}
+            className={styles.actionButton}
             title="Просмотреть домашнее задание"
           >
             <FileIcon />
           </button>
           <button
             onClick={() => handleOpenEditModal(row)}
-            className={styles.action__button}
+            className={styles.actionButton}
             title="Редактировать задание"
           >
             <EditPen />

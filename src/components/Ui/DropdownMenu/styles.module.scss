@@ -1,0 +1,29 @@
+@import "../../../styles/varibles.scss";
+@import "../../../styles/mixins/";
+
+.dropdownMenu {
+  position: absolute;
+  top: 15px;
+  left: 0;
+  background: $White;
+  border: 1px solid $white-ligth;
+  border-radius: 6px;
+  padding: 5px 0;
+  list-style: none;
+  min-width: 100px;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdownItem {
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+  text-align: left;
+
+  &:hover {
+    color: $primary;
+  }
+
+}

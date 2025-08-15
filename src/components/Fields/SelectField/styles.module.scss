@@ -1,6 +1,27 @@
 @import "../../../styles/varibles.scss";
 @import "../../../styles/mixins/";
 
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: fit-content;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &.fullWidth {
+    width: 100%;
+  }
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  color: $black-dark;
+}
+
 .inputContainer {
   position: relative;
 }
@@ -71,6 +92,14 @@
 }
 
 @include respond-above(xs) {
+  .inputWrapper {
+    gap: 3px;
+  }
+
+  .label {
+    font-size: 12px;
+  }
+
   .select {
     padding: 6px 9px;
     padding-right: 35px;
@@ -83,6 +112,14 @@
 }
 
 @include respond-above(sm) {
+  .inputWrapper {
+    gap: 5px;
+  }
+
+  .label {
+    font-size: 14px;
+  }
+
   .select {
     padding: 9px 12px;
     padding-right: 40px;
@@ -102,6 +139,14 @@
 }
 
 @include respond-above(xlg) {
+  .inputWrapper {
+    gap: 6px;
+  }
+
+  .label {
+    font-size: 16px;
+  }
+
   .select {
     padding: 10px 13px;
     padding-right: 45px;
@@ -122,6 +167,14 @@
 }
 
 @include respond-above(fhd) {
+  .inputWrapper {
+    gap: 7px;
+  }
+
+  .label {
+    font-size: 18px;
+  }
+
   .select {
     padding: 12px 16px;
     padding-right: 52px;
@@ -142,6 +195,14 @@
 }
 
 @include respond-above(fhd-plus) {
+  .inputWrapper {
+    gap: 8px;
+  }
+
+  .label {
+    font-size: 23px;
+  }
+
   .select {
     padding: 15px 19px;
     padding-right: 65px;
@@ -162,6 +223,14 @@
 }
 
 @include respond-above(qhd) {
+  .inputWrapper {
+    gap: 9px;
+  }
+
+  .label {
+    font-size: 25px;
+  }
+
   .select {
     padding: 16px 21px;
     padding-right: 71px;
@@ -182,6 +251,14 @@
 }
 
 @include respond-above(uhd) {
+  .inputWrapper {
+    gap: 12px;
+  }
+
+  .label {
+    font-size: 33px;
+  }
+
   .select {
     padding: 21px 29px;
     padding-right: 94px;

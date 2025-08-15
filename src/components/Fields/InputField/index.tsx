@@ -53,6 +53,7 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
   ) => {
     return (
       <div
+        style={style}
         className={`${styles.inputWrapper} ${
           fullWidth ? styles.fullWidth : ""
         }`}
@@ -71,7 +72,6 @@ const InputField = forwardRef<HTMLInputElement, InputFieldProps>(
           <input
             id={id}
             ref={ref}
-            style={style}
             className={`${styles.input} ${error ? styles.error : ""} ${
               leftIcon ? styles.withLeftIcon : ""
             }`}

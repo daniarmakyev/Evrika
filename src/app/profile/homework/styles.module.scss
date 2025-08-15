@@ -47,7 +47,9 @@
     width: 100%;
     display: flex;
     align-items: center;
-    
+    overflow-x: hidden !important;
+    text-overflow: ellipsis !important;
+
     span {
       word-break: break-word;
       line-height: 1.4;
@@ -55,35 +57,6 @@
 
     &:hover {
       color: darken($primary-button, 10%);
-    }
-  }
-
-  .upload__button {
-    background: $primary-button;
-    border: none;
-    border-radius: 8px;
-    padding: 8px 12px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.2s ease;
-    min-width: 40px;
-    height: 40px;
-
-    svg {
-      width: 18px;
-      height: 18px;
-      fill: white;
-    }
-
-    &:hover {
-      background: darken($primary-button, 8%);
-      transform: translateY(-1px);
-    }
-
-    &:active {
-      transform: translateY(0);
     }
   }
 
@@ -334,3 +307,17 @@
   margin: 0 8px;
 }
 
+.upload__button {
+  min-width: 18px;
+  height: 18px;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: white;
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}

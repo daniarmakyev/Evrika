@@ -9,7 +9,7 @@ type GroupTableItem = {
   group: string;
   course: string;
   startDate: string; // or Date if you store actual Date objects
-  endDate: string;   // same here
+  endDate: string; // same here
   status: "active" | "non-active";
 };
 
@@ -56,22 +56,22 @@ const StudentGroups = () => {
       isButton: true,
       render: (_: string, row: GroupTableItem) => {
         return (
-          <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-            <span
+          <div style={{ display: "flex", flexDirection: "column", gap: "2px", justifyContent:"flex-start",alignItems:"flex-start" }}>
+            <button
               onClick={() => {
                 setSelectedGroup(row.group);
                 setIsModalOpen(true);
               }}
             >
               Посещаемость
-            </span>
-            <span
+            </button>
+            <button
               onClick={() => {
                 setIsHomeworkOpen(true); // Homework
               }}
             >
               Домашние задание
-            </span>
+            </button>
           </div>
         );
       },
@@ -84,17 +84,10 @@ const StudentGroups = () => {
       render: (value: string) => {
         return (
           <div
-            style={{
-              backgroundColor: value === "active" ? "green" : "red",
-              color: "white",
-              fontWeight: 600,
-              borderRadius: "6px",
-              fontSize: "13px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "30px",
-            }}
+            className={classNames(styles.status, {
+              [styles.active]: value === "active",
+              [styles.inactive]: value === "non-active",
+            })}
           >
             {value === "active" ? "Активен" : "Не активен"}
           </div>

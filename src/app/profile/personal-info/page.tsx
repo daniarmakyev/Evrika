@@ -87,6 +87,7 @@ const PersonalInfo: React.FC = () => {
                   {...field}
                   value={`${user.first_name} ${user.last_name}`}
                   label="Имя и фамилия"
+                  isShadow
                   placeholder="Введите имя и фамилию"
                   disabled
                 />
@@ -99,11 +100,10 @@ const PersonalInfo: React.FC = () => {
               render={({ field }) => (
                 <InputField
                   {...field}
+                  isShadow
                   value={user.courses.map((course) => course.name).join(", ")}
                   label={
-                    user.role === "teacher"
-                      ? "Курсы преподавания"
-                      : "Курсы"
+                    user.role === "teacher" ? "Курсы преподавания" : "Курсы"
                   }
                   placeholder="Введите курсы"
                   disabled
@@ -116,6 +116,7 @@ const PersonalInfo: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <InputField
+                  isShadow
                   {...field}
                   value={user.phone_number || ""}
                   label="Телефон"
@@ -130,6 +131,7 @@ const PersonalInfo: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <InputField
+                  isShadow
                   {...field}
                   value={user.email}
                   label="Почта"

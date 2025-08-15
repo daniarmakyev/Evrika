@@ -9,12 +9,15 @@ interface ProfileHeroBannerProps {
   role?: string;
 }
 
-const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({ name, role }) => {
+const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({
+  name,
+  role,
+}) => {
   const greeting =
     role === "teacher"
       ? "Здравствуйте, учитель"
       : role === "admin"
-      ? "Здравствуйте, администратор"
+      ? "Здравствуйте, <br/> администратор"
       : "Привет";
 
   return (
@@ -22,9 +25,17 @@ const ProfileHeroBanner: React.FC<ProfileHeroBannerProps> = ({ name, role }) => 
       <div className={classNames(styles.quote__container, "container")}>
         <div className={styles.quote__title}>
           <h1>
-            {greeting}
-            <br />
-            {name}
+            {role === "admin" ? (
+              <>
+                Здравствуйте, <br /> администратор
+              </>
+            ) : (
+              <>
+                {greeting}
+                <br />
+                {name}
+              </>
+            )}
           </h1>
         </div>
       </div>

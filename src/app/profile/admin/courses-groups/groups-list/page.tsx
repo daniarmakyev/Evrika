@@ -17,6 +17,7 @@ import CreateGroupModal from "./CreateModal";
 import EditGroupModal from "./EditModal";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import {
+  getCourses,
   getGroups,
   getTeachers,
 } from "src/store/courseGroup/courseGroup.action";
@@ -55,8 +56,9 @@ const TableSkeleton = () => (
 export default function GroupsList() {
   const pathname = usePathname();
   const dispatch = useAppDispatch();
-  const { groups, loadingGroups, teachers, error } =
-    useAppSelector((state) => state.groupsCourses);
+  const { groups, loadingGroups, teachers, error, courses } = useAppSelector(
+    (state) => state.groupsCourses
+  );
 
   const [filteredGroups, setFilteredGroups] = useState<GroupTableItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -75,6 +77,7 @@ export default function GroupsList() {
   ];
 
   useEffect(() => {
+    dispatch(getCourses());
     dispatch(getGroups({ limit: 50, offset: 0 }));
     dispatch(getTeachers({ limit: 50, offset: 0 }));
   }, [dispatch]);
@@ -359,20 +362,31 @@ export default function GroupsList() {
         )}
       </ProfileModal>
 
-      <EditGroupModal
-        data={editModal.data}
-        isOpen={editModal.isOpen}
-        onClose={editModal.closeModal}
-        onSuccess={handleEditSuccess}
-        teachers={teachers || []}
-      />
-
-      <CreateGroupModal
-        isOpen={isCreateModalOpen}
-        onClose={() => setIsCreateModalOpen(false)}
-        onSuccess={handleCreateSuccess}
-        teachers={teachers || []}
-      />
+      {courses && (
+        <>
+          <CreateGroupModal
+            isOpen={isCreateModalOpen}
+            onClose={() => setIsCreateModalOpen(false)}
+            onSuccess={handleCreateSuccess}
+            teachers={teachers || []}
+            courseOptions={courses.map((item) => ({
+              label: item.name,
+              value: item.id,
+            }))}
+          />
+          <EditGroupModal
+            data={editModal.data}
+            isOpen={editModal.isOpen}
+            onClose={editModal.closeModal}
+            onSuccess={handleEditSuccess}
+            teachers={teachers || []}
+            courseOptions={courses.map((item) => ({
+              label: item.name,
+              value: item.id,
+            }))}
+          />
+        </>
+      )}
     </div>
   );
 }

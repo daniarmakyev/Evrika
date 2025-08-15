@@ -15,6 +15,7 @@ type Props = {
   data: Group | null;
   onSuccess?: () => void;
   teachers: Teacher[];
+  courseOptions: { label: string; value: number | string }[];
 };
 
 interface EditGroupForm {
@@ -28,7 +29,14 @@ interface EditGroupForm {
   teacher_id: number;
 }
 
-const EditGroupModal = ({ isOpen, onClose, data, onSuccess, teachers }: Props) => {
+const EditGroupModal = ({
+  isOpen,
+  onClose,
+  data,
+  onSuccess,
+  teachers,
+  courseOptions,
+}: Props) => {
   const dispatch = useAppDispatch();
   const { updatingGroup, error } = useAppSelector(
     (state) => state.groupsCourses
@@ -55,13 +63,7 @@ const EditGroupModal = ({ isOpen, onClose, data, onSuccess, teachers }: Props) =
     },
   });
 
-  const courseOptions = [
-    { value: "1", label: "Английский-B1" },
-    { value: "2", label: "Английский-B2" },
-    { value: "3", label: "Испанский-A1" },
-  ];
-
-  const teacherOptions = teachers.map(teacher => ({
+  const teacherOptions = teachers.map((teacher) => ({
     value: teacher.id.toString(),
     label: `${teacher.first_name} ${teacher.last_name}`,
   }));
@@ -113,10 +115,12 @@ const EditGroupModal = ({ isOpen, onClose, data, onSuccess, teachers }: Props) =
         approximate_lesson_start: timeWithSeconds,
       };
 
-      await dispatch(updateGroup({ 
-        id: data.id, 
-        updateData: submitData 
-      })).unwrap();
+      await dispatch(
+        updateGroup({
+          id: data.id,
+          updateData: submitData,
+        })
+      ).unwrap();
 
       if (onSuccess) {
         onSuccess();
@@ -136,7 +140,7 @@ const EditGroupModal = ({ isOpen, onClose, data, onSuccess, teachers }: Props) =
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const status = e.target.value;
-    
+
     switch (status) {
       case "active":
         setValue("is_active", true);

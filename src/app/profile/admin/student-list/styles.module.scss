@@ -51,7 +51,8 @@
     width: 100%;
     display: flex;
     align-items: center;
-      position: "relative";
+    position: "relative";
+    
 
     span {
       word-break: break-word;
@@ -209,41 +210,66 @@
   position: "relative";
 }
 
- .add__button {
-      background-color: $primary;
-      display: flex;
-      align-items: center;
-      color: $White;
-      gap: 5px;
-      padding: 10px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      width:'160px'
-    }
- .white__button {
-      background-color:white;
-      display: flex;
-      align-items: center;
-      color:rgb(158, 149, 149);
-      gap: 5px;
-      padding: 10px 18px;
-      border-radius: 8px;
-      cursor: pointer;
-      width:'160px';
-      box-shadow: 0px 3px 3px 0px rgba(0,0, 0,0.25);
-      border:1px solid #E0E6ED
-    }
+.add__button {
+  background-color: $primary;
+  display: flex;
+  align-items: center;
+  color: $White;
+  gap: 5px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: "160px";
+}
+.white__button {
+  background-color: white;
+  display: flex;
+  align-items: center;
+  color: $White-ligth;
+  gap: 5px;
+  padding: 9px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  width: "160px";
+  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.25);
+  border: 1px solid $white-ligth;
+  box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+  font-size: 14px;
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+}
 
-    
-    .button_container{
-      display: flex;
-      gap:50px;
-      justify-content: end;
-      margin-bottom:20px
-    }
+.button_container {
+  display: flex;
+  gap: 50px;
+  justify-content: end;
+  margin-bottom: 20px;
+}
 
-    .filter_container{
-      display:flex;
-      gap:20px
-    }
-  
+.filter_container {
+  display: flex;
+  gap: 20px;
+}
+
+.active {
+  background-color: $success;
+  color: $White;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+}
+.inactive {
+  background-color: $danger;
+  color: $White;
+  border-radius: 6px;
+  font-size: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+}
