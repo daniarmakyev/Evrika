@@ -15,6 +15,7 @@ const studentData = [
   { tab: "Личная информация", icon: <UserIcon />, link: "/personal-info" },
   { tab: "Расписание", icon: <CalendarIcon />, link: "/schedule" },
   { tab: "Домашнее задание", icon: <HomeIcon />, link: "/homework" },
+  { tab: "Чеки", icon: <GroupsAdminIcon />, link: "/checks" },
 ];
 
 const teacherData = [

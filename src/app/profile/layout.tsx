@@ -1,4 +1,3 @@
-// Исправленный ProfileLayout
 "use client";
 
 import Footer from "@components/Footer";
