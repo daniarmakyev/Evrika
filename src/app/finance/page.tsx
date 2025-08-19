@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "@components/Footer";
 import Header from "@components/Header";
 import HeroBanner from "@components/HeroBanner";
@@ -10,43 +10,11 @@ import SelectField from "@components/Fields/SelectField";
 import Link from "next/link";
 import Image from "next/image";
 import qr from "../../../public/assets/images/qr.png";
-
-interface Student {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone_number: string;
-  role: string;
-}
-
-interface Group {
-  id: number;
-  name: string;
-  created_at: string;
-  start_date: string;
-  end_date: string;
-  approximate_lesson_start: string;
-  is_active: boolean;
-  is_archived: boolean;
-  course_id: number;
-  teacher_id: number;
-}
-
-interface StudentGroup {
-  id: number;
-  student_id: number;
-  group_id: number;
-  joined_at: string;
-  months_paid: number;
-  is_active: boolean;
-  price: number;
-  current_month_number: number;
-  deadline: string;
-  status: string;
-  group: Group;
-  student: Student;
-}
+import { Group, Course } from "src/consts/types";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { getMyPayments } from "src/store/finance/finance.action";
+import { getCourse } from "src/store/courseGroup/courseGroup.action";
+import LoadingSpinner from "@components/Ui/LoadingSpinner";
 
 const coursesPageBanner = {
   title: "Оплата",
@@ -57,84 +25,62 @@ const coursesPageBanner = {
   },
 };
 
-const mockStudentGroups: StudentGroup[] = [
-  {
-    id: 0,
-    student_id: 0,
-    group_id: 0,
-    joined_at: "2025-08-19",
-    months_paid: 0,
-    is_active: true,
-    price: 5000,
-    current_month_number: 0,
-    deadline: "2025-08-19",
-    status: "Оплачено",
-    group: {
-      id: 0,
-      name: "Английский-A1-0825",
-      created_at: "2025-08-19T15:39:36.788Z",
-      start_date: "2025-08-19",
-      end_date: "2025-12-19",
-      approximate_lesson_start: "15:39:36.788Z",
-      is_active: true,
-      is_archived: false,
-      course_id: 0,
-      teacher_id: 0,
-    },
-    student: {
-      id: 0,
-      first_name: "Иван",
-      last_name: "Иванов",
-      email: "ivan@example.com",
-      phone_number: "+996123456789",
-      role: "student",
-    },
-  },
-];
-
-const columns = [
-  {
-    key: "group",
-    title: "Группа",
-    width: "20%",
-    render: (value: Group) => value?.name,
-  },
-  {
-    key: "group",
-    title: "Окончание курса",
-    width: "15%",
-    render: (value: Group) => new Date(value?.end_date).toLocaleDateString(),
-  },
-  {
-    key: "price",
-    title: "Стоимость",
-    width: "15%",
-    render: (value: number) => `${value} сом`,
-  },
-  {
-    key: "deadline",
-    title: "Дедлайн",
-    width: "15%",
-    render: (value: string) => new Date(value).toLocaleDateString(),
-  },
-  {
-    key: "status",
-    title: "Статус",
-    width: "15%",
-    render: (value: string) => (
-      <span
-        className={classNames(styles.status, {
-          [styles.paid]: value === "Оплачено",
-          [styles.unpaid]: value === "Неоплачено",
-        })}
-      >
-        {value}
-      </span>
-    ),
-  },
-];
-
 const FinancePage = () => {
+  const { myPaymentsError, myPayments, myPaymentsLoading } = useAppSelector(
+    (state) => state.finance
+  );
+
+  const { error: courseError } = useAppSelector((state) => state.groupsCourses);
+
+  const dispatch = useAppDispatch();
+
+  const [loadedCourses, setLoadedCourses] = useState<Course[]>([]);
+  const [loadingCourses, setLoadingCourses] = useState(false);
+
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [groupFilter, setGroupFilter] = useState<string>("");
+
+  const loadPayments = (status?: "Оплачено" | "Не оплачено") => {
+    dispatch(getMyPayments(status || undefined));
+  };
+
+  useEffect(() => {
+    loadPayments();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (myPayments && myPayments.length > 0) {
+      const uniqueCourseIds = Array.from(
+        new Set(myPayments.map((payment) => payment.group.course_id))
+      );
+
+      if (uniqueCourseIds.length > 0) {
+        setLoadingCourses(true);
+        setLoadedCourses([]);
+
+        const loadCourses = async () => {
+          const courses: Course[] = [];
+
+          for (const courseId of uniqueCourseIds) {
+            try {
+              const result = await dispatch(getCourse(courseId));
+              if (getCourse.fulfilled.match(result)) {
+                courses.push(result.payload);
+              }
+            } catch (error) {
+              console.error(`Ошибка загрузки курса ${courseId}:`, error);
+            }
+          }
+
+          setLoadedCourses(courses);
+          setLoadingCourses(false);
+        };
+
+        loadCourses();
+      }
+    }
+  }, [myPayments, dispatch]);
+
   const [paymentType, setPaymentType] = useState<"offline" | "online">(
     "offline"
   );
@@ -142,6 +88,67 @@ const FinancePage = () => {
   const handlePaymentTypeChange = (type: "offline" | "online") => {
     setPaymentType(type);
   };
+
+  const handleStatusFilterChange = (value: "Оплачено" | "Не оплачено") => {
+    setStatusFilter(value);
+    loadPayments(value);
+  };
+
+  const handleGroupFilterChange = (value: string) => {
+    setGroupFilter(value);
+  };
+
+  const getCoursePrice = (courseId: number): string => {
+    const course = loadedCourses.find((c) => c.id === courseId);
+    return course ? `${course.price} сом` : "Загружается...";
+  };
+
+  const filteredPayments = myPayments?.filter((payment) => {
+    if (!groupFilter) return true;
+    return payment.group.id.toString() === groupFilter;
+  });
+
+  const columns = [
+    {
+      key: "group",
+      title: "Группа",
+      width: "20%",
+      render: (value: Group) => value?.name,
+    },
+    {
+      key: "group",
+      title: "Окончание курса",
+      width: "15%",
+      render: (value: Group) => new Date(value?.end_date).toLocaleDateString(),
+    },
+    {
+      key: "group",
+      title: "Стоимость курса",
+      width: "15%",
+      render: (value: Group) => getCoursePrice(value.course_id),
+    },
+    {
+      key: "deadline",
+      title: "Дедлайн",
+      width: "15%",
+      render: (value: string) => new Date(value).toLocaleDateString(),
+    },
+    {
+      key: "status",
+      title: "Статус",
+      width: "15%",
+      render: (value: string) => (
+        <span
+          className={classNames(styles.status, {
+            [styles.paid]: value === "Оплачено",
+            [styles.unpaid]: value === "Не оплачено",
+          })}
+        >
+          {value}
+        </span>
+      ),
+    },
+  ];
 
   const renderOfflinePayment = () => (
     <div className={styles.finance__pay}>
@@ -188,6 +195,27 @@ const FinancePage = () => {
     </div>
   );
 
+  const statusOptions = [
+    { label: "Все статусы", value: "" },
+    { label: "Оплачено", value: "Оплачено" },
+    { label: "Не оплачено", value: "Не оплачено" },
+  ];
+
+  const groupOptions = [
+    { label: "Все группы", value: "" },
+    ...(myPayments
+      ?.map((payment) => ({
+        label: payment.group.name,
+        value: payment.group.id.toString(),
+      }))
+      .filter(
+        (option, index, self) =>
+          index === self.findIndex((o) => o.value === option.value)
+      ) || []),
+  ];
+
+  const isLoading = myPaymentsLoading || loadingCourses;
+
   return (
     <>
       <Header />
@@ -198,20 +226,67 @@ const FinancePage = () => {
             <div className={styles.finance__content}>
               <div className={styles.finance__header}>
                 <h2 className={styles.finance__title}>Детали об оплате</h2>
-                <SelectField
-                  isShadow
-                  options={[{ label: "dadada", value: "dasdada" }]}
-                  label="Выберите группу"
-                  labelLeft
-                />
+
+                <div className={styles.finance__filters}>
+                  <SelectField
+                    isShadow
+                    options={statusOptions}
+                    label="Статус платежа"
+                    labelLeft
+                    value={statusFilter}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                      handleStatusFilterChange(
+                        event.target.value as "Оплачено" | "Не оплачено"
+                      )
+                    }
+                  />
+
+                  <SelectField
+                    isShadow
+                    options={groupOptions}
+                    label="Группа"
+                    labelLeft
+                    value={groupFilter}
+                    onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
+                      handleGroupFilterChange(event.target.value)
+                    }
+                  />
+                </div>
               </div>
-              <div className={styles.table__container}>
-                <Table
-                  columns={columns}
-                  data={mockStudentGroups}
-                  emptyMessage="Студенты не найдены"
-                />
-              </div>
+
+              {isLoading && <LoadingSpinner />}
+
+              {filteredPayments &&
+                filteredPayments.length > 0 &&
+                !isLoading && (
+                  <div className={styles.table__container}>
+                    <Table
+                      columns={columns}
+                      data={filteredPayments}
+                      emptyMessage="Платежи не найдены"
+                    />
+                  </div>
+                )}
+
+              {filteredPayments &&
+                filteredPayments.length === 0 &&
+                !isLoading && (
+                  <div className={styles.emptyMessage}>
+                    Платежи по выбранным фильтрам не найдены
+                  </div>
+                )}
+
+              {myPaymentsError && (
+                <div className={styles.error}>
+                  Ошибка при загрузке данных об оплате
+                </div>
+              )}
+
+              {courseError && (
+                <div className={styles.error}>
+                  Ошибка при загрузке курсов: {courseError}
+                </div>
+              )}
             </div>
 
             <div className={styles.finance__content}>

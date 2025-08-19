@@ -353,3 +353,65 @@ export interface FinanceResponse {
   items: FinanceItem[];
   pagination: PaginationType;
 }
+
+export interface PaymentDetail {
+  id: number;
+  student_id: number;
+  group_id: number;
+  joined_at: string;
+  months_paid: number;
+  is_active: boolean;
+  price: number;
+  current_month_number: number;
+  deadline: string;
+  status: "Оплачено" | "Не оплачено";
+  group: {
+    id: number;
+    name: string;
+    created_at: string;
+    start_date: string;
+    end_date: string;
+    approximate_lesson_start: string;
+    is_active: boolean;
+    is_archived: boolean;
+    course_id: number;
+    teacher_id: number;
+  };
+  student: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number: string;
+    role: "teacher" | "student" | "admin";
+  };
+};
+export interface Check {
+  id: number;
+  check: string;
+  student_id: number;
+  group_id: number;
+  uploaded_at: string;
+  group: {
+    id: number;
+    name: string;
+    created_at: string;
+    start_date: string;
+    end_date: string;
+    approximate_lesson_start: string;
+    is_active: boolean;
+    is_archived: boolean;
+    course_id: number;
+    teacher_id: number;
+  };
+  student: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number: string;
+    role: string;
+  };
+}
+
+

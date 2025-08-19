@@ -48,7 +48,7 @@ export default function CoursesList() {
 
   const [filteredCourses, setFilteredCourses] = useState<CourseTableItem[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("");
+  const [selectedLanguageId, setSelectedLanguageId] = useState("");
   const { courses, loadingCourses, languages, levels } = useAppSelector(
     (state) => state.groupsCourses
   );
@@ -73,11 +73,9 @@ export default function CoursesList() {
         );
       }
 
-      if (selectedLanguage) {
+      if (selectedLanguageId) {
         filtered = filtered.filter(
-          (course) =>
-            course.language_name.toLowerCase() ===
-            selectedLanguage.toLowerCase()
+          (course) => course.language_id === parseInt(selectedLanguageId)
         );
       }
 
@@ -92,7 +90,7 @@ export default function CoursesList() {
 
       setFilteredCourses(tableData);
     }
-  }, [courses, searchTerm, selectedLanguage]);
+  }, [courses, searchTerm, selectedLanguageId]);
 
   const handleViewCourse = (course: CourseTableItem) => {
     if (courses) {
@@ -207,16 +205,17 @@ export default function CoursesList() {
             {languages && (
               <div className={styles.selectField}>
                 <SelectField
-                  options={languages.map((lang) => ({
-                    label: lang.name,
-                    value: lang.id,
-                  }))}
+                  options={[
+                    { label: "Все языки", value: "" },
+                    ...languages.map((lang) => ({
+                      label: lang.name,
+                      value: lang.id.toString(),
+                    })),
+                  ]}
                   isShadow
-                  value={selectedLanguage}
+                  value={selectedLanguageId}
                   onChange={(e) => {
-                    setSelectedLanguage(
-                      e.target.options[e.target.selectedIndex].text
-                    );
+                    setSelectedLanguageId(e.target.value);
                   }}
                   placeholder="Выберите язык"
                 />

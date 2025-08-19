@@ -6,6 +6,7 @@ import { lessonSlice } from "./lesson/lesson.slice";
 import { userSlice } from "./user/user.slice";
 import { attendanceApi } from "./attendance/attendance";
 import { courseGroupSlice } from "./courseGroup/courseGroup.slice";
+import { financeSlice } from "./finance/finance.slice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     user: userSlice.reducer,
     lesson: lessonSlice.reducer,
     groupsCourses: courseGroupSlice.reducer,
+    finance: financeSlice.reducer,
     [attendanceApi.reducerPath]: attendanceApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>

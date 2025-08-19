@@ -49,6 +49,26 @@ const mockFinanceData: FinanceItem[] = [
         student_id: 1,
         group_id: 1,
         uploaded_at: "2025-08-14T10:30:00Z",
+        group: {
+          id: 0,
+          name: "",
+          created_at: "",
+          start_date: "",
+          end_date: "",
+          approximate_lesson_start: "",
+          is_active: false,
+          is_archived: false,
+          course_id: 0,
+          teacher_id: 0
+        },
+        student: {
+          id: 0,
+          first_name: "",
+          last_name: "",
+          email: "",
+          phone_number: "",
+          role: ""
+        }
       },
       {
         id: 2,
@@ -56,6 +76,26 @@ const mockFinanceData: FinanceItem[] = [
         student_id: 1,
         group_id: 1,
         uploaded_at: "2025-08-14T11:15:00Z",
+        group: {
+          id: 0,
+          name: "",
+          created_at: "",
+          start_date: "",
+          end_date: "",
+          approximate_lesson_start: "",
+          is_active: false,
+          is_archived: false,
+          course_id: 0,
+          teacher_id: 0
+        },
+        student: {
+          id: 0,
+          first_name: "",
+          last_name: "",
+          email: "",
+          phone_number: "",
+          role: ""
+        }
       },
     ],
     group_course_name: "Английский-B1",
@@ -97,6 +137,26 @@ const mockFinanceData: FinanceItem[] = [
         student_id: 3,
         group_id: 1,
         uploaded_at: "2025-08-14T12:00:00Z",
+        group: {
+          id: 0,
+          name: "",
+          created_at: "",
+          start_date: "",
+          end_date: "",
+          approximate_lesson_start: "",
+          is_active: false,
+          is_archived: false,
+          course_id: 0,
+          teacher_id: 0
+        },
+        student: {
+          id: 0,
+          first_name: "",
+          last_name: "",
+          email: "",
+          phone_number: "",
+          role: ""
+        }
       },
     ],
     group_course_name: "Английский-B1",

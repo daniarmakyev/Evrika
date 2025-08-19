@@ -1,5 +1,7 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { getMyChecks } from "src/store/finance/finance.action";
 import styles from "./styles.module.scss";
 import CheckModal from "./ChekModal";
 import Table from "@components/Table";
@@ -7,100 +9,41 @@ import DragAndDrop from "@components/DragAndDrop";
 import classNames from "classnames";
 import SelectField from "@components/Fields/SelectField";
 import EditPen from "../../../../public/assets/icons/edit-pen.svg";
-interface Student {
-  id: number;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone_number: string;
-  role: string;
-}
-
-interface Group {
-  id: number;
-  name: string;
-  created_at: string;
-  start_date: string;
-  end_date: string;
-  approximate_lesson_start: string;
-  is_active: boolean;
-  is_archived: boolean;
-  course_id: number;
-  teacher_id: number;
-}
-
-interface Check {
-  id: number;
-  check: string;
-  student_id: number;
-  group_id: number;
-  uploaded_at: string;
-  group: Group;
-  student: Student;
-}
-
-const mockChecks: Check[] = [
-  {
-    id: 1,
-    check: "f97d735028764b528794bf712653efd8.jpg",
-    student_id: 3,
-    group_id: 1,
-    uploaded_at: "2025-08-18T21:26:53.166716",
-    group: {
-      id: 1,
-      name: "Английский-B1-0825-1",
-      created_at: "2025-08-14T09:13:06.586770Z",
-      start_date: "2025-08-14",
-      end_date: "2025-08-14",
-      approximate_lesson_start: "09:11:00",
-      is_active: true,
-      is_archived: false,
-      course_id: 1,
-      teacher_id: 2,
-    },
-    student: {
-      id: 3,
-      first_name: "Бегимай",
-      last_name: "Абдылдаева",
-      email: "begish@begish.com",
-      phone_number: "+9965111222333",
-      role: "student",
-    },
-  },
-  {
-    id: 2,
-    check: "another_check_example.jpg",
-    student_id: 4,
-    group_id: 1,
-    uploaded_at: "2025-08-19T14:15:30.123456",
-    group: {
-      id: 1,
-      name: "Английский-B1-0825-1",
-      created_at: "2025-08-14T09:13:06.586770Z",
-      start_date: "2025-08-14",
-      end_date: "2025-08-14",
-      approximate_lesson_start: "09:11:00",
-      is_active: true,
-      is_archived: false,
-      course_id: 1,
-      teacher_id: 2,
-    },
-    student: {
-      id: 4,
-      first_name: "Айжан",
-      last_name: "Кочкорова",
-      email: "aizhan@example.com",
-      phone_number: "+9965444555666",
-      role: "student",
-    },
-  },
-];
+import { Check } from "src/consts/types";
 
 const ChecksTable: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const { myChecks, myChecksLoading, myChecksError } = useAppSelector(
+    (state) => state.finance
+  );
+
   const [selectedCheck, setSelectedCheck] = useState<Check | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>(
+    undefined
+  );
+
+  useEffect(() => {
+    dispatch(getMyChecks(selectedGroupId));
+  }, [dispatch, selectedGroupId]);
+
+  const groupOptions = React.useMemo(() => {
+    if (!myChecks) return [{ label: "Все группы", value: "all" }];
+
+    const uniqueGroups = Array.from(
+      new Map(myChecks.map((check) => [check.group.id, check.group])).values()
+    );
+
+    return [
+      { label: "Все группы", value: "all" },
+      ...uniqueGroups.map((group) => ({
+        label: group.name,
+        value: group.id.toString(),
+      })),
+    ];
+  }, [myChecks]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -137,6 +80,8 @@ const ChecksTable: React.FC = () => {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       setUploadedFile(null);
+
+      dispatch(getMyChecks(selectedGroupId));
     } catch (error) {
       console.error("Upload error:", error);
     } finally {
@@ -146,6 +91,12 @@ const ChecksTable: React.FC = () => {
 
   const removeFile = () => {
     setUploadedFile(null);
+  };
+
+  const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    const groupId = value === "all" ? undefined : parseInt(value);
+    setSelectedGroupId(groupId);
   };
 
   const columns = [
@@ -185,8 +136,9 @@ const ChecksTable: React.FC = () => {
         <div className={styles.checks__content__upload}>
           <SelectField
             isShadow
-            options={[{ label: "Селект", value: "Селект" }]}
+            options={groupOptions}
             label="Группы"
+            onChange={handleGroupChange}
           />
           <DragAndDrop
             onFileSelect={(files) => {
@@ -229,11 +181,17 @@ const ChecksTable: React.FC = () => {
       <div className={styles.checks__content}>
         <h2 className={styles.checks__title}>Чеки</h2>
         <div className={styles.table__container}>
-          <Table
-            columns={columns}
-            data={mockChecks}
-            emptyMessage="Чеки не найдены"
-          />
+          {myChecksLoading ? (
+            <div className={styles.loading}>Загрузка чеков...</div>
+          ) : myChecksError ? (
+            <div className={styles.error}>Ошибка загрузки чеков</div>
+          ) : (
+            <Table
+              columns={columns}
+              data={myChecks || []}
+              emptyMessage="Чеки не найдены"
+            />
+          )}
         </div>
       </div>
 
@@ -244,10 +202,14 @@ const ChecksTable: React.FC = () => {
         onUpdate={(updatedCheck: Check) => {
           console.log("Updated check:", updatedCheck);
           handleCloseModal();
+
+          dispatch(getMyChecks(selectedGroupId));
         }}
         onDelete={(checkId: number) => {
           console.log("Deleted check ID:", checkId);
           handleCloseModal();
+
+          dispatch(getMyChecks(selectedGroupId));
         }}
       />
     </div>

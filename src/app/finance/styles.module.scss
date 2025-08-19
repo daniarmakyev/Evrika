@@ -19,6 +19,7 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
+
     flex-direction: column;
     gap: 20px;
   }
@@ -26,6 +27,12 @@
   &__header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 40px;
     align-items: center;
   }
   &__title {
@@ -38,6 +45,7 @@
   &__pay {
     display: flex;
     justify-content: space-between;
+    align-items: center;
   }
 
   &__instructions {
@@ -126,8 +134,7 @@
   display: flex;
   background: $primary;
   border-radius: 10px;
-  width: 100%;
-  max-width: 100%;
+  width: fit-content;
   padding: 4px;
   justify-content: space-around;
   margin-bottom: 30px;
