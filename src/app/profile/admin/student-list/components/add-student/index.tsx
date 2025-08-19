@@ -4,6 +4,8 @@ import InputField from "@components/Fields/InputField";
 import React from "react";
 import styles from "./styles.module.scss";
 import { ChevronDown } from "lucide-react";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { getCourses } from "src/store/courseGroup/courseGroup.action";
 
 import { useForm, Controller } from "react-hook-form";
 // import SelectField from "@components/Fields/SelectField";
@@ -24,6 +26,13 @@ interface FormData {
 const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
+  const { courses, loadingCourses, groups, loadingGroups } = useAppSelector(
+    (state) => state.groupsCourses
+  );
+
+  courses?.map((course) => console.log(course.language_name));
+  groups?.map((group) => console.log(group.name, "GROUP NAME"));
+
   const { control, watch } = useForm<FormData>({
     defaultValues: {
       fullName: "",
@@ -126,62 +135,79 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
           {/* Dropdown content */}
           {openDropdown && (
             <div className={styles.dropdown__content}>
-              {groups.map((group, index) => (
-                <div key={index}>
+              {/* Сначала группируем курсы по языку */}
+              {Object.entries(
+                courses?.reduce((acc: any, course) => {
+                  if (!acc[course.language_name]) {
+                    acc[course.language_name] = [];
+                  }
+                  acc[course.language_name].push(course);
+                  return acc;
+                }, {}) || {}
+              ).map(([language, languageCourses]) => (
+                <div key={language}>
                   {/* Accordion header */}
                   <button
                     type="button"
                     className={`${styles.dropdown__accordion_header} ${
-                      openAccordion === group.label ? styles.open : ""
+                      openAccordion === language ? styles.open : ""
                     }`}
                     onClick={() =>
                       setOpenAccordion(
-                        openAccordion === group.label ? null : group.label
+                        openAccordion === language ? null : language
                       )
                     }
                   >
-                    {group.label}
-                    <span>{openAccordion === group.label ? "-" : "+"}</span>
+                    {language} язык
+                    <span>{openAccordion === language ? "-" : "+"}</span>
                   </button>
 
                   {/* Accordion body */}
-                  {openAccordion === group.label && (
+                  {openAccordion === language && (
                     <div style={{ paddingLeft: "10px", paddingBlock: "10px" }}>
                       <Controller
                         control={control}
                         name="group"
                         render={({ field }) => (
                           <div className={styles.dropdown__input_container}>
-                            {group.options.map((option, index) => (
-                              <label
-                                key={index}
-                                className={styles.dropdown__input_container_label}
-                              >
-                                <div>
-                                <input
-                                className={styles.dropdown__checkbox}
-                                  type="checkbox"
-                                  value={option.value}
-                                  checked={field.value.includes(option.value)}
-                                  onChange={(e) => {
-                                    if (e.target.checked) {
-                                      field.onChange([
-                                        ...field.value,
-                                        option.value,
-                                      ]); 
-                                    } else {
-                                      field.onChange(
-                                        field.value.filter(
-                                          (val) => val !== option.value
-                                        ) 
-                                      );
-                                    }
-                                  }}
-                                />
-                                </div>
-                               <p>{option.label}</p>
-                              </label>
-                            ))}
+                            {groups
+                              ?.filter((group) =>
+                                languageCourses.some(
+                                  (course) => course.id === group.course_id
+                                )
+                              )
+                              .map((group) => (
+                                <label
+                                  key={group.id}
+                                  className={
+                                    styles.dropdown__input_container_label
+                                  }
+                                >
+                                  <div>
+                                    <input
+                                      className={styles.dropdown__checkbox}
+                                      type="checkbox"
+                                      value={group.name}
+                                      checked={field.value.includes(group.name)}
+                                      onChange={(e) => {
+                                        if (e.target.checked) {
+                                          field.onChange([
+                                            ...field.value,
+                                            group.name,
+                                          ]);
+                                        } else {
+                                          field.onChange(
+                                            field.value.filter(
+                                              (val) => val !== group.name
+                                            )
+                                          );
+                                        }
+                                      }}
+                                    />
+                                  </div>
+                                  <p>{group.name}</p>
+                                </label>
+                              ))}
                           </div>
                         )}
                       />
