@@ -15,12 +15,10 @@ type Props = {
 };
 
 interface FormData {
-  firstName?: string;
-  lastName?: string;
   group: string[];
   phone: string;
   email: string;
-  fullName?: string;
+  fullName: string;
 }
 
 const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
@@ -28,8 +26,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
   const { control, watch } = useForm<FormData>({
     defaultValues: {
-      firstName: "",
-      lastName: "",
+      fullName: "",
       group: [],
       phone: "",
       email: "",
@@ -137,7 +134,6 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
                     className={`${styles.dropdown__accordion_header} ${
                       openAccordion === group.label ? styles.open : ""
                     }`}
-            
                     onClick={() =>
                       setOpenAccordion(
                         openAccordion === group.label ? null : group.label
@@ -150,18 +146,20 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
 
                   {/* Accordion body */}
                   {openAccordion === group.label && (
-                    <div className="pl-4 py-2">
+                    <div style={{ paddingLeft: "10px", paddingBlock: "10px" }}>
                       <Controller
                         control={control}
                         name="group"
                         render={({ field }) => (
-                          <div className="flex flex-col gap-1">
+                          <div className={styles.dropdown__input_container}>
                             {group.options.map((option, index) => (
                               <label
                                 key={index}
-                                className="flex items-center gap-2"
+                                className={styles.dropdown__input_container_label}
                               >
+                                <div>
                                 <input
+                                className={styles.dropdown__checkbox}
                                   type="checkbox"
                                   value={option.value}
                                   checked={field.value.includes(option.value)}
@@ -170,17 +168,18 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
                                       field.onChange([
                                         ...field.value,
                                         option.value,
-                                      ]); // add to array
+                                      ]); 
                                     } else {
                                       field.onChange(
                                         field.value.filter(
                                           (val) => val !== option.value
-                                        ) // remove from array
+                                        ) 
                                       );
                                     }
                                   }}
                                 />
-                                {option.label}
+                                </div>
+                               <p>{option.label}</p>
                               </label>
                             ))}
                           </div>
