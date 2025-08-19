@@ -120,7 +120,6 @@
   }
 }
 
-// Skeleton loader styles
 @keyframes skeleton-loading {
   0% {
     background-position: -200% 0;
@@ -208,43 +207,4 @@
   animation: skeleton-loading 1.5s infinite;
   border-radius: 8px;
   margin: 0 8px;
-}
-
-// Responsive design
-@media (max-width: 768px) {
-  .courses__container {
-    .content {
-      padding: 20px;
-
-      .contentHeader {
-        flex-direction: column;
-        align-items: stretch;
-
-        .filtersContainer {
-          flex-direction: column;
-
-          .searchField,
-          .selectField {
-            min-width: 100%;
-          }
-        }
-      }
-    }
-  }
-
-  .skeletonHeaderCell,
-  .skeletonCell {
-    &:nth-child(1) {
-      width: 120px;
-    }
-    &:nth-child(2) {
-      width: 120px;
-    }
-    &:nth-child(3) {
-      width: 100px;
-    }
-    &:nth-child(4) {
-      width: 80px;
-    }
-  }
 }

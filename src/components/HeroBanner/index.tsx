@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import React from "react";
 import Image from "next/image";
@@ -16,14 +16,16 @@ interface HeroBannerData {
 
 interface HeroBannerProps {
   data: HeroBannerData;
+  button?: boolean;
 }
 
-const HeroBanner: React.FC<HeroBannerProps> = ({ data }) => {
+const HeroBanner: React.FC<HeroBannerProps> = ({ data, button = true }) => {
   const scrollToSignup = () => {
     setTimeout(() => {
       const section = document.getElementById("signup");
       if (section) {
-        const offset = section.getBoundingClientRect().top + window.scrollY - 100;
+        const offset =
+          section.getBoundingClientRect().top + window.scrollY - 100;
         window.scrollTo({ top: offset, behavior: "smooth" });
       }
     }, 0);
@@ -39,11 +41,13 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ data }) => {
           <div className={styles.quote__description}>
             <p>{data.description}</p>
           </div>
-          <div className={styles.quote__btn}>
-            <button onClick={scrollToSignup}>
-              <span>Записаться</span>
-            </button>
-          </div>
+          {button && (
+            <div className={styles.quote__btn}>
+              <button onClick={scrollToSignup}>
+                <span>Записаться</span>
+              </button>
+            </div>
+          )}
         </div>
         <div className={styles.quote__image}>
           <Image
@@ -57,7 +61,7 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ data }) => {
         </div>
       </div>
     </section>
-  )
+  );
 };
 
 export default HeroBanner;
