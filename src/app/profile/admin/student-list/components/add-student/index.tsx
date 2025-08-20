@@ -4,10 +4,11 @@ import InputField from "@components/Fields/InputField";
 import React from "react";
 import styles from "./styles.module.scss";
 import { ChevronDown } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "src/store/store";
-import { getCourses } from "src/store/courseGroup/courseGroup.action";
+import { useAppSelector } from "src/store/store";
+import { useRegisterStudentMutation } from "src/store/admin/students/students";
+import type { Course } from "src/consts/types";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 // import SelectField from "@components/Fields/SelectField";
 // import { FolderUp } from "lucide-react";
 
@@ -21,27 +22,76 @@ interface FormData {
   phone: string;
   email: string;
   fullName: string;
+  role: string;
 }
-
+type ValidationError = {
+  type: string;
+  loc: string | string[];
+  msg: string;
+  input?: unknown;
+};
+type CoursesByLanguage = Record<string, Course[]>;
 const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
-  const { courses, loadingCourses, groups, loadingGroups } = useAppSelector(
-    (state) => state.groupsCourses
-  );
+  const { courses, groups } = useAppSelector((state) => state.groupsCourses);
+  const [registerStudent, { error, isLoading, isSuccess }] =
+    useRegisterStudentMutation();
 
-  courses?.map((course) => console.log(course.language_name));
-  groups?.map((group) => console.log(group.name, "GROUP NAME"));
-
-  const { control, watch } = useForm<FormData>({
+  const {
+    control,
+    watch,
+    register,
+    setError,
+    formState: { errors },
+    handleSubmit,
+  } = useForm<FormData>({
     defaultValues: {
       fullName: "",
       group: [],
       phone: "",
       email: "",
+      role: "student",
     },
   });
   const selectedCourse = watch("group");
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+      const selectedGroupIds =
+        groups?.filter((g) => data?.group.includes(g.name)).map((g) => g.id) ??
+        [];
+      if (selectedGroupIds?.length === 0) {
+        setError("group", {
+          type: "manual",
+          message: "Нужно выбрать хотя бы одну группу",
+        });
+        return;
+      }
+
+      const payload = {
+        full_name: data.fullName,
+        email: data.email,
+        phone_number: data.phone,
+        role: data.role,
+      };
+
+      const response = await registerStudent({
+        groupIds: selectedGroupIds,
+        studentData: payload,
+      }).unwrap();
+
+      console.log("Студент успешно добавлен:", response);
+      onClose();
+    } catch (err: unknown) {
+      console.error("Ошибка при добавлении студента:", err);
+
+      if (typeof err === "string") {
+        alert(err);
+      } else {
+        alert("Не удалось добавить студента");
+      }
+    }
+  };
 
   return (
     <ProfileModal
@@ -50,71 +100,70 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
       title="Добавление студента"
       size="lg"
     >
-      <form className={styles.form}>
-        <Controller
-          name="fullName"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              {...field}
-              isShadow
-              fullWidth
-              style={{ maxWidth: "45%" }}
-              label="Имя и фамилия"
-              placeholder="Введите имя и фамилию"
-            />
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <div className={styles.input_container}>
+          <InputField
+            {...register("fullName", {
+              required: "Имя и фамилия обязательны",
+              minLength: { value: 2, message: "Минимум 2 символа" },
+            })}
+            isShadow
+            fullWidth
+            // style={{ maxWidth: "45%" }}
+            label="Имя и фамилия"
+            placeholder="Введите имя и фамилию"
+          />
+          {errors.fullName && (
+            <span style={{ color: "red", fontSize: "14px" }}>
+              {errors.fullName.message}
+            </span>
           )}
-        />
+        </div>
 
-        <Controller
-          name="phone"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              {...field}
-              isShadow
-              fullWidth
-              style={{ maxWidth: "45%" }}
-              // value={user.phone_number || ""}
-              label="Телефон"
-              placeholder="+7 (999) 999-99-99"
-            />
+        <div className={styles.input_container}>
+          <InputField
+            {...register("phone", {
+              required: "Телефон обязателен",
+              pattern: {
+                value: /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/,
+                message: "Введите телефон в формате +7 (999) 999-99-99",
+              },
+            })}
+            isShadow
+            fullWidth
+            // style={{ width: "45%" }}
+            label="Телефон"
+            placeholder="+7 (999) 999-99-99"
+          />
+          {errors.phone && (
+            <span style={{ color: "red", fontSize: "14px" }}>
+              {errors.phone.message}
+            </span>
           )}
-        />
+        </div>
 
-        <Controller
-          name="email"
-          control={control}
-          render={({ field }) => (
-            <InputField
-              {...field}
-              isShadow
-              fullWidth
-              style={{ maxWidth: "45%" }}
-              // value={user.email}
-              label="Почта"
-              type="email"
-              placeholder="example@mail.com"
-            />
+        <div className={styles.input_container}>
+          <InputField
+            {...register("email", {
+              required: "Почта обязательна",
+              pattern: {
+                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                message: "Введите корректный email",
+              },
+            })}
+            isShadow
+            fullWidth
+            // style={{ maxWidth: "45%" }}
+            label="Почта"
+            type="email"
+            placeholder="example@mail.com"
+          />
+          {errors.email && (
+            <span style={{ color: "red", fontSize: "14px" }}>
+              {errors.email.message}
+            </span>
           )}
-        />
-        {/* <Controller
-          name="groups"
-          control={control}
-          render={({ field }) => (
-            <SelectField
-              {...field}
-              label="Выберите курс"
-              isShadow
-              fullWidth
-              style={{ maxWidth: "45%" }}
-              options={groups.map((group) => ({
-                label: group.label,
-                value: group.label,
-              }))}
-            />
-          )}
-        /> */}
+        </div>
         <div className={styles.dropdown}>
           {/* Dropdown trigger */}
           <button
@@ -137,7 +186,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className={styles.dropdown__content}>
               {/* Сначала группируем курсы по языку */}
               {Object.entries(
-                courses?.reduce((acc: any, course) => {
+                courses?.reduce((acc: CoursesByLanguage, course) => {
                   if (!acc[course.language_name]) {
                     acc[course.language_name] = [];
                   }
@@ -167,13 +216,19 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
                     <div style={{ paddingLeft: "10px", paddingBlock: "10px" }}>
                       <Controller
                         control={control}
+                        rules={{
+                          validate: (value) =>
+                            value.length > 0 ||
+                            "Нужно выбрать хотя бы одну группу",
+                        }}
                         name="group"
                         render={({ field }) => (
                           <div className={styles.dropdown__input_container}>
                             {groups
                               ?.filter((group) =>
                                 languageCourses.some(
-                                  (course) => course.id === group.course_id
+                                  (course: Course) =>
+                                    course.id === group.course_id
                                 )
                               )
                               .map((group) => (
@@ -217,56 +272,44 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
               ))}
             </div>
           )}
+          {errors.group && (
+            <span style={{ color: "red", fontSize: "14px" }}>
+              {errors.group.message}
+            </span>
+          )}
         </div>
 
         <div className={styles.button_container}>
-          <button className={styles.cancel__button} type="button">
+          <button
+            className={styles.cancel__button}
+            type="button"
+            onClick={onClose}
+          >
             Отмена
           </button>
-          <button className={styles.save__button}>Добавить</button>
+          <button className={styles.save__button} disabled={isLoading}>
+            {" "}
+            {isLoading ? "Сохраняем..." : "Добавить"}
+          </button>
         </div>
+        {error && (
+          <div style={{ color: "red" }}>
+            {Array.isArray(error) ? (
+              error.map((err: ValidationError, idx: number) => (
+                <p key={idx}>{err.msg}</p>
+              ))
+            ) : typeof error === "string" ? (
+              <p>{error}</p>
+            ) : (
+              <p>Не удалось зарегистрировать студента</p>
+            )}
+          </div>
+        )}
+
+        {isSuccess && <p style={{ color: "green" }}>Успешная регистрация!</p>}
       </form>
     </ProfileModal>
   );
 };
 
 export default AddStudent;
-export const groups = [
-  {
-    label: "Английский язык",
-    baseColor: "#4a90e2",
-    options: [
-      {
-        label: "Английский язык A1-0925",
-        value: "Английский язык A1-0925",
-        dotColor: "#9b59b6",
-      },
-      {
-        label: "Английский язык B1-0925",
-        value: "Английский язык B1-0925",
-        dotColor: "#2ecc71",
-      },
-      {
-        label: "Английский язык B2-0925",
-        value: "Английский язык B2-0925",
-        dotColor: "#f1c40f",
-      },
-      {
-        label: "Английский язык C1-0925",
-        value: "Английский язык C1-0925",
-        dotColor: "#e74c3c",
-      },
-    ],
-  },
-  {
-    label: "Японский язык",
-    baseColor: "#ff9800",
-    options: [
-      {
-        label: "Японский язык N5-0925",
-        value: "Японский язык N5-0925",
-        dotColor: "#ff9800",
-      },
-    ],
-  },
-];
