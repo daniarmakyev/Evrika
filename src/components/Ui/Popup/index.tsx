@@ -27,6 +27,11 @@ const PopupHeader: React.FC<PopupHeaderProps> = ({
           name: "Меню",
           link: "/profile/admin/teacher-list",
         },
+        {
+          id: 11,
+          name: "Финансы",
+          link: "/financeAdmin",
+        },
       ];
     } else if (user.role === "student") {
       menuItems = [

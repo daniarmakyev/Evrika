@@ -1,5 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import {
+  getMyPayments,
+  getPaymentRequisites,
+} from "src/store/finance/finance.action";
+import { getCourse } from "src/store/courseGroup/courseGroup.action";
 import Footer from "@components/Footer";
 import Header from "@components/Header";
 import HeroBanner from "@components/HeroBanner";
@@ -9,12 +15,8 @@ import classNames from "classnames";
 import SelectField from "@components/Fields/SelectField";
 import Link from "next/link";
 import Image from "next/image";
-import qr from "../../../public/assets/images/qr.png";
-import { Group, Course } from "src/consts/types";
-import { useAppDispatch, useAppSelector } from "src/store/store";
-import { getMyPayments } from "src/store/finance/finance.action";
-import { getCourse } from "src/store/courseGroup/courseGroup.action";
 import LoadingSpinner from "@components/Ui/LoadingSpinner";
+import { Group, Course } from "src/consts/types";
 
 const coursesPageBanner = {
   title: "Оплата",
@@ -26,19 +28,26 @@ const coursesPageBanner = {
 };
 
 const FinancePage = () => {
-  const { myPaymentsError, myPayments, myPaymentsLoading } = useAppSelector(
-    (state) => state.finance
-  );
+  const dispatch = useAppDispatch();
+
+  const {
+    myPaymentsError,
+    myPayments,
+    myPaymentsLoading,
+    paymentRequisites,
+    paymentRequisitesLoading,
+    paymentRequisitesError,
+  } = useAppSelector((state) => state.finance);
 
   const { error: courseError } = useAppSelector((state) => state.groupsCourses);
 
-  const dispatch = useAppDispatch();
-
   const [loadedCourses, setLoadedCourses] = useState<Course[]>([]);
   const [loadingCourses, setLoadingCourses] = useState(false);
-
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [groupFilter, setGroupFilter] = useState<string>("");
+  const [paymentType, setPaymentType] = useState<"offline" | "online">(
+    "offline"
+  );
 
   const loadPayments = (status?: "Оплачено" | "Не оплачено") => {
     dispatch(getMyPayments(status || undefined));
@@ -46,6 +55,7 @@ const FinancePage = () => {
 
   useEffect(() => {
     loadPayments();
+    dispatch(getPaymentRequisites());
   }, [dispatch]);
 
   useEffect(() => {
@@ -81,10 +91,6 @@ const FinancePage = () => {
     }
   }, [myPayments, dispatch]);
 
-  const [paymentType, setPaymentType] = useState<"offline" | "online">(
-    "offline"
-  );
-
   const handlePaymentTypeChange = (type: "offline" | "online") => {
     setPaymentType(type);
   };
@@ -96,6 +102,11 @@ const FinancePage = () => {
 
   const handleGroupFilterChange = (value: string) => {
     setGroupFilter(value);
+  };
+
+  const handleCopyAccount = (account: string) => {
+    navigator.clipboard.writeText(account);
+    alert("Лицевой счет скопирован!");
   };
 
   const getCoursePrice = (courseId: number): string => {
@@ -150,44 +161,89 @@ const FinancePage = () => {
     },
   ];
 
-  const renderOfflinePayment = () => (
-    <div className={styles.finance__pay}>
-      <div className={styles.finance__instructions}>
-        <h3 className={styles.instructions__title}>
-          Для проведения оффлайн-оплаты, пожалуйста, выполните следующие
-          действия:
-        </h3>
-        <ol className={styles.instructions__list}>
-          <li>
-            Скопируйте или сохраните наш лицевой счёт оплаты, указанный ниже.
-          </li>
-          <li>
-            Наш лицевой счёт:{" "}
-            <span className={styles.account}>5414 4132 9831 3123</span>
-            <br />
-            <span className={styles.note}>
-              (Вы можете <a href="#">скопировать</a> его или сделать скриншот)
-            </span>
-          </li>
-          <li>
-            Через пост-терминал (в любом удобном для вас месте) выберите способ
-            оплаты по номеру карты &quot;Оптима&quot; и введите указанный
-            лицевой счёт.
-            <br />
-            После оплаты сфотографируйте чек, перейдите в профиль, откройте
-            вкладку <strong>{'"Чеки"'}</strong>, загрузите фотографию чека и
-            ожидайте обратной связи от администратора.
-          </li>
-        </ol>
-        <Link href={"/profile/checks"} className={styles.checkLink}>
-          Чеки
-        </Link>
+  const renderOfflinePayment = () => {
+    const currentRequisite = paymentRequisites?.[0]; // Берем первый реквизит
+
+    if (paymentRequisitesLoading) {
+      return (
+        <div className={styles.finance__pay}>
+          <LoadingSpinner />
+          <p>Загружаем реквизиты...</p>
+        </div>
+      );
+    }
+
+    if (paymentRequisitesError || !currentRequisite) {
+      return (
+        <div className={styles.finance__pay}>
+          <div className={styles.finance__instructions}>
+            <h3 className={styles.instructions__title}>
+              Ошибка загрузки реквизитов
+            </h3>
+            <p>Попробуйте обновить страницу или обратитесь к администратору.</p>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={styles.finance__pay}>
+        <div className={styles.finance__instructions}>
+          <h3 className={styles.instructions__title}>
+            Для проведения оффлайн-оплаты, пожалуйста, выполните следующие
+            действия:
+          </h3>
+          <ol className={styles.instructions__list}>
+            <li>
+              Скопируйте или сохраните наш лицевой счёт оплаты, указанный ниже.
+            </li>
+            <li>
+              Наш лицевой счёт:{" "}
+              <span className={styles.account}>
+                <b>{currentRequisite.account}</b>
+              </span>
+              <br />
+              <span>
+                Банк: <b>{currentRequisite.bank_name}</b>
+              </span>
+              <br />
+              <span className={styles.note}>
+                (Вы можете{" "}
+                <button
+                  type="button"
+                  onClick={() => handleCopyAccount(currentRequisite.account)}
+                  className={styles.copyText}
+                >
+                  скопировать
+                </button>{" "}
+                его или сделать скриншот)
+              </span>
+            </li>
+            <li>
+              Через пост-терминал (в любом удобном для вас месте) выберите
+              способ оплаты по номеру карты &quot;{currentRequisite.bank_name}
+              &quot; и введите указанный лицевой счёт.
+              <br />
+              После оплаты сфотографируйте чек, перейдите в профиль, откройте
+              вкладку <strong>&quot;Чеки&quot;</strong>, загрузите фотографию
+              чека и ожидайте обратной связи от администратора.
+            </li>
+          </ol>
+          <Link href="/profile/checks" className={styles.checkLink}>
+            Чеки
+          </Link>
+        </div>
+        <div className={styles.finance__qr}>
+          <Image
+            src={currentRequisite.qr}
+            width={400}
+            height={400}
+            alt="QR код для оплаты"
+          />
+        </div>
       </div>
-      <div className={styles.finance__qr}>
-        <Image src={qr} width={400} height={400} alt="QR код для оплаты" />
-      </div>
-    </div>
-  );
+    );
+  };
 
   const renderOnlinePayment = () => (
     <div className={styles.finance__onlinePayment}>
@@ -300,7 +356,7 @@ const FinancePage = () => {
                   })}
                   onClick={() => handlePaymentTypeChange("offline")}
                 >
-                  Оффлайн оплата
+                  По лицевому счету и qr
                 </button>
                 <button
                   className={classNames(styles.paymentSwitcher__button, {
@@ -309,7 +365,7 @@ const FinancePage = () => {
                   })}
                   onClick={() => handlePaymentTypeChange("online")}
                 >
-                  Онлайн оплата
+                  Оплата visa/mastercard
                 </button>
               </div>
 

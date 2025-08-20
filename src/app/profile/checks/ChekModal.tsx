@@ -112,8 +112,35 @@ const CheckModal: React.FC<CheckModalProps> = ({
     onClose();
   };
 
-  const getImageUrl = (filename: string) => {
-    return `https://example.com/uploads/${filename}`;
+  const getFileExtension = (filename: string) => {
+    return filename.split(".").pop()?.toLowerCase() || "";
+  };
+
+  const getFileIcon = (filename: string) => {
+    const extension = getFileExtension(filename);
+
+    switch (extension) {
+      case "pdf":
+        return "📄";
+      case "doc":
+      case "docx":
+        return "📝";
+      case "xls":
+      case "xlsx":
+        return "📊";
+      case "txt":
+        return "📃";
+      case "jpg":
+      case "jpeg":
+      case "png":
+      case "gif":
+        return "🖼️";
+      case "zip":
+      case "rar":
+        return "🗜️";
+      default:
+        return "📁";
+    }
   };
 
   return (
@@ -137,18 +164,13 @@ const CheckModal: React.FC<CheckModalProps> = ({
           </div>
         </div>
 
-        <div className={styles.check__image}>
+        <div className={styles.check__file}>
           <h4>Чек:</h4>
-          <div className={styles.image__container}>
-            <img
-              src={getImageUrl(check.check)}
-              alt="Чек"
-              className={styles.check__img}
-              onError={(e) => {
-                e.currentTarget.src =
-                  "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjRjVGNUY1Ii8+CjxwYXRoIGQ9Ik0xMDAgNzVMMTI1IDEwMEwxMDAgMTI1TDc1IDEwMEwxMDAgNzVaIiBmaWxsPSIjQ0NDIi8+Cjwvdmc+";
-              }}
-            />
+          <div className={styles.file__preview}>
+            <div className={styles.file__icon}>{getFileIcon(check.check)}</div>
+            <div className={styles.file__info}>
+              <p className={styles.file__name}>{check.check}</p>
+            </div>
           </div>
         </div>
 
@@ -157,7 +179,7 @@ const CheckModal: React.FC<CheckModalProps> = ({
             <h4>Заменить чек:</h4>
             <input
               type="file"
-              accept="image/*"
+              accept="image/*,.pdf,.doc,.docx,.txt"
               onChange={handleFileChange}
               className={styles.file__input}
             />

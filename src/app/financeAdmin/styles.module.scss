@@ -19,7 +19,6 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
-
     flex-direction: column;
     gap: 20px;
   }
@@ -35,11 +34,17 @@
     gap: 40px;
     align-items: center;
   }
+
   &__title {
     font-size: 24px;
     font-weight: 800;
     line-height: 100%;
     padding-bottom: 20px;
+  }
+
+  &__description {
+    color: #666;
+    margin-bottom: 20px;
   }
 
   &__pay {
@@ -67,6 +72,7 @@
     }
 
     .account {
+      font-weight: 600;
       font-size: 18px;
       color: $black;
     }
@@ -99,10 +105,129 @@
   &__qr {
     max-width: 50%;
     width: 100%;
+    max-height: 350px;
+    div {
+      margin-left: auto;
+      margin-right: auto;
+    }
     img {
       max-height: 250px;
       width: 100%;
+      margin-left: auto;
     }
+  }
+
+  &__qrContainer {
+    position: relative;
+    max-height: 400px;
+    max-width: 400px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &--empty {
+      border: 2px dashed #ccc;
+      background: #f9f9f9;
+    }
+
+    &--filled {
+      border: none;
+      background: transparent;
+    }
+  }
+
+  &__qrOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 8px;
+    font-size: 18px;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  &__qrPlaceholder {
+    text-align: center;
+    color: #999;
+
+    &Icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+  }
+
+  &__editContainer {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__editInput {
+    padding: 4px 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: inherit;
+    font-weight: 400;
+  }
+
+  &__editButton {
+    padding: 4px 8px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+
+    &--save {
+      background: #4caf50;
+    }
+
+    &--cancel {
+      background: #f44336;
+    }
+  }
+
+  &__editableField {
+    cursor: pointer;
+    border-bottom: 1px dashed #999;
+    padding: 2px 4px;
+  }
+
+  &__copyButton {
+    font-weight: 600;
+    color: $primary;
+    cursor: pointer;
+    text-decoration: underline;
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &__hiddenInput {
+    display: none;
+  }
+
+  &__error {
+    margin-top: 20px;
+    padding: 12px;
+    background: #fee;
+    border: 1px solid #fcc;
+    border-radius: 4px;
+    color: #c00;
   }
 
   .status {
@@ -119,6 +244,7 @@
     background-color: $danger;
     color: $White;
   }
+
   &__onlinePayment {
     display: flex;
     justify-content: center;
@@ -138,6 +264,7 @@
   justify-content: space-around;
   margin-bottom: 30px;
   padding: 10px;
+
   &__button {
     padding: 6px 24px;
     border: none;
@@ -164,11 +291,4 @@
       margin-right: 4px;
     }
   }
-}
-
-.copyText {
-  font-weight: 600;
-  color: $primary;
-  cursor: pointer;
-  text-decoration: underline;
 }

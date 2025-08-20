@@ -37,9 +37,13 @@
     padding-bottom: 20px;
   }
 }
-
 .table__container {
   overflow-x: auto;
+
+  &__checks {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
 }
 
 .view__button {

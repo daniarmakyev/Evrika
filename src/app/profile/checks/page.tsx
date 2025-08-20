@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { getMyChecks } from "src/store/finance/finance.action";
+import { getMyChecks, createCheck } from "src/store/finance/finance.action";
 import styles from "./styles.module.scss";
 import CheckModal from "./ChekModal";
 import Table from "@components/Table";
@@ -13,14 +13,17 @@ import { Check } from "src/consts/types";
 
 const ChecksTable: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { myChecks, myChecksLoading, myChecksError } = useAppSelector(
-    (state) => state.finance
-  );
+  const {
+    myChecks,
+    myChecksLoading,
+    myChecksError,
+    createCheckLoading,
+    createCheckError,
+  } = useAppSelector((state) => state.finance);
 
   const [selectedCheck, setSelectedCheck] = useState<Check | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [uploading, setUploading] = useState(false);
   const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>(
     undefined
   );
@@ -71,21 +74,25 @@ const ChecksTable: React.FC = () => {
   };
 
   const handleUpload = async () => {
-    if (!uploadedFile) return;
+    if (!uploadedFile || !selectedGroupId) {
+      alert("Выберите файл и группу");
+      return;
+    }
 
-    setUploading(true);
     try {
-      console.log("Uploading file:", uploadedFile.name);
+      await dispatch(
+        createCheck({
+          file: uploadedFile,
+          group_id: selectedGroupId,
+        })
+      ).unwrap();
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      dispatch(getMyChecks());
 
       setUploadedFile(null);
-
-      dispatch(getMyChecks(selectedGroupId));
     } catch (error) {
       console.error("Upload error:", error);
-    } finally {
-      setUploading(false);
+      alert("Ошибка при загрузке чека");
     }
   };
 
@@ -138,6 +145,7 @@ const ChecksTable: React.FC = () => {
             isShadow
             options={groupOptions}
             label="Группы"
+            value={selectedGroupId?.toString() || "all"}
             onChange={handleGroupChange}
           />
           <DragAndDrop
@@ -148,7 +156,7 @@ const ChecksTable: React.FC = () => {
             }}
             accept="image/*,.pdf"
             maxSize={10 * 1024 * 1024}
-          ></DragAndDrop>
+          />
 
           {uploadedFile && (
             <div className={styles.file__preview}>
@@ -161,14 +169,18 @@ const ChecksTable: React.FC = () => {
               <div className={styles.file__actions}>
                 <button
                   onClick={handleUpload}
-                  disabled={uploading}
+                  disabled={
+                    createCheckLoading ||
+                    !selectedGroupId ||
+                    selectedGroupId === undefined
+                  }
                   className={styles.send__button}
                 >
-                  {uploading ? "Отправка..." : "Отправить чек"}
+                  {createCheckLoading ? "Отправка..." : "Отправить чек"}
                 </button>
                 <button
                   onClick={removeFile}
-                  disabled={uploading}
+                  disabled={createCheckLoading}
                   className={styles.remove__button}
                 >
                   Удалить
@@ -176,22 +188,35 @@ const ChecksTable: React.FC = () => {
               </div>
             </div>
           )}
+
+          {!selectedGroupId && uploadedFile && (
+            <p className={styles.error__message}>
+              Выберите группу для загрузки чека
+            </p>
+          )}
+
+          {createCheckError && (
+            <p className={styles.error__message}>Ошибка при создании чека</p>
+          )}
         </div>
       </div>
+
       <div className={styles.checks__content}>
         <h2 className={styles.checks__title}>Чеки</h2>
         <div className={styles.table__container}>
-          {myChecksLoading ? (
-            <div className={styles.loading}>Загрузка чеков...</div>
-          ) : myChecksError ? (
-            <div className={styles.error}>Ошибка загрузки чеков</div>
-          ) : (
-            <Table
-              columns={columns}
-              data={myChecks || []}
-              emptyMessage="Чеки не найдены"
-            />
-          )}
+          <div className={styles.table__container__checks}>
+            {myChecksLoading ? (
+              <div className={styles.loading}>Загрузка чеков...</div>
+            ) : myChecksError ? (
+              <div className={styles.error}>Ошибка загрузки чеков</div>
+            ) : (
+              <Table
+                columns={columns}
+                data={myChecks || []}
+                emptyMessage="Чеки не найдены"
+              />
+            )}
+          </div>
         </div>
       </div>
 
@@ -202,13 +227,11 @@ const ChecksTable: React.FC = () => {
         onUpdate={(updatedCheck: Check) => {
           console.log("Updated check:", updatedCheck);
           handleCloseModal();
-
           dispatch(getMyChecks(selectedGroupId));
         }}
         onDelete={(checkId: number) => {
           console.log("Deleted check ID:", checkId);
           handleCloseModal();
-
           dispatch(getMyChecks(selectedGroupId));
         }}
       />
