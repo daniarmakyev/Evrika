@@ -6,7 +6,6 @@ import {
   editFinanceStatus,
   getFinance,
 } from "src/store/finance/finance.action";
-import { updatePaymentStatus } from "src/store/finance/finance.slice";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import Table from "@components/Table";
@@ -15,7 +14,7 @@ import SelectField from "@components/Fields/SelectField";
 import SearchIcon from "@icons/searchIcon.svg";
 import { useModal } from "@context/ModalContext";
 import ProfileModal from "@components/ProfileModal";
-import { FinanceItem, FinanceTableItem, Check, Group } from "src/consts/types";
+import { FinanceTableItem, Check, Group } from "src/consts/types";
 
 const TableSkeleton = () => (
   <div className={styles.tableSkeleton}>
@@ -69,9 +68,14 @@ export default function FinancePage() {
     { label: "Оплачено", value: "Оплачено" },
     { label: "Не оплачено", value: "Не оплачено" },
   ];
-
+  interface FinanceParams {
+    page: number;
+    size: number;
+    group_id?: string | number;
+    search?: string;
+  }
   const fetchFinanceData = useCallback(() => {
-    const params: any = {
+    const params: FinanceParams = {
       page: currentPage,
       size: 20,
     };
@@ -84,7 +88,12 @@ export default function FinancePage() {
       params.search = searchTerm.trim();
     }
 
-    dispatch(getFinance(params));
+    const paramsForDispatch = {
+      ...params,
+      group_id: params.group_id !== undefined ? Number(params.group_id) : undefined,
+    };
+
+    dispatch(getFinance(paramsForDispatch));
   }, [dispatch, selectedGroupId, searchTerm, currentPage]);
 
   useEffect(() => {

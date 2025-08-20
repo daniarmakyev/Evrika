@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import {
   getMyPayments,
@@ -49,14 +49,17 @@ const FinancePage = () => {
     "offline"
   );
 
-  const loadPayments = (status?: "Оплачено" | "Не оплачено") => {
-    dispatch(getMyPayments(status || undefined));
-  };
+  const loadPayments = useCallback(
+    (status?: "Оплачено" | "Не оплачено") => {
+      dispatch(getMyPayments(status || undefined));
+    },
+    [dispatch]
+  );
 
   useEffect(() => {
     loadPayments();
     dispatch(getPaymentRequisites());
-  }, [dispatch]);
+  }, [dispatch, loadPayments]);
 
   useEffect(() => {
     if (myPayments && myPayments.length > 0) {
