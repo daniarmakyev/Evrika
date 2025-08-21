@@ -103,7 +103,6 @@ button {
   margin: 0;
 }
 
-ol,
 ul {
   list-style: none;
 }
@@ -133,7 +132,7 @@ input {
   background: transparent;
   &::selection {
     background-color: $primary;
-    color: $White; 
+    color: $White;
   }
 
   &::-moz-selection {
