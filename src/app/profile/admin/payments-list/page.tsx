@@ -48,13 +48,8 @@ interface ChecksModalData {
 
 export default function FinancePage() {
   const dispatch = useAppDispatch();
-  const { 
-    financeData, 
-    financeLoading, 
-    financeError,
-    downloadCheckLoading,
-    downloadCheckError 
-  } = useAppSelector((state) => state.finance);
+  const { financeData, financeLoading, financeError, downloadCheckError } =
+    useAppSelector((state) => state.finance);
 
   const [filteredFinance, setFilteredFinance] = useState<FinanceTableItem[]>(
     []
@@ -66,7 +61,9 @@ export default function FinancePage() {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [groupDetails, setGroupDetails] = useState<Group | null>(null);
-  const [downloadingCheckId, setDownloadingCheckId] = useState<number | null>(null);
+  const [downloadingCheckId, setDownloadingCheckId] = useState<number | null>(
+    null
+  );
 
   const checksModal = useModal<ChecksModalData>("checks");
 
@@ -192,8 +189,12 @@ export default function FinancePage() {
           filename: check.check.split("/").pop() || `check_${check.id}`,
         })
       ).unwrap();
-    } catch (error: any) {
-      console.error("Error downloading check:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error downloading check:", error.message);
+      } else {
+        console.error("Unknown error downloading check:", error);
+      }
     } finally {
       setDownloadingCheckId(null);
     }

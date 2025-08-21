@@ -80,8 +80,16 @@ const ChecksTable: React.FC = () => {
           filename: check.check.split("/").pop() || `check_${check.id}`,
         })
       ).unwrap();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error downloading check:", error);
+
+      if (error instanceof Error) {
+        console.error("Error message:", error.message);
+      } else if (typeof error === "string") {
+        console.error("Error string:", error);
+      } else {
+        console.error("Unknown error occurred");
+      }
     }
   };
 
@@ -131,7 +139,7 @@ const ChecksTable: React.FC = () => {
     title: string;
     width?: string;
     isButton?: boolean;
-    render: (value: any, row: Check) => React.ReactNode;
+    render: (value: string, row: Check) => React.ReactNode;
   }[] = [
     {
       key: "group",

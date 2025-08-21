@@ -74,12 +74,12 @@ const CheckModal: React.FC<CheckModalProps> = ({
     });
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setNewCheckFile(e.target.files[0]);
-      setError(null);
-    }
-  };
+  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     setNewCheckFile(e.target.files[0]);
+  //     setError(null);
+  //   }
+  // };
 
   const handleUpdate = async () => {
     if (!newCheckFile) {
@@ -103,9 +103,16 @@ const CheckModal: React.FC<CheckModalProps> = ({
 
       setIsEditing(false);
       setNewCheckFile(null);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error updating check:", error);
-      setError(error || "Произошла ошибка при обновлении чека");
+
+      if (error instanceof Error) {
+        setError(error.message);
+      } else if (typeof error === "string") {
+        setError(error);
+      } else {
+        setError("Произошла ошибка при обновлении чека");
+      }
     } finally {
       setLoading(false);
     }
@@ -133,9 +140,16 @@ const CheckModal: React.FC<CheckModalProps> = ({
           filename: check.check.split("/").pop() || `check_${check.id}`,
         })
       ).unwrap();
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Error downloading check:", error);
-      setError(error || "Произошла ошибка при скачивании файла");
+
+      if (error instanceof Error) {
+        setError(error.message);
+      } else if (typeof error === "string") {
+        setError(error);
+      } else {
+        setError("Произошла ошибка при скачивании файла");
+      }
     }
   };
 
