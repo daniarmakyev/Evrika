@@ -5,7 +5,7 @@ import classNames from "classnames";
 import styles from "./styles.module.scss";
 import StudentGroups from "./_components/StudentGroups";
 import { useParams } from "next/navigation";
-import { useGetUserInfoQuery } from "src/store/admin/students/students";
+import { useGetUserInfoQuery, useGetGroupListQuery } from "src/store/admin/students/students";
 
 
 const StudentDetailPage = () => {
@@ -14,7 +14,8 @@ const StudentDetailPage = () => {
   const { data, error, isLoading, refetch } = useGetUserInfoQuery({
     user_id: id,
   });
-
+  const{data:groupList, error:groupListError,isLoading:groupListLoading}=useGetGroupListQuery()
+  console.log(groupList)
   if (error) {
     return (
       <div className={styles.errorMessage}>

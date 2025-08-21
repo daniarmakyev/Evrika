@@ -2,7 +2,12 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "src/consts/api";
-import type { StudentsResponse, GetStudentsParams,User} from "src/consts/types";
+import type {
+  StudentsResponse,
+  GetStudentsParams,
+  User,
+  CoursesResponse,
+} from "src/consts/types";
 import qs from "qs";
 
 interface Student {
@@ -42,7 +47,7 @@ export const studentApi = createApi({
       return headers;
     },
   }),
-
+  tagTypes: ["Students"],
   endpoints: (builder) => ({
     registerStudent: builder.mutation<
       Student,
@@ -69,13 +74,28 @@ export const studentApi = createApi({
     getStudentList: builder.query<StudentsResponse, GetStudentsParams>({
       query: ({ user_id, page = 1, size = 20 }) =>
         `/user/students/?page=${page}&size=${size}&group_id=${user_id}`,
+      providesTags: ["Students"],
     }),
     getUserInfo: builder.query<User, { user_id: string }>({
-      query: ({ user_id}) =>
-        `/user/${user_id}`,
+      query: ({ user_id }) => `/user/${user_id}`,
+    }),
+    getGroupList: builder.query<CoursesResponse, void>({
+      query: () => `/group-students/detail-list`,
+    }),
+    deleteStudent: builder.mutation<void, number>({
+      query: (id) => ({
+        url: `/user/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Students"],
     }),
   }),
 });
 
-export const { useRegisterStudentMutation, useGetStudentListQuery,useGetUserInfoQuery } =
-  studentApi;
+export const {
+  useRegisterStudentMutation,
+  useGetStudentListQuery,
+  useGetUserInfoQuery,
+  useGetGroupListQuery,
+  useDeleteStudentMutation,
+} = studentApi;

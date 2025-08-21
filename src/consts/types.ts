@@ -391,3 +391,41 @@ export type User = {
   role: "teacher" | "student" | "admin"; 
   password: string;
 };
+
+type Teacher2 = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  role: string;
+  password: string;
+};
+
+type Student2 = {
+  id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  role: string; // хотя тут у тебя указано "teacher", наверное должно быть "student"
+  is_active: boolean;
+  payment_status: "Оплачено" | "Не оплачено" | string;
+};
+
+type Course2 = {
+  id: number;
+  name: string;
+  created_at: string; // ISO string
+  start_date: string; // YYYY-MM-DD
+  end_date: string;   // YYYY-MM-DD
+  approximate_lesson_start: string; // время в ISO формате
+  is_active: boolean;
+  is_archived: boolean;
+  course_id: number;
+  teacher: Teacher2;
+  teacher_id: number;
+  students: Student2[];
+};
+
+// это твой полный ответ от API
+export type CoursesResponse = Course2[];

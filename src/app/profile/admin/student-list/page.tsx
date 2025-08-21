@@ -13,7 +13,10 @@ import { Search } from "lucide-react";
 import SelectField from "@components/Fields/SelectField";
 import { Download } from "lucide-react";
 import AddStudent from "./components/add-student";
-import { useGetStudentListQuery } from "src/store/admin/students/students";
+import {
+  useGetStudentListQuery,
+  useDeleteStudentMutation,
+} from "src/store/admin/students/students";
 import { useAppSelector } from "src/store/store";
 import type { Student } from "src/consts/types";
 import { useRouter } from "next/navigation";
@@ -21,6 +24,7 @@ import { useRouter } from "next/navigation";
 export default function StudentList() {
   const [openRowId, setOpenRowId] = useState<number | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const { courses, groups } = useAppSelector((state) => state.groupsCourses);
@@ -38,8 +42,12 @@ export default function StudentList() {
     { skip: !user_id }
   );
   console.log(data?.students, "Student", error);
+  const filteredStudents = data?.students?.filter((student: Student) =>
+    student.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  const [deleteStudent] = useDeleteStudentMutation();
 
-  const handleOptionClick = (option: string, student: Student) => {
+  const handleOptionClick = async (option: string, student: Student) => {
     switch (option) {
       case "Редактировать":
         console.log("Edit student:", student);
@@ -48,11 +56,21 @@ export default function StudentList() {
 
       case "Удалить":
         console.log("Delete student:", student.id);
-        // call delete mutation
+        if (
+          window.confirm(
+            `Вы уверены, что хотите удалить студента: ${student.full_name}?`
+          )
+        ) {
+          try {
+            await deleteStudent(student.id).unwrap();
+            alert(`Студент ${student.full_name} успешно удалён`);
+          } catch (err: any) {
+            alert(`Ошибка при удалении: ${err.message}`);
+          }
+        }
         break;
 
       case "Посмотреть":
-        console.log("View student:", student);
         router.push(`/profile/admin/student-list/${student.id}`);
 
         break;
@@ -244,6 +262,8 @@ export default function StudentList() {
                 isShadow
                 leftIcon={<Search />}
                 placeholder="Поиск по имени"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             <div>
@@ -276,7 +296,7 @@ export default function StudentList() {
           <div className={styles.homework__table}>
             <Table
               columns={homeWorkColumns}
-              data={data?.students}
+              data={filteredStudents}
               emptyMessage="Нет данных "
             />
           </div>
