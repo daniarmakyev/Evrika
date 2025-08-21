@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "src/store/store";
 import {
   editFinanceStatus,
   getFinance,
+  downloadCheck,
 } from "src/store/finance/finance.action";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
@@ -14,6 +15,7 @@ import SelectField from "@components/Fields/SelectField";
 import SearchIcon from "@icons/searchIcon.svg";
 import { useModal } from "@context/ModalContext";
 import ProfileModal from "@components/ProfileModal";
+import Pagination from "@components/Pagination";
 import { FinanceTableItem, Check, Group } from "src/consts/types";
 
 const TableSkeleton = () => (
@@ -46,9 +48,13 @@ interface ChecksModalData {
 
 export default function FinancePage() {
   const dispatch = useAppDispatch();
-  const { financeData, financeLoading, financeError } = useAppSelector(
-    (state) => state.finance
-  );
+  const { 
+    financeData, 
+    financeLoading, 
+    financeError,
+    downloadCheckLoading,
+    downloadCheckError 
+  } = useAppSelector((state) => state.finance);
 
   const [filteredFinance, setFilteredFinance] = useState<FinanceTableItem[]>(
     []
@@ -60,6 +66,7 @@ export default function FinancePage() {
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [groupDetails, setGroupDetails] = useState<Group | null>(null);
+  const [downloadingCheckId, setDownloadingCheckId] = useState<number | null>(null);
 
   const checksModal = useModal<ChecksModalData>("checks");
 
@@ -68,12 +75,14 @@ export default function FinancePage() {
     { label: "Оплачено", value: "Оплачено" },
     { label: "Не оплачено", value: "Не оплачено" },
   ];
+
   interface FinanceParams {
     page: number;
     size: number;
     group_id?: string | number;
     search?: string;
   }
+
   const fetchFinanceData = useCallback(() => {
     const params: FinanceParams = {
       page: currentPage,
@@ -90,7 +99,8 @@ export default function FinancePage() {
 
     const paramsForDispatch = {
       ...params,
-      group_id: params.group_id !== undefined ? Number(params.group_id) : undefined,
+      group_id:
+        params.group_id !== undefined ? Number(params.group_id) : undefined,
     };
 
     dispatch(getFinance(paramsForDispatch));
@@ -173,6 +183,22 @@ export default function FinancePage() {
     });
   };
 
+  const handleDownloadCheck = async (check: Check) => {
+    setDownloadingCheckId(check.id);
+    try {
+      await dispatch(
+        downloadCheck({
+          check_id: check.id,
+          filename: check.check.split("/").pop() || `check_${check.id}`,
+        })
+      ).unwrap();
+    } catch (error: any) {
+      console.error("Error downloading check:", error);
+    } finally {
+      setDownloadingCheckId(null);
+    }
+  };
+
   const handleStatusChange = (paymentId: number) => {
     const originalPayment = financeData?.items.find(
       (item) => item.payment_detail_id === paymentId
@@ -205,6 +231,10 @@ export default function FinancePage() {
     ).then(() => {
       fetchFinanceData();
     });
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -306,11 +336,12 @@ export default function FinancePage() {
       isButton: true,
       render: (_: string, row: Check) => (
         <button
-          onClick={() => window.open(row.check, "_blank")}
+          onClick={() => handleDownloadCheck(row)}
           className={styles.checkNameButton}
-          title="Посмотреть чек"
+          title="Скачать чек"
+          disabled={downloadingCheckId === row.id}
         >
-          Скачать
+          {downloadingCheckId === row.id ? "Скачивание..." : "Скачать"}
         </button>
       ),
     },
@@ -373,39 +404,11 @@ export default function FinancePage() {
 
                 {financeData?.pagination &&
                   financeData.pagination.total_pages > 1 && (
-                    <div className={styles.pagination}>
-                      <button
-                        onClick={() =>
-                          setCurrentPage((prev) => Math.max(1, prev - 1))
-                        }
-                        disabled={currentPage === 1}
-                        className={styles.paginationButton}
-                      >
-                        Назад
-                      </button>
-
-                      <span className={styles.paginationInfo}>
-                        Страница {currentPage} из{" "}
-                        {financeData.pagination.total_pages}
-                      </span>
-
-                      <button
-                        onClick={() =>
-                          setCurrentPage((prev) =>
-                            Math.min(
-                              financeData.pagination.total_pages,
-                              prev + 1
-                            )
-                          )
-                        }
-                        disabled={
-                          currentPage === financeData.pagination.total_pages
-                        }
-                        className={styles.paginationButton}
-                      >
-                        Далее
-                      </button>
-                    </div>
+                    <Pagination
+                      totalPages={financeData.pagination.total_pages}
+                      currentPage={currentPage}
+                      handlePageChange={handlePageChange}
+                    />
                   )}
               </>
             )}
@@ -421,6 +424,11 @@ export default function FinancePage() {
       >
         {checksModal.data && (
           <div className={styles.checksModalContent}>
+            {downloadCheckError && (
+              <div className={styles.error__message}>
+                <span className={styles.error__text}>{downloadCheckError}</span>
+              </div>
+            )}
             <div className={styles.tableContainer}>
               <Table
                 columns={checksColumns}

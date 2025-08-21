@@ -39,6 +39,12 @@ interface UpdatePaymentRequisiteParams {
     qr?: File;
 }
 
+interface UpdateCheckParams {
+    check_id: number;
+    file: File;
+    group_id?: number;
+}
+
 export const getMyPayments = createAsyncThunk<
     PaymentDetail[],
     "Оплачено" | "Не оплачено" | undefined,
@@ -127,6 +133,121 @@ export const createCheck = createAsyncThunk<
             if (axios.isAxiosError<CustomApiError>(err)) {
                 return rejectWithValue(
                     err.response?.data.detail || "Ошибка создания чека"
+                );
+            }
+            return rejectWithValue("Неизвестная ошибка!");
+        }
+    }
+);
+
+export const updateCheck = createAsyncThunk<
+    Check,
+    UpdateCheckParams,
+    { rejectValue: string }
+>(
+    "finance/updateCheck",
+    async ({ check_id, file, group_id }, { rejectWithValue }) => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+
+            const searchParams = new URLSearchParams();
+            if (group_id) {
+                searchParams.append('group_id', group_id.toString());
+            }
+
+            const queryString = searchParams.toString();
+            const url = `/checks/${check_id}${queryString ? `?${queryString}` : ''}`;
+
+            const response = await $apiPrivate.patch<Check>(
+                url,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            return response.data;
+        } catch (err) {
+            if (axios.isAxiosError<CustomApiError>(err)) {
+                if (err.response?.status === 404) {
+                    return rejectWithValue("Check not found");
+                }
+                return rejectWithValue(
+                    err.response?.data.detail || "Ошибка обновления чека"
+                );
+            }
+            return rejectWithValue("Неизвестная ошибка!");
+        }
+    }
+);
+
+export const downloadCheck = createAsyncThunk<
+    void,
+    { check_id: number; filename?: string },
+    { rejectValue: string }
+>(
+    "finance/downloadCheck",
+    async ({ check_id, filename }, { rejectWithValue }) => {
+        try {
+            const response = await $apiPrivate.get(
+                `/checks/${check_id}/download`,
+                {
+                    responseType: 'blob',
+                }
+            );
+
+            let downloadFilename = filename || `check_${check_id}`;
+
+            const contentDisposition = response.headers['content-disposition'];
+            if (contentDisposition) {
+                const filenameMatch = contentDisposition.match(/filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/);
+                if (filenameMatch && filenameMatch[1]) {
+                    downloadFilename = filenameMatch[1].replace(/['"]/g, '');
+                }
+            }
+            const blob = new Blob([response.data]);
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = downloadFilename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+        } catch (err) {
+            if (axios.isAxiosError<CustomApiError>(err)) {
+                if (err.response?.status === 404) {
+                    return rejectWithValue("Файл не найден");
+                }
+                return rejectWithValue(
+                    err.response?.data.detail || "Ошибка при скачивании файла"
+                );
+            }
+            return rejectWithValue("Неизвестная ошибка!");
+        }
+    }
+);
+
+export const deleteCheck = createAsyncThunk<
+    void,
+    number,
+    { rejectValue: string }
+>(
+    "finance/deleteCheck",
+    async (check_id, { rejectWithValue }) => {
+        try {
+            await $apiPrivate.delete(`/checks/${check_id}`);
+        } catch (err) {
+            if (axios.isAxiosError<CustomApiError>(err)) {
+                if (err.response?.status === 404) {
+                    return rejectWithValue("Чек не найден");
+                }
+                return rejectWithValue(
+                    err.response?.data.detail || "Ошибка при удалении чека"
                 );
             }
             return rejectWithValue("Неизвестная ошибка!");

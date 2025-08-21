@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PaymentDetail, Check, FinanceItem } from "src/consts/types";
-import { getMyPayments, getMyChecks, createCheck, getFinance, getPaymentRequisites, createPaymentRequisite, updatePaymentRequisite } from "./finance.action";
+import { getMyPayments, getMyChecks, createCheck, downloadCheck, getFinance, getPaymentRequisites, createPaymentRequisite, updatePaymentRequisite } from "./finance.action";
 
 interface PaymentRequisite {
     id: number;
@@ -26,7 +26,9 @@ interface FinanceState {
     myChecksLoading: boolean;
     myChecksError: boolean;
     createCheckLoading: boolean;
-    createCheckError: boolean;
+    createCheckError: string | null;
+    downloadCheckLoading: boolean;
+    downloadCheckError: string | null;
     financeData: FinanceResponse | null;
     financeLoading: boolean;
     financeError: boolean;
@@ -47,7 +49,9 @@ const INIT_STATE: FinanceState = {
     myChecksLoading: false,
     myChecksError: false,
     createCheckLoading: false,
-    createCheckError: false,
+    createCheckError: null,
+    downloadCheckLoading: false,
+    downloadCheckError: null,
     financeData: null,
     financeLoading: false,
     financeError: false,
@@ -106,15 +110,27 @@ export const financeSlice = createSlice({
             })
             .addCase(createCheck.pending, (state) => {
                 state.createCheckLoading = true;
-                state.createCheckError = false;
+                state.createCheckError = null;
             })
             .addCase(createCheck.fulfilled, (state) => {
                 state.createCheckLoading = false;
-                state.createCheckError = false;
+                state.createCheckError = null;
             })
-            .addCase(createCheck.rejected, (state) => {
+            .addCase(createCheck.rejected, (state, { payload }) => {
                 state.createCheckLoading = false;
-                state.createCheckError = true;
+                state.createCheckError = payload || "Не удалось создать чек";
+            })
+            .addCase(downloadCheck.pending, (state) => {
+                state.downloadCheckLoading = true;
+                state.downloadCheckError = null;
+            })
+            .addCase(downloadCheck.fulfilled, (state) => {
+                state.downloadCheckLoading = false;
+                state.downloadCheckError = null;
+            })
+            .addCase(downloadCheck.rejected, (state, { payload }) => {
+                state.downloadCheckLoading = false;
+                state.downloadCheckError = payload || "Не удалось скачать файл";
             })
             .addCase(getFinance.pending, (state) => {
                 state.financeLoading = true;

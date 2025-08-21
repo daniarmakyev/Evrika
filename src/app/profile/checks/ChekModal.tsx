@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import { updateCheck, downloadCheck } from "src/store/finance/finance.action";
 import ProfileModal from "@components/ProfileModal";
 import styles from "./styles.module.scss";
 
@@ -49,10 +51,15 @@ const CheckModal: React.FC<CheckModalProps> = ({
   onUpdate,
   onDelete,
 }) => {
+  const dispatch = useAppDispatch();
+  const { downloadCheckLoading, downloadCheckError } = useAppSelector(
+    (state) => state.finance
+  );
   const [newCheckFile, setNewCheckFile] = useState<File | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!check) return null;
 
@@ -70,25 +77,35 @@ const CheckModal: React.FC<CheckModalProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setNewCheckFile(e.target.files[0]);
+      setError(null);
     }
   };
 
   const handleUpdate = async () => {
-    if (!newCheckFile) return;
+    if (!newCheckFile) {
+      setError("Пожалуйста, выберите файл для замены");
+      return;
+    }
 
     setLoading(true);
-    try {
-      const updatedCheck = {
-        ...check,
-        check: newCheckFile.name,
-        uploaded_at: new Date().toISOString(),
-      };
+    setError(null);
 
-      onUpdate(updatedCheck);
+    try {
+      const result = await dispatch(
+        updateCheck({
+          check_id: check.id,
+          file: newCheckFile,
+          group_id: check.group_id,
+        })
+      ).unwrap();
+
+      onUpdate(result);
+
       setIsEditing(false);
       setNewCheckFile(null);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating check:", error);
+      setError(error || "Произошла ошибка при обновлении чека");
     } finally {
       setLoading(false);
     }
@@ -96,12 +113,29 @@ const CheckModal: React.FC<CheckModalProps> = ({
 
   const handleDelete = async () => {
     setLoading(true);
+    setError(null);
+
     try {
       onDelete(check.id);
     } catch (error) {
       console.error("Error deleting check:", error);
+      setError("Произошла ошибка при удалении чека");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDownload = async () => {
+    try {
+      await dispatch(
+        downloadCheck({
+          check_id: check.id,
+          filename: check.check.split("/").pop() || `check_${check.id}`,
+        })
+      ).unwrap();
+    } catch (error: any) {
+      console.error("Error downloading check:", error);
+      setError(error || "Произошла ошибка при скачивании файла");
     }
   };
 
@@ -109,6 +143,7 @@ const CheckModal: React.FC<CheckModalProps> = ({
     setIsEditing(false);
     setNewCheckFile(null);
     setShowDeleteConfirm(false);
+    setError(null);
     onClose();
   };
 
@@ -143,6 +178,48 @@ const CheckModal: React.FC<CheckModalProps> = ({
     }
   };
 
+  const validateFile = (file: File) => {
+    const maxSize = 10 * 1024 * 1024;
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "text/plain",
+    ];
+
+    if (file.size > maxSize) {
+      return "Размер файла не должен превышать 10MB";
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      return "Неподдерживаемый тип файла";
+    }
+
+    return null;
+  };
+
+  const handleFileChangeWithValidation = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const validationError = validateFile(file);
+
+      if (validationError) {
+        setError(validationError);
+        setNewCheckFile(null);
+        e.target.value = "";
+        return;
+      }
+
+      setNewCheckFile(file);
+      setError(null);
+    }
+  };
+
   return (
     <ProfileModal
       isOpen={isOpen}
@@ -151,10 +228,24 @@ const CheckModal: React.FC<CheckModalProps> = ({
       size="lg"
     >
       <div className={styles.modal__content}>
+        {(error || downloadCheckError) && (
+          <div className={styles.error__message}>
+            <span className={styles.error__text}>
+              {error || downloadCheckError}
+            </span>
+          </div>
+        )}
+
         <div className={styles.check__info}>
           <div className={styles.info__row}>
             <span className={styles.info__label}>Группа:</span>
             <span className={styles.info__value}>{check.group.name}</span>
+          </div>
+          <div className={styles.info__row}>
+            <span className={styles.info__label}>Студент:</span>
+            <span className={styles.info__value}>
+              {check.student.first_name} {check.student.last_name}
+            </span>
           </div>
           <div className={styles.info__row}>
             <span className={styles.info__label}>Дата отправки:</span>
@@ -165,11 +256,18 @@ const CheckModal: React.FC<CheckModalProps> = ({
         </div>
 
         <div className={styles.check__file}>
-          <h4>Чек:</h4>
+          <h4>Текущий чек:</h4>
           <div className={styles.file__preview}>
             <div className={styles.file__icon}>{getFileIcon(check.check)}</div>
             <div className={styles.file__info}>
               <p className={styles.file__name}>{check.check}</p>
+              <button
+                onClick={handleDownload}
+                className={styles.download__file__button}
+                disabled={loading || downloadCheckLoading}
+              >
+                {downloadCheckLoading ? "Скачивание..." : "Скачать файл"}
+              </button>
             </div>
           </div>
         </div>
@@ -177,16 +275,31 @@ const CheckModal: React.FC<CheckModalProps> = ({
         {isEditing && (
           <div className={styles.edit__section}>
             <h4>Заменить чек:</h4>
-            <input
-              type="file"
-              accept="image/*,.pdf,.doc,.docx,.txt"
-              onChange={handleFileChange}
-              className={styles.file__input}
-            />
+            <div className={styles.file__input__container}>
+              <input
+                type="file"
+                accept="image/*,.pdf,.doc,.docx,.txt"
+                onChange={handleFileChangeWithValidation}
+                className={styles.file__input}
+                disabled={loading}
+              />
+              <small className={styles.file__hint}>
+                Поддерживаемые форматы: изображения, PDF, DOC, DOCX, TXT.
+                Максимальный размер: 10MB
+              </small>
+            </div>
             {newCheckFile && (
-              <p className={styles.file__name}>
-                Выбран файл: {newCheckFile.name}
-              </p>
+              <div className={styles.selected__file}>
+                <span className={styles.file__icon}>
+                  {getFileIcon(newCheckFile.name)}
+                </span>
+                <span className={styles.file__name}>
+                  Выбран файл: {newCheckFile.name}
+                </span>
+                <span className={styles.file__size}>
+                  ({(newCheckFile.size / 1024 / 1024).toFixed(2)} MB)
+                </span>
+              </div>
             )}
           </div>
         )}
@@ -251,6 +364,7 @@ const CheckModal: React.FC<CheckModalProps> = ({
                 onClick={() => {
                   setIsEditing(false);
                   setNewCheckFile(null);
+                  setError(null);
                 }}
                 disabled={loading}
                 className={styles.cancel__button}

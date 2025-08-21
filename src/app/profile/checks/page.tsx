@@ -1,7 +1,12 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { getMyChecks, createCheck } from "src/store/finance/finance.action";
+import {
+  getMyChecks,
+  createCheck,
+  deleteCheck,
+  downloadCheck,
+} from "src/store/finance/finance.action";
 import styles from "./styles.module.scss";
 import CheckModal from "./ChekModal";
 import Table from "@components/Table";
@@ -9,7 +14,9 @@ import DragAndDrop from "@components/DragAndDrop";
 import classNames from "classnames";
 import SelectField from "@components/Fields/SelectField";
 import EditPen from "../../../../public/assets/icons/edit-pen.svg";
+import FileIcon from "../../../../public/assets/icons/upload-file.svg";
 import { Check } from "src/consts/types";
+import { getGroup } from "src/store/user/user.action";
 
 const ChecksTable: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -19,34 +26,35 @@ const ChecksTable: React.FC = () => {
     myChecksError,
     createCheckLoading,
     createCheckError,
+    downloadCheckLoading,
+    downloadCheckError,
   } = useAppSelector((state) => state.finance);
+
+  const { groups } = useAppSelector((state) => state.user);
 
   const [selectedCheck, setSelectedCheck] = useState<Check | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>(
-    undefined
-  );
+  const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>();
 
   useEffect(() => {
     dispatch(getMyChecks(selectedGroupId));
+    dispatch(getGroup());
   }, [dispatch, selectedGroupId]);
 
-  const groupOptions = React.useMemo(() => {
-    if (!myChecks) return [{ label: "Все группы", value: "all" }];
-
-    const uniqueGroups = Array.from(
-      new Map(myChecks.map((check) => [check.group.id, check.group])).values()
-    );
+  const groupOptions = useMemo(() => {
+    if (!groups || groups.groups.length === 0) {
+      return [{ label: "Все группы", value: "all" }];
+    }
 
     return [
       { label: "Все группы", value: "all" },
-      ...uniqueGroups.map((group) => ({
+      ...groups.groups.map((group) => ({
         label: group.name,
         value: group.id.toString(),
       })),
     ];
-  }, [myChecks]);
+  }, [groups]);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -62,6 +70,19 @@ const ChecksTable: React.FC = () => {
   const handleViewCheck = (check: Check) => {
     setSelectedCheck(check);
     setIsModalOpen(true);
+  };
+
+  const handleDownloadCheck = async (check: Check) => {
+    try {
+      await dispatch(
+        downloadCheck({
+          check_id: check.id,
+          filename: check.check.split("/").pop() || `check_${check.id}`,
+        })
+      ).unwrap();
+    } catch (error: any) {
+      console.error("Error downloading check:", error);
+    }
   };
 
   const handleCloseModal = () => {
@@ -87,8 +108,7 @@ const ChecksTable: React.FC = () => {
         })
       ).unwrap();
 
-      dispatch(getMyChecks());
-
+      dispatch(getMyChecks(selectedGroupId));
       setUploadedFile(null);
     } catch (error) {
       console.error("Upload error:", error);
@@ -102,11 +122,17 @@ const ChecksTable: React.FC = () => {
 
   const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
-    const groupId = value === "all" ? undefined : parseInt(value);
+    const groupId = value === "all" ? undefined : Number(value);
     setSelectedGroupId(groupId);
   };
 
-  const columns = [
+  const columns: {
+    key: string;
+    title: string;
+    width?: string;
+    isButton?: boolean;
+    render: (value: any, row: Check) => React.ReactNode;
+  }[] = [
     {
       key: "group",
       title: "Группа",
@@ -121,16 +147,29 @@ const ChecksTable: React.FC = () => {
     },
     {
       key: "actions",
-      title: "Просмотр",
-      width: "20%",
+      title: "Действия",
+      width: "25%",
       isButton: true,
       render: (_: string, row: Check) => (
-        <button
-          className={styles.view__button}
-          onClick={() => handleViewCheck(row)}
-        >
-          <EditPen />
-        </button>
+        <div className={styles.table__actions}>
+          <button
+            className={styles.download__button}
+            onClick={() => handleDownloadCheck(row)}
+            title="Скачать чек"
+            disabled={downloadCheckLoading}
+          >
+            <FileIcon />
+            {downloadCheckLoading ? "Скачивание..." : "Скачать"}
+          </button>
+          <button
+            className={styles.edit__table__button}
+            onClick={() => handleViewCheck(row)}
+            title="Редактировать чек"
+          >
+            <EditPen />
+            Изменить
+          </button>
+        </div>
       ),
     },
   ];
@@ -169,11 +208,7 @@ const ChecksTable: React.FC = () => {
               <div className={styles.file__actions}>
                 <button
                   onClick={handleUpload}
-                  disabled={
-                    createCheckLoading ||
-                    !selectedGroupId ||
-                    selectedGroupId === undefined
-                  }
+                  disabled={!selectedGroupId || createCheckLoading}
                   className={styles.send__button}
                 >
                   {createCheckLoading ? "Отправка..." : "Отправить чек"}
@@ -195,8 +230,10 @@ const ChecksTable: React.FC = () => {
             </p>
           )}
 
-          {createCheckError && (
-            <p className={styles.error__message}>Ошибка при создании чека</p>
+          {(createCheckError || downloadCheckError) && (
+            <p className={styles.error__message}>
+              {createCheckError || downloadCheckError}
+            </p>
           )}
         </div>
       </div>
@@ -224,15 +261,19 @@ const ChecksTable: React.FC = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         check={selectedCheck}
-        onUpdate={(updatedCheck: Check) => {
-          console.log("Updated check:", updatedCheck);
+        onUpdate={() => {
           handleCloseModal();
           dispatch(getMyChecks(selectedGroupId));
         }}
-        onDelete={(checkId: number) => {
-          console.log("Deleted check ID:", checkId);
-          handleCloseModal();
-          dispatch(getMyChecks(selectedGroupId));
+        onDelete={async () => {
+          if (!selectedCheck) return;
+          try {
+            await dispatch(deleteCheck(selectedCheck.id)).unwrap();
+            handleCloseModal();
+            dispatch(getMyChecks(selectedGroupId));
+          } catch (error) {
+            console.error("Ошибка при удалении:", error);
+          }
         }}
       />
     </div>

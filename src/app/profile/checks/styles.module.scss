@@ -412,3 +412,121 @@
     cursor: not-allowed;
   }
 }
+
+.table__actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.download__button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  width: fit-content;
+  color: $primary;
+  background-color: $primary;
+  svg {
+    width: 12px;
+    height: 12px;
+    color: $primary;
+  }
+
+  &:disabled {
+    background-color: lighten($placeholder, 30%);
+    cursor: not-allowed;
+  }
+}
+
+.edit__table__button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: $primary;
+  background-color: $primary;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  svg {
+    width: 12px;
+    height: 12px;
+    color: $primary;
+  }
+
+  &:disabled {
+    background: $placeholder;
+    cursor: not-allowed;
+  }
+}
+
+.download__file__button {
+  background: $primary-button;
+  color: $White;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.error__message {
+  background-color: #fee;
+  border: 1px solid #fcc;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.error__text {
+  color: #c33;
+  font-size: 14px;
+}
+
+.file__input__container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.file__hint {
+  color: #666;
+  font-size: 12px;
+}
+
+.selected__file {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.file__icon {
+  font-size: 16px;
+}
