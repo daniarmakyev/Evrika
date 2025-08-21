@@ -2,7 +2,7 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "src/consts/api";
-import type { StudentsResponse, GetStudentsParams } from "src/consts/types";
+import type { StudentsResponse, GetStudentsParams,User} from "src/consts/types";
 import qs from "qs";
 
 interface Student {
@@ -70,8 +70,12 @@ export const studentApi = createApi({
       query: ({ user_id, page = 1, size = 20 }) =>
         `/user/students/?page=${page}&size=${size}&group_id=${user_id}`,
     }),
+    getUserInfo: builder.query<User, { user_id: string }>({
+      query: ({ user_id}) =>
+        `/user/${user_id}`,
+    }),
   }),
 });
 
-export const { useRegisterStudentMutation, useGetStudentListQuery } =
+export const { useRegisterStudentMutation, useGetStudentListQuery,useGetUserInfoQuery } =
   studentApi;

@@ -16,6 +16,7 @@ import AddStudent from "./components/add-student";
 import { useGetStudentListQuery } from "src/store/admin/students/students";
 import { useAppSelector } from "src/store/store";
 import type { Student } from "src/consts/types";
+import { useRouter } from "next/navigation";
 
 export default function StudentList() {
   const [openRowId, setOpenRowId] = useState<number | null>(null);
@@ -23,11 +24,11 @@ export default function StudentList() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const { courses, groups } = useAppSelector((state) => state.groupsCourses);
+  const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
   const size = 20; // items per pag
   const groupId = selectedGroup?.match(/\d+/);
   const user_id = groupId ? Number(groupId[0]) : null;
-  console.log(typeof user_id);
   const { data, error, isLoading, refetch } = useGetStudentListQuery(
     {
       page: currentPage,
@@ -38,8 +39,28 @@ export default function StudentList() {
   );
   console.log(data?.students, "Student", error);
 
-  const handleOptionClick = () => {
-    setOpenRowId(null); // close menu after selection
+  const handleOptionClick = (option: string, student: Student) => {
+    switch (option) {
+      case "Редактировать":
+        console.log("Edit student:", student);
+        router.push(`/profile/admin/student-list/${student.id}`);
+        break;
+
+      case "Удалить":
+        console.log("Delete student:", student.id);
+        // call delete mutation
+        break;
+
+      case "Посмотреть":
+        console.log("View student:", student);
+        router.push(`/profile/admin/student-list/${student.id}`);
+
+        break;
+
+      default:
+        break;
+    }
+    setOpenRowId(null);
   };
   const homeWorkColumns = [
     {
@@ -60,7 +81,7 @@ export default function StudentList() {
               {isMenuOpen && (
                 <DropdownMenu
                   options={["Редактировать", "Удалить", "Посмотреть"]}
-                  onSelect={handleOptionClick}
+                  onSelect={(option) => handleOptionClick(option, row)}
                 />
               )}
             </button>
@@ -85,13 +106,25 @@ export default function StudentList() {
         if (!value || value.length === 0) return <span>-</span>;
 
         const joined = value.map((g) => g.name).join(", ");
+
         return (
-          <span>
-            {joined.length > 50 ? joined.substring(0, 50) + "..." : joined}
+          <span
+            style={{
+              display: "inline-block",
+              maxWidth: "220px", // same as column width
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+              textOverflow: "ellipsis",
+              verticalAlign: "middle",
+            }}
+            title={joined} // show full text on hover
+          >
+            {joined}
           </span>
         );
       },
     },
+
     {
       key: "email",
       title: "Почта",
@@ -126,12 +159,12 @@ export default function StudentList() {
       key: "is_active",
       title: "Статус",
       width: "100px",
-      render: (value: string) => {
+      render: (value: boolean) => {
         return (
           <div
             className={classNames(styles.status, {
-              [styles.active]: value === "active",
-              [styles.inactive]: value === "non-active",
+              [styles.active]: value,
+              [styles.inactive]: !value,
             })}
           >
             {value ? "Активен" : "Не активен"}
@@ -143,10 +176,8 @@ export default function StudentList() {
 
   useEffect(() => {
     if (courses?.length) {
-      const defaultCourse = courses[0]; // первый курс
+      const defaultCourse = courses[0];
       setSelectedCourse(String(defaultCourse.id));
-
-      // ищем первую группу этого курса
       const firstGroup = groups?.find(
         (group) => group.course_id === defaultCourse.id
       );
@@ -193,59 +224,72 @@ export default function StudentList() {
         </button>
         <button className={styles.white__button}>Архив</button>
       </div>
-      <div className={styles.homework__content}>
-        <div className={styles.homework__title}>
-          <h3>Студенты</h3>
-          <div>
-            <InputField
-              isShadow
-              leftIcon={<Search />}
-              placeholder="Поиск по имени"
+      {error ? (
+        <div className={styles.errorMessage}>
+          <p>Произошла ошибка при загрузке студентов.</p>
+          <pre>{JSON.stringify(error, null, 2)}</pre>
+          <button onClick={() => refetch()} className={styles.retryButton}>
+            Повторить попытку
+          </button>
+        </div>
+      ) : isLoading ? (
+        <TableSkeleton />
+      ) : (
+        <div className={styles.homework__content}>
+          <div className={styles.homework__title}>
+            <h3>Студенты</h3>
+
+            <div>
+              <InputField
+                isShadow
+                leftIcon={<Search />}
+                placeholder="Поиск по имени"
+              />
+            </div>
+            <div>
+              <button className={styles.white__button}>
+                <Download /> Выгрузить
+              </button>
+            </div>
+            <div className={styles.filter_container}>
+              <div style={{ width: "210px", position: "relative" }}>
+                <SelectField
+                  isShadow
+                  value={selectedCourse ?? ""}
+                  onChange={(e) => handleCourseChange(e.target.value || null)}
+                  options={courseOptions}
+                  placeholder="Выбрать курс"
+                />
+              </div>
+              <div style={{ width: "210px", position: "relative" }}>
+                <SelectField
+                  isShadow
+                  value={selectedGroup ?? ""}
+                  onChange={(e) => setSelectedGroup(e.target.value || null)}
+                  options={groupOptions}
+                  placeholder="Выбрать группу"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className={styles.homework__table}>
+            <Table
+              columns={homeWorkColumns}
+              data={data?.students}
+              emptyMessage="Нет данных "
             />
           </div>
-          <div>
-            <button className={styles.white__button}>
-              <Download /> Выгрузить
-            </button>
-          </div>
-          <div className={styles.filter_container}>
-            <div style={{ width: "210px", position: "relative" }}>
-              <SelectField
-                isShadow
-                value={selectedCourse ?? ""}
-                onChange={(e) => handleCourseChange(e.target.value || null)}
-                options={courseOptions}
-                placeholder="Выбрать курс"
-              />
-            </div>
-            <div style={{ width: "210px", position: "relative" }}>
-              <SelectField
-                isShadow
-                value={selectedGroup ?? ""}
-                onChange={(e) => setSelectedGroup(e.target.value || null)}
-                options={groupOptions}
-                placeholder="Выбрать группу"
-              />
-            </div>
-          </div>
-        </div>
 
-        <div className={styles.homework__table}>
-          <Table
-            columns={homeWorkColumns}
-            data={data?.students}
-            emptyMessage="Нет данных о посещаемости"
-          />
+          {data?.pagination && data.pagination.total_pages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={data?.pagination.total_pages}
+              handlePageChange={setCurrentPage}
+            />
+          )}
         </div>
-
-        {data?.pagination && data.pagination.total_pages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={data?.pagination.total_pages}
-            handlePageChange={setCurrentPage}
-          />
-        )}
-      </div>
+      )}
       <AddStudent
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
