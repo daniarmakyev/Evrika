@@ -117,7 +117,8 @@ picture {
   height: 100%;
 }
 
-img, video {
+img,
+video {
   width: 100%;
   height: auto;
   object-fit: contain;
@@ -130,6 +131,15 @@ input {
   padding: 0;
   border: none;
   background: transparent;
+  &::selection {
+    background-color: $primary;
+    color: $White; 
+  }
+
+  &::-moz-selection {
+    background-color: $primary;
+    color: $White;
+  }
 }
 
 p,
