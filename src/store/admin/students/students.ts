@@ -2,6 +2,9 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "src/consts/api";
+import type { StudentsResponse, GetStudentsParams } from "src/consts/types";
+import qs from "qs";
+
 interface Student {
   id: number;
   full_name: string;
@@ -19,8 +22,12 @@ interface StudentForm {
   role: string;
 }
 
-interface CustomApiError {
-  detail: string;
+// Тип ошибки с сервера
+interface ValidationError {
+  type?: string;
+  loc?: string[];
+  msg: string;
+  input?: unknown;
 }
 
 export const studentApi = createApi({
@@ -42,20 +49,29 @@ export const studentApi = createApi({
       { groupIds: number[]; studentData: StudentForm }
     >({
       query: ({ groupIds, studentData }) => ({
-        url: `/auth/register-student-with-group/${groupIds.join(",")}`,
+        url: `/auth/register-student-with-group?${qs.stringify(
+          { group_id: groupIds },
+          { arrayFormat: "repeat" }
+        )}`,
         method: "POST",
         body: studentData,
       }),
+
       transformErrorResponse: (response: {
-        data?: CustomApiError[];
+        data?: ValidationError[];
         status: number;
       }) => {
-        return (
-          response?.data ?? [{ msg: "***Ошибка!!!Не удалось зарегистрировать студента" }]
-        );
+        // возвращаем массив ошибок или один объект с msg
+        if (response?.data) return response.data;
+        return [{ msg: "Не удалось зарегистрировать студента" }];
       },
+    }),
+    getStudentList: builder.query<StudentsResponse, GetStudentsParams>({
+      query: ({ user_id, page = 1, size = 20 }) =>
+        `/user/students/?page=${page}&size=${size}&group_id=${user_id}`,
     }),
   }),
 });
 
-export const { useRegisterStudentMutation } = studentApi;
+export const { useRegisterStudentMutation, useGetStudentListQuery } =
+  studentApi;

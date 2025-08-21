@@ -211,14 +211,15 @@ export interface Lesson {
   lesson_end: string;
 }
 
-export interface Pagination {
-  current_page_size: number;
-  current_page: number;
-  total_pages: number;
-}
+
 
 export type GetAttendanceStudentParams = {
-  user_id: string;
+  user_id: string|null
+  page?: number;
+  size?: number;
+};
+export type GetStudentsParams = {
+  user_id: number|null
   page?: number;
   size?: number;
 };
@@ -353,3 +354,30 @@ export interface FinanceResponse {
   items: FinanceItem[];
   pagination: PaginationType;
 }
+
+
+export type GroupStudent = {
+  id: number;
+  name: string;
+};
+
+export type Student = {
+  id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  role: "teacher" | "student" | string; // если роль может быть не только teacher
+  is_active: boolean;
+  groups: GroupStudent[];
+};
+
+export type Pagination = {
+  current_page_size: number;
+  current_page: number;
+  total_pages: number;
+};
+
+export type StudentsResponse = {
+  students: Student[];
+  pagination: Pagination;
+};

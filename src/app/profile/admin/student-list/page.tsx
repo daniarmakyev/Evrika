@@ -1,7 +1,9 @@
 "use client";
+
 import styles from "./styles.module.scss";
-import { useState } from "react";
-// import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
+import { useState, useEffect } from "react";
+import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
+import Pagination from "@components/Pagination";
 import Table from "@components/Table";
 import { Ellipsis } from "lucide-react";
 import classNames from "classnames";
@@ -11,29 +13,40 @@ import { Search } from "lucide-react";
 import SelectField from "@components/Fields/SelectField";
 import { Download } from "lucide-react";
 import AddStudent from "./components/add-student";
-type TableDataItem = {
-  id: number;
-  name: string;
-  group: string;
-  course?: string;
-  email: string;
-  phone: string;
-  status: "active" | "non-active"; // restrict to possible values
-};
+import { useGetStudentListQuery } from "src/store/admin/students/students";
+import { useAppSelector } from "src/store/store";
+import type { Student } from "src/consts/types";
 
 export default function StudentList() {
   const [openRowId, setOpenRowId] = useState<number | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const { courses, groups } = useAppSelector((state) => state.groupsCourses);
+  const [currentPage, setCurrentPage] = useState(1);
+  const size = 20; // items per pag
+  const groupId = selectedGroup?.match(/\d+/);
+  const user_id = groupId ? Number(groupId[0]) : null;
+  console.log(typeof user_id);
+  const { data, error, isLoading, refetch } = useGetStudentListQuery(
+    {
+      page: currentPage,
+      size,
+      user_id: user_id,
+    },
+    { skip: !user_id }
+  );
+  console.log(data?.students, "Student", error);
 
   const handleOptionClick = () => {
     setOpenRowId(null); // close menu after selection
   };
   const homeWorkColumns = [
     {
-      key: "name",
+      key: "full_name",
       title: "ФИО",
       width: "230px",
-      render: (value: string, row: TableDataItem) => {
+      render: (value: string, row: Student) => {
         const isMenuOpen = openRowId === row.id;
         return (
           <div className={styles.noUnderline} style={{ position: "relative" }}>
@@ -64,14 +77,17 @@ export default function StudentList() {
       },
     },
     {
-      key: "group",
+      key: "groups",
       title: "Группа",
       width: "220px",
       isButton: false,
-      render: (value: string) => {
+      render: (value: { id: number; name: string }[] = []) => {
+        if (!value || value.length === 0) return <span>-</span>;
+
+        const joined = value.map((g) => g.name).join(", ");
         return (
           <span>
-            {value.length > 50 ? value.substring(0, 50) + "..." : value}
+            {joined.length > 50 ? joined.substring(0, 50) + "..." : joined}
           </span>
         );
       },
@@ -95,7 +111,7 @@ export default function StudentList() {
       },
     },
     {
-      key: "phone",
+      key: "phone_number",
       title: "Телефон",
       width: "220px",
       render: (value: string) => {
@@ -107,7 +123,7 @@ export default function StudentList() {
       },
     },
     {
-      key: "status",
+      key: "is_active",
       title: "Статус",
       width: "100px",
       render: (value: string) => {
@@ -118,61 +134,53 @@ export default function StudentList() {
               [styles.inactive]: value === "non-active",
             })}
           >
-            {value === "active" ? "Активен" : "Не активен"}
+            {value ? "Активен" : "Не активен"}
           </div>
         );
       },
     },
   ];
 
-  const tableData = [
-    {
-      id: 1,
-      name: "Айкокул Чаргынова",
-      group: "Английский A1-0925",
-      course: "Английский A1",
-      email: "email@gmail.com",
-      phone: "+99670770707",
-      status: "active",
-    },
-    {
-      id: 2,
-      name: "Айкокул Чаргынова",
-      group: "Английский A1-0925",
-      email: "email@gmail.com",
-      phone: "+99670770707",
-      status: "active",
-      course: "Английский A1",
-    },
-    {
-      id: 3,
-      name: "Айкокул Чаргынова",
-      group: "Английский A1-0925",
-      email: "email@gmail.com",
-      phone: "+99670770707",
-      status: "non-active",
-      course: "Английский A1",
-    },
-  ];
+  useEffect(() => {
+    if (courses?.length) {
+      const defaultCourse = courses[0]; // первый курс
+      setSelectedCourse(String(defaultCourse.id));
 
-  const groupOptions = [
-    { value: "", label: "Все группы" }, // default "All"
-    ...Array.from(new Set(tableData.map((item) => item.group))).map(
-      (groupName) => ({
-        value: groupName,
-        label: groupName,
-      })
-    ),
-  ];
-  const courseOptions = [
-    { value: "", label: "Все курсы" }, // default "All"
-    ...Array.from(new Set(tableData.map((item) => item.course))).map(
-      (groupName) => ({
-        value: groupName,
-        label: groupName,
-      })
-    ),
-  ];
+      // ищем первую группу этого курса
+      const firstGroup = groups?.find(
+        (group) => group.course_id === defaultCourse.id
+      );
+      setSelectedGroup(firstGroup ? String(firstGroup.id) : null);
+    }
+  }, [courses, groups]);
+  const groupOptions =
+    groups
+      ?.filter((group) =>
+        selectedCourse ? group.course_id === Number(selectedCourse) : true
+      )
+      .map((group) => ({
+        value: group.id,
+        label: group.name,
+      })) ?? [];
+
+  const courseOptions =
+    courses?.map((item) => ({
+      value: String(item.id),
+      label: item.name,
+    })) ?? [];
+
+  const handleCourseChange = (courseId: string | null) => {
+    setSelectedCourse(courseId);
+
+    if (courseId) {
+      const firstGroup = groups?.find(
+        (group) => group.course_id === Number(courseId)
+      );
+      setSelectedGroup(firstGroup ? String(firstGroup.id) : null);
+    } else {
+      setSelectedGroup(null);
+    }
+  };
 
   return (
     <div className={classNames(styles.homework__container, "container")}>
@@ -188,13 +196,6 @@ export default function StudentList() {
       <div className={styles.homework__content}>
         <div className={styles.homework__title}>
           <h3>Студенты</h3>
-          {/* <div style={{ width: "210px", position: "relative" }}>
-              <SelectField
-                value={selectedGroup}
-                onChange={(e) => setSelectedGroup(e.target.value)}
-                options={groupOptions}
-              />
-            </div> */}
           <div>
             <InputField
               isShadow
@@ -211,17 +212,19 @@ export default function StudentList() {
             <div style={{ width: "210px", position: "relative" }}>
               <SelectField
                 isShadow
-                // value={selectedGroup}
-                // onChange={(e) => setSelectedGroup(e.target.value)}
+                value={selectedCourse ?? ""}
+                onChange={(e) => handleCourseChange(e.target.value || null)}
                 options={courseOptions}
+                placeholder="Выбрать курс"
               />
             </div>
             <div style={{ width: "210px", position: "relative" }}>
               <SelectField
                 isShadow
-                // value={selectedGroup}
-                // onChange={(e) => setSelectedGroup(e.target.value)}
+                value={selectedGroup ?? ""}
+                onChange={(e) => setSelectedGroup(e.target.value || null)}
                 options={groupOptions}
+                placeholder="Выбрать группу"
               />
             </div>
           </div>
@@ -230,18 +233,18 @@ export default function StudentList() {
         <div className={styles.homework__table}>
           <Table
             columns={homeWorkColumns}
-            data={tableData}
+            data={data?.students}
             emptyMessage="Нет данных о посещаемости"
           />
         </div>
 
-        {/* {data?.pagination && data.pagination.total_pages > 1 && (
+        {data?.pagination && data.pagination.total_pages > 1 && (
           <Pagination
             currentPage={currentPage}
             totalPages={data?.pagination.total_pages}
             handlePageChange={setCurrentPage}
           />
-        )} */}
+        )}
       </div>
       <AddStudent
         isOpen={isAddModalOpen}

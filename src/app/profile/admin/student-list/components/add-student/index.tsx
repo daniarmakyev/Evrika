@@ -6,7 +6,7 @@ import styles from "./styles.module.scss";
 import { ChevronDown } from "lucide-react";
 import { useAppSelector } from "src/store/store";
 import { useRegisterStudentMutation } from "src/store/admin/students/students";
-import type { Course } from "src/consts/types";
+import type { Course} from "src/consts/types";
 
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 // import SelectField from "@components/Fields/SelectField";
@@ -19,9 +19,9 @@ type Props = {
 
 interface FormData {
   group: string[];
-  phone: string;
+  phone_number: string;
   email: string;
-  fullName: string;
+  full_name: string;
   role: string;
 }
 type ValidationError = {
@@ -40,6 +40,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
 
   const {
     control,
+    reset,
     watch,
     register,
     setError,
@@ -47,9 +48,9 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
     handleSubmit,
   } = useForm<FormData>({
     defaultValues: {
-      fullName: "",
+      full_name: "",
       group: [],
-      phone: "",
+      phone_number: "",
       email: "",
       role: "student",
     },
@@ -58,9 +59,9 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const selectedGroupIds =
-        groups?.filter((g) => data?.group.includes(g.name)).map((g) => g.id) ??
-        [];
-      if (selectedGroupIds?.length === 0) {
+        groups?.filter((g) => data.group.includes(g.name)).map((g) => g.id) ?? [];
+
+      if (selectedGroupIds.length === 0) {
         setError("group", {
           type: "manual",
           message: "Нужно выбрать хотя бы одну группу",
@@ -69,29 +70,42 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
       }
 
       const payload = {
-        full_name: data.fullName,
+        full_name: data.full_name,
         email: data.email,
-        phone_number: data.phone,
+        phone_number: data.phone_number,
         role: data.role,
       };
 
-      const response = await registerStudent({
-        groupIds: selectedGroupIds,
-        studentData: payload,
-      }).unwrap();
+      // Ждем промис и обрабатываем ошибки
+      await registerStudent({ groupIds: selectedGroupIds, studentData: payload }).unwrap();
 
-      console.log("Студент успешно добавлен:", response);
+      // Если успешно — сбрасываем форму и закрываем модалку
+      reset();
       onClose();
-    } catch (err: unknown) {
+    } catch (err: any) {
       console.error("Ошибка при добавлении студента:", err);
 
-      if (typeof err === "string") {
-        alert(err);
+      // Если сервер вернул объект с detail
+      if (err?.detail) {
+        if (Array.isArray(err.detail)) {
+          err.detail.forEach((e: any) => {
+            // Можно отображать ошибки по полям, если они есть
+            if (e.loc?.[1] === "email") {
+              setError("email", { type: "manual", message: e.msg });
+            } else if (e.loc?.[1] === "group_id") {
+              setError("group", { type: "manual", message: e.msg });
+            }
+          });
+        } else {
+          setError("email", { type: "manual", message: err.detail });
+        }
       } else {
-        alert("Не удалось добавить студента");
+        // Общая ошибка
+        setError("email", { type: "manual", message: "Не удалось зарегистрировать студента" });
       }
     }
   };
+
 
   return (
     <ProfileModal
@@ -103,7 +117,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
         <div className={styles.input_container}>
           <InputField
-            {...register("fullName", {
+            {...register("full_name", {
               required: "Имя и фамилия обязательны",
               minLength: { value: 2, message: "Минимум 2 символа" },
             })}
@@ -113,9 +127,9 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
             label="Имя и фамилия"
             placeholder="Введите имя и фамилию"
           />
-          {errors.fullName && (
+          {errors.full_name && (
             <span style={{ color: "red", fontSize: "14px" }}>
-              {errors.fullName.message}
+              {errors.full_name.message}
             </span>
           )}
         </div>
