@@ -165,7 +165,7 @@ const FinancePage = () => {
   ];
 
   const renderOfflinePayment = () => {
-    const currentRequisite = paymentRequisites?.[0]; // Берем первый реквизит
+    const currentRequisite = paymentRequisites?.[0];
 
     if (paymentRequisitesLoading) {
       return (
@@ -193,10 +193,9 @@ const FinancePage = () => {
       <div className={styles.finance__pay}>
         <div className={styles.finance__instructions}>
           <h3 className={styles.instructions__title}>
-            Для проведения оффлайн-оплаты, пожалуйста, выполните следующие
-            действия:
+            Для проведения оплаты используйте наш лицевой счет или QR-код:
           </h3>
-          <ol className={styles.instructions__list}>
+          <ul className={styles.instructions__list}>
             <li>
               Скопируйте или сохраните наш лицевой счёт оплаты, указанный ниже.
             </li>
@@ -219,19 +218,26 @@ const FinancePage = () => {
                 >
                   скопировать
                 </button>{" "}
-                его или сделать скриншот)
+                его, сделать скриншот или оплатить напрямую через QR-код)
               </span>
             </li>
             <li>
-              Через пост-терминал (в любом удобном для вас месте) выберите
-              способ оплаты по номеру карты &quot;{currentRequisite.bank_name}
-              &quot; и введите указанный лицевой счёт.
-              <br />
-              После оплаты сфотографируйте чек, перейдите в профиль, откройте
-              вкладку <strong>&quot;Чеки&quot;</strong>, загрузите фотографию
-              чека и ожидайте обратной связи от администратора.
+              Оплатите одним из способов:
+              <ol>
+                <li>Через мобильное банковское приложение</li>
+                <li>Через пост-терминал в любом удобном месте</li>
+                <li>
+                  Сканировав QR-код через мобильное банковское приложение{" "}
+                  <span style={{ fontStyle: "italic", color: "#555" }}>
+                    (работает только с местными банками и если QR-код доступен)
+                  </span>
+                </li>
+              </ol>
+              После оплаты сфотографируйте чек (если он есть), перейдите в
+              профиль, откройте вкладку <strong>&quot;Чеки&quot;</strong>,
+              загрузите фото и ожидайте подтверждения от администратора.
             </li>
-          </ol>
+          </ul>
           <Link href="/profile/checks" className={styles.checkLink}>
             Чеки
           </Link>
@@ -359,7 +365,7 @@ const FinancePage = () => {
                   })}
                   onClick={() => handlePaymentTypeChange("offline")}
                 >
-                  По лицевому счету и qr
+                  По лицевому счету и QR-коду
                 </button>
                 <button
                   className={classNames(styles.paymentSwitcher__button, {

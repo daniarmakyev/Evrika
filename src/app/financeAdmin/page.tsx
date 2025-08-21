@@ -393,7 +393,7 @@ const FinanceAdminPage = () => {
                   })}
                   onClick={() => handlePaymentTypeChange("offline")}
                 >
-                  По лицевому счету и qr
+                  По лицевому счету и QR-коду
                 </button>
                 <button
                   className={classNames(styles.paymentSwitcher__button, {
