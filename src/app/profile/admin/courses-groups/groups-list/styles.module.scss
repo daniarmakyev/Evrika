@@ -89,6 +89,7 @@
   gap: 20px;
   align-items: flex-start;
   justify-content: flex-start;
+  color: $black;
 }
 
 .actionButton {
@@ -163,7 +164,7 @@
   .formActions {
     display: flex;
     gap: 12px;
-    justify-content: flex-end;
+    justify-content: space-between;
     margin-top: 24px;
     padding-top: 20px;
     border-top: 1px solid #f0f0f0;
@@ -315,11 +316,12 @@
 }
 
 .errorMessage {
-  font-size: 16px;
-  color: #666;
-  margin-bottom: 24px;
-  line-height: 1.5;
-  max-width: 400px;
+  color: red;
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ffcdd2;
+  margin-bottom: 20px;
 }
 
 .retryButton {
@@ -360,7 +362,7 @@
   .formActions {
     display: flex;
     gap: 20px;
-    justify-content: flex-end;
+    justify-content: space-between;
     width: 100%;
   }
 }
@@ -418,4 +420,108 @@
 .archived {
   background: $warning;
   color: $White;
+}
+
+.errorMessage {
+  color: red;
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ffcdd2;
+  margin-bottom: 20px;
+}
+
+.validationError {
+  color: red;
+  font-size: 14px;
+}
+
+.deleteConfirmContainer {
+  background-color: #ffebee;
+  padding: 15px;
+  border-radius: 4px;
+  width: 100%;
+  border: 1px solid #ffcdd2;
+}
+
+.deleteConfirmTitle {
+  color: #d32f2f;
+  margin: 0 0 10px 0;
+  font-weight: bold;
+}
+
+.deleteConfirmText {
+  color: #666;
+  margin: 0 0 15px 0;
+  font-size: 14px;
+}
+
+.deleteConfirmActions {
+  display: flex;
+  gap: 10px;
+}
+
+.deleteConfirmButton {
+  background-color: $danger;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.deleteCancelButton {
+  background-color: #f5f5f5;
+  color: #333;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+}
+
+.deleteGroupButton {
+  background-color: #d32f2f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 10px;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: #ff9b9b;
+  }
+}
+
+.formRow {
+  margin-bottom: 20px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+  .formActionsInner {
+    display: flex;
+    gap: 12px;
+  }
 }

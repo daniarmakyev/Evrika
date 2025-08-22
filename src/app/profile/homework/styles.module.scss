@@ -96,7 +96,6 @@
     font-size: 14px;
     font-weight: 500;
     transition: all 0.2s ease;
-    background: black;
 
     &:disabled {
       background: #ccc;
@@ -310,11 +309,11 @@
 .upload__button {
   min-width: 18px;
   height: 18px;
-
+  color: $black;
   svg {
     width: 18px;
     height: 18px;
-    fill: white;
+    color: $black;
   }
 
   &:active {

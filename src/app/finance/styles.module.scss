@@ -1,0 +1,174 @@
+@import "../../styles/_varibles.scss";
+@import "../../styles/mixins/media-queries";
+
+.finance {
+  &__container {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    margin-bottom: 100px;
+    row-gap: 40px;
+  }
+
+  &__content {
+    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    padding: 40px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__filters {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+  }
+  &__title {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 100%;
+    padding-bottom: 20px;
+  }
+
+  &__pay {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__instructions {
+    width: 50%;
+
+    .instructions__title {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 15px;
+    }
+
+    .instructions__list {
+      margin: 0;
+      padding-left: 20px;
+
+      li {
+        margin-bottom: 12px;
+      }
+    }
+
+    .account {
+      font-size: 18px;
+      color: $black;
+    }
+
+    .note {
+      font-size: 14px;
+      color: $White-ligth;
+    }
+
+    .checkLink {
+      background: $primary-button;
+      color: $White;
+      border: none;
+      padding: 6px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      width: fit-content;
+      margin-left: auto;
+
+      &:disabled {
+        background: $placeholder;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &__qr {
+    max-width: 50%;
+    width: 100%;
+    img {
+      max-height: 250px;
+      width: 100%;
+    }
+  }
+
+  .status {
+    padding: 6px 10px;
+    border-radius: 10px;
+  }
+
+  .paid {
+    background-color: $success;
+    color: $White;
+  }
+
+  .unpaid {
+    background-color: $danger;
+    color: $White;
+  }
+  &__onlinePayment {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+    color: $White-ligth;
+    font-size: 16px;
+  }
+}
+
+.paymentSwitcher {
+  display: flex;
+  background: $primary;
+  border-radius: 10px;
+  width: fit-content;
+  padding: 4px;
+  justify-content: space-around;
+  margin-bottom: 30px;
+  padding: 10px;
+  &__button {
+    padding: 6px 24px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: $White;
+    white-space: nowrap;
+
+    &:hover {
+      color: $black;
+    }
+
+    &_active {
+      background: $White;
+      color: $black;
+      box-shadow: 0 2px 8px rgba(255, 255, 255);
+    }
+
+    &:first-child {
+      margin-right: 4px;
+    }
+  }
+}
+
+.copyText {
+  font-weight: 600;
+  color: $primary;
+  cursor: pointer;
+  text-decoration: underline;
+}

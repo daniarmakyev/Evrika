@@ -34,8 +34,8 @@ export const getGroup = createAsyncThunk<
     "user/getGroup",
     async (args, { rejectWithValue }) => {
         try {
-            const page = args && args.page;
-            const size = args && args.size;
+            const page = args?.page;
+            const size = args?.size;
 
             let url = "/group/my";
             if (page !== undefined && size !== undefined) {
@@ -46,7 +46,9 @@ export const getGroup = createAsyncThunk<
             return data;
         } catch (err) {
             if (axios.isAxiosError<CustomApiError>(err)) {
-                return rejectWithValue(err.response?.data.detail || "Ошибка получения групп");
+                return rejectWithValue(
+                    err.response?.data?.detail || "Ошибка получения групп"
+                );
             }
             return rejectWithValue("Неизвестная ошибка!");
         }

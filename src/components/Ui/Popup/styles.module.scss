@@ -91,3 +91,19 @@
     }
   }
 }
+
+.logoutBtn {
+  width: 100%;
+  font-size: 16px;
+  line-height: 100%;
+  color: $primary;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  padding: 10px 0;
+  display: block;
+  text-decoration: none;
+  text-align: left;
+  &:hover {
+    color: #a8b8ff;
+  }
+}

@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import { useAppDispatch, useAppSelector } from "src/store/store";
+import {
+  editFinanceStatus,
+  getFinance,
+  downloadCheck,
+} from "src/store/finance/finance.action";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import Table from "@components/Table";
@@ -9,165 +15,8 @@ import SelectField from "@components/Fields/SelectField";
 import SearchIcon from "@icons/searchIcon.svg";
 import { useModal } from "@context/ModalContext";
 import ProfileModal from "@components/ProfileModal";
-import { FinanceItem, FinanceTableItem, Check, Group } from "src/consts/types";
-
-const mockFinanceData: FinanceItem[] = [
-  {
-    student_id: 1,
-    student_first_name: "Аскар",
-    student_last_name: "Шаршенбеков",
-    group_id: 1,
-    payment_detail_id: 1,
-    months_paid: 1,
-    current_month_number: 1,
-    payment_status: "Не оплачено",
-    group: {
-      id: 1,
-      name: "Английский-B1-0825-1",
-      created_at: "2025-08-14T09:13:06.586770Z",
-      start_date: "2025-08-14",
-      end_date: "2025-08-14",
-      approximate_lesson_start: "09:11:35.981000",
-      is_active: true,
-      is_archived: false,
-      course_id: 1,
-      teacher_id: 2,
-      teacher: {
-        id: 2,
-        first_name: "Иван",
-        last_name: "Иванов",
-        email: "",
-        phone_number: "",
-        role: "",
-        password: null,
-      },
-    },
-    checks: [
-      {
-        id: 1,
-        check: "check_001.jpg",
-        student_id: 1,
-        group_id: 1,
-        uploaded_at: "2025-08-14T10:30:00Z",
-      },
-      {
-        id: 2,
-        check: "check_002.jpg",
-        student_id: 1,
-        group_id: 1,
-        uploaded_at: "2025-08-14T11:15:00Z",
-      },
-    ],
-    group_course_name: "Английский-B1",
-  },
-  {
-    student_id: 3,
-    student_first_name: "Бегимай",
-    student_last_name: "Абдылдаева",
-    group_id: 1,
-    payment_detail_id: 3,
-    months_paid: 1,
-    current_month_number: 1,
-    payment_status: "Не оплачено",
-    group: {
-      id: 1,
-      name: "Английский-B1-0825-1",
-      created_at: "2025-08-14T09:13:06.586770Z",
-      start_date: "2025-08-14",
-      end_date: "2025-08-14",
-      approximate_lesson_start: "09:11:35.981000",
-      is_active: true,
-      is_archived: false,
-      course_id: 1,
-      teacher_id: 2,
-      teacher: {
-        id: 2,
-        first_name: "Иван",
-        last_name: "Иванов",
-        email: "",
-        phone_number: "",
-        role: "",
-        password: null,
-      },
-    },
-    checks: [
-      {
-        id: 3,
-        check: "check_003.jpg",
-        student_id: 3,
-        group_id: 1,
-        uploaded_at: "2025-08-14T12:00:00Z",
-      },
-    ],
-    group_course_name: "Английский-B1",
-  },
-  {
-    student_id: 2,
-    student_first_name: "Болот",
-    student_last_name: "Калыков",
-    group_id: 1,
-    payment_detail_id: 2,
-    months_paid: 1,
-    current_month_number: 1,
-    payment_status: "Оплачено",
-    group: {
-      id: 1,
-      name: "Английский-B1-0825-1",
-      created_at: "2025-08-14T09:13:06.586770Z",
-      start_date: "2025-08-14",
-      end_date: "2025-08-14",
-      approximate_lesson_start: "09:11:35.981000",
-      is_active: true,
-      is_archived: false,
-      course_id: 1,
-      teacher_id: 2,
-      teacher: {
-        id: 2,
-        first_name: "Иван",
-        last_name: "Иванов",
-        email: "",
-        phone_number: "",
-        role: "",
-        password: null,
-      },
-    },
-    checks: [],
-    group_course_name: "Английский-B1",
-  },
-];
-
-const mockGroupData: Group = {
-  id: 1,
-  name: "Английский-B1-0825-1",
-  created_at: "2025-08-14T09:13:06.586770Z",
-  start_date: "2025-08-14",
-  end_date: "2025-08-14",
-  approximate_lesson_start: "09:11:35.981000",
-  is_active: true,
-  is_archived: false,
-  course_id: 1,
-  teacher_id: 2,
-  teacher: {
-    id: 2,
-    first_name: "Иван",
-    last_name: "Иванов",
-    email: "",
-    phone_number: "",
-    role: "",
-    password: null,
-  },
-  course: {
-    id: 1,
-    name: "Английский язык",
-    price: 5000,
-    description: "Курс английского языка уровня B1",
-    language_id: 1,
-    level_id: 1,
-    language_name: "Английский",
-    level_code: "B1",
-    created_at: "2025-08-14T09:00:00Z",
-  },
-};
+import Pagination from "@components/Pagination";
+import { FinanceTableItem, Check, Group } from "src/consts/types";
 
 const TableSkeleton = () => (
   <div className={styles.tableSkeleton}>
@@ -198,51 +47,83 @@ interface ChecksModalData {
 }
 
 export default function FinancePage() {
+  const dispatch = useAppDispatch();
+  const { financeData, financeLoading, financeError, downloadCheckError } =
+    useAppSelector((state) => state.finance);
+
   const [filteredFinance, setFilteredFinance] = useState<FinanceTableItem[]>(
     []
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | undefined>(
+    undefined
+  );
+  const [currentPage, setCurrentPage] = useState(1);
   const [groupDetails, setGroupDetails] = useState<Group | null>(null);
-  const [, setLoadingGroupDetails] = useState(false);
+  const [downloadingCheckId, setDownloadingCheckId] = useState<number | null>(
+    null
+  );
 
   const checksModal = useModal<ChecksModalData>("checks");
 
   const statusOptions = [
+    { label: "Все статусы", value: "" },
     { label: "Оплачено", value: "Оплачено" },
     { label: "Не оплачено", value: "Не оплачено" },
   ];
 
-  const fetchGroupDetails = async (): Promise<Group> => {
-    setLoadingGroupDetails(true);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        setLoadingGroupDetails(false);
-        resolve(mockGroupData);
-      }, 500);
-    });
-  };
+  interface FinanceParams {
+    page: number;
+    size: number;
+    group_id?: string | number;
+    search?: string;
+  }
+
+  const fetchFinanceData = useCallback(() => {
+    const params: FinanceParams = {
+      page: currentPage,
+      size: 20,
+    };
+
+    if (selectedGroupId) {
+      params.group_id = selectedGroupId;
+    }
+
+    if (searchTerm.trim()) {
+      params.search = searchTerm.trim();
+    }
+
+    const paramsForDispatch = {
+      ...params,
+      group_id:
+        params.group_id !== undefined ? Number(params.group_id) : undefined,
+    };
+
+    dispatch(getFinance(paramsForDispatch));
+  }, [dispatch, selectedGroupId, searchTerm, currentPage]);
 
   useEffect(() => {
-    setLoading(true);
-    setTimeout(() => {
-      let filtered = mockFinanceData;
+    fetchFinanceData();
+  }, [fetchFinanceData]);
 
-      if (searchTerm) {
-        filtered = filtered.filter(
-          (item) =>
-            `${item.student_first_name} ${item.student_last_name}`
-              .toLowerCase()
-              .includes(searchTerm.toLowerCase()) ||
-            item.group.name.toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      }
+  useEffect(() => {
+    if (financeData?.items) {
+      let filtered = financeData.items;
+
+      filtered = filtered.filter(
+        (item) =>
+          item.student_id !== item.group.teacher_id &&
+          item.student_first_name !== "Super"
+      );
 
       if (selectedStatus) {
         filtered = filtered.filter(
           (item) =>
-            item.payment_status.toLowerCase() === selectedStatus.toLowerCase()
+            getPaymentStatus(
+              item.months_paid,
+              item.current_month_number
+            ).toLowerCase() === selectedStatus.toLowerCase()
         );
       }
 
@@ -257,13 +138,39 @@ export default function FinancePage() {
       }));
 
       setFilteredFinance(tableData);
-      setLoading(false);
-    }, 1000);
-  }, [searchTerm, selectedStatus]);
+    }
+  }, [financeData, selectedStatus]);
+
+  const groupOptions = React.useMemo(() => {
+    if (!financeData?.items) return [{ label: "Все группы", value: "" }];
+
+    const uniqueGroups = Array.from(
+      new Map(
+        financeData.items.map((item) => [item.group.id, item.group])
+      ).values()
+    );
+
+    return [
+      { label: "Все группы", value: "" },
+      ...uniqueGroups.map((group) => ({
+        label: group.name,
+        value: group.id.toString(),
+      })),
+    ];
+  }, [financeData]);
+
+  const getPaymentStatus = (monthsPaid: number, currentMonth: number) => {
+    return monthsPaid < currentMonth ? "Не оплачено" : "Оплачено";
+  };
 
   const handleViewChecks = async (financeItem: FinanceTableItem) => {
-    const groupData = await fetchGroupDetails();
-    setGroupDetails(groupData);
+    const groupData = financeData?.items.find(
+      (item) => item.group_id === financeItem.group_id
+    )?.group;
+
+    if (groupData) {
+      setGroupDetails(groupData as Group);
+    }
 
     checksModal.openModal({
       studentName: financeItem.student_name,
@@ -273,18 +180,80 @@ export default function FinancePage() {
     });
   };
 
+  const handleDownloadCheck = async (check: Check) => {
+    setDownloadingCheckId(check.id);
+    try {
+      await dispatch(
+        downloadCheck({
+          check_id: check.id,
+          filename: check.check.split("/").pop() || `check_${check.id}`,
+        })
+      ).unwrap();
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Error downloading check:", error.message);
+      } else {
+        console.error("Unknown error downloading check:", error);
+      }
+    } finally {
+      setDownloadingCheckId(null);
+    }
+  };
+
   const handleStatusChange = (paymentId: number) => {
-    setFilteredFinance((prev) =>
-      prev.map((item) =>
-        item.id === paymentId
-          ? {
-              ...item,
-              payment_status:
-                item.payment_status === "Оплачено" ? "Не оплачено" : "Оплачено",
-            }
-          : item
-      )
+    const originalPayment = financeData?.items.find(
+      (item) => item.payment_detail_id === paymentId
     );
+    if (!originalPayment) return;
+
+    const { student_id, group_id, current_month_number, months_paid } =
+      originalPayment;
+
+    const isPaid = months_paid >= current_month_number;
+
+    const updatedMonthsPaid = isPaid
+      ? Math.max(months_paid - 1, 0)
+      : months_paid + 1;
+
+    const newStatus =
+      updatedMonthsPaid < current_month_number ? "Не оплачено" : "Оплачено";
+
+    dispatch(
+      editFinanceStatus({
+        payments_id: paymentId,
+        group_id,
+        student_id,
+        data: {
+          current_month_number,
+          months_paid: updatedMonthsPaid,
+          status: newStatus,
+        },
+      })
+    ).then(() => {
+      fetchFinanceData();
+    });
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleGroupChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    const groupId = value ? parseInt(value) : undefined;
+    setSelectedGroupId(groupId);
+    setCurrentPage(1);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handleStatusFilterChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    setSelectedStatus(e.target.value);
   };
 
   const financeColumns = [
@@ -310,7 +279,7 @@ export default function FinancePage() {
             className={styles.actionButton}
             title="Посмотреть чеки"
           >
-            Чеки
+            Чеки ({row.checks.length})
           </button>
         </div>
       ),
@@ -320,17 +289,30 @@ export default function FinancePage() {
       title: "Оплата",
       width: "150px",
       isButton: true,
-      render: (value: string, row: FinanceTableItem) => (
-        <button
-          onClick={() => handleStatusChange(row.id)}
-          className={classNames(styles.statusBadge, {
-            [styles.paid]: value === "Оплачено",
-            [styles.unpaid]: value === "Не оплачено",
-          })}
-        >
-          {value}
-        </button>
-      ),
+      render: (_: string, row: FinanceTableItem) => {
+        const originalPayment = financeData?.items.find(
+          (item) => item.payment_detail_id === row.id
+        );
+
+        const status = originalPayment
+          ? getPaymentStatus(
+              originalPayment.months_paid,
+              originalPayment.current_month_number
+            )
+          : row.payment_status;
+
+        return (
+          <button
+            onClick={() => handleStatusChange(row.id)}
+            className={classNames(styles.statusBadge, {
+              [styles.paid]: status === "Оплачено",
+              [styles.unpaid]: status === "Не оплачено",
+            })}
+          >
+            {status}
+          </button>
+        );
+      },
     },
   ];
 
@@ -339,7 +321,8 @@ export default function FinancePage() {
       key: "group_name",
       title: "Группа",
       width: "150px",
-      render: () => groupDetails?.name || "Загрузка...",
+      render: () =>
+        groupDetails?.name || checksModal.data?.groupName || "Загрузка...",
     },
     {
       key: "uploaded_at",
@@ -354,11 +337,12 @@ export default function FinancePage() {
       isButton: true,
       render: (_: string, row: Check) => (
         <button
-          onClick={() => window.open(row.check, "_blank")}
+          onClick={() => handleDownloadCheck(row)}
           className={styles.checkNameButton}
-          title="Посмотреть чек"
+          title="Скачать чек"
+          disabled={downloadingCheckId === row.id}
         >
-          Скачать
+          {downloadingCheckId === row.id ? "Скачивание..." : "Скачать"}
         </button>
       ),
     },
@@ -371,13 +355,24 @@ export default function FinancePage() {
           <div className={styles.contentHeader}>
             <div className={styles.filtersContainer}>
               <h3 className={styles.title}>Финансы</h3>
+
               <div className={styles.searchField}>
                 <InputField
                   leftIcon={<SearchIcon />}
                   isShadow
                   placeholder="Поиск по ФИО или группе..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={handleSearchChange}
+                />
+              </div>
+
+              <div className={styles.selectField}>
+                <SelectField
+                  options={groupOptions}
+                  isShadow
+                  value={selectedGroupId?.toString() || ""}
+                  onChange={handleGroupChange}
+                  placeholder="Выберите группу"
                 />
               </div>
 
@@ -386,7 +381,7 @@ export default function FinancePage() {
                   options={statusOptions}
                   isShadow
                   value={selectedStatus}
-                  onChange={(e) => setSelectedStatus(e.target.value)}
+                  onChange={handleStatusFilterChange}
                   placeholder="Статус оплаты"
                 />
               </div>
@@ -394,14 +389,29 @@ export default function FinancePage() {
           </div>
 
           <div className={styles.tableContainer}>
-            {loading ? (
+            {financeLoading ? (
               <TableSkeleton />
+            ) : financeError ? (
+              <div className={styles.error}>
+                Ошибка загрузки финансовых данных. Попробуйте обновить страницу.
+              </div>
             ) : (
-              <Table
-                columns={financeColumns}
-                data={filteredFinance}
-                emptyMessage="Данные о финансах не найдены"
-              />
+              <>
+                <Table
+                  columns={financeColumns}
+                  data={filteredFinance}
+                  emptyMessage="Данные о финансах не найдены"
+                />
+
+                {financeData?.pagination &&
+                  financeData.pagination.total_pages > 1 && (
+                    <Pagination
+                      totalPages={financeData.pagination.total_pages}
+                      currentPage={currentPage}
+                      handlePageChange={handlePageChange}
+                    />
+                  )}
+              </>
             )}
           </div>
         </div>
@@ -415,6 +425,11 @@ export default function FinancePage() {
       >
         {checksModal.data && (
           <div className={styles.checksModalContent}>
+            {downloadCheckError && (
+              <div className={styles.error__message}>
+                <span className={styles.error__text}>{downloadCheckError}</span>
+              </div>
+            )}
             <div className={styles.tableContainer}>
               <Table
                 columns={checksColumns}

@@ -2,12 +2,15 @@ import InputField from "@components/Fields/InputField";
 import SelectField from "@components/Fields/SelectField";
 import TextArea from "@components/Fields/TextAreaField";
 import ProfileModal from "@components/ProfileModal";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import { Course, Language, Level } from "src/consts/types";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { updateCourse } from "src/store/courseGroup/courseGroup.action";
+import {
+  updateCourse,
+  deleteCourse,
+} from "src/store/courseGroup/courseGroup.action";
 
 type Props = {
   isOpen: boolean;
@@ -35,9 +38,10 @@ const EditModal = ({
   onSuccess,
 }: Props) => {
   const dispatch = useAppDispatch();
-  const { updatingCourse, error } = useAppSelector(
+  const { updatingCourse, deletingCourse, error } = useAppSelector(
     (state) => state.groupsCourses
   );
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const {
     register,
@@ -69,6 +73,7 @@ const EditModal = ({
         level_id: level ? level.id : "",
         description: data.description || null,
       });
+      setShowDeleteConfirm(false);
     }
   }, [isOpen, data, reset, languageOptions, levelOptions]);
 
@@ -91,6 +96,30 @@ const EditModal = ({
     } catch (error) {
       console.error("Ошибка обновления курса:", error);
     }
+  };
+
+  const handleDelete = async () => {
+    if (!data) return;
+
+    try {
+      await dispatch(deleteCourse(data.id)).unwrap();
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        onClose();
+      }
+    } catch (error) {
+      console.error("Ошибка удаления курса:", error);
+    }
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirm(false);
   };
 
   return (
@@ -117,7 +146,7 @@ const EditModal = ({
               isShadow
             />
             {errors.name && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.name.message}
               </span>
             )}
@@ -140,7 +169,7 @@ const EditModal = ({
               isShadow
             />
             {errors.price && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.price.message}
               </span>
             )}
@@ -158,7 +187,7 @@ const EditModal = ({
               isShadow
             />
             {errors.language_id && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.language_id.message}
               </span>
             )}
@@ -177,7 +206,7 @@ const EditModal = ({
               isShadow
             />
             {errors.level_id && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.level_id.message}
               </span>
             )}
@@ -193,36 +222,73 @@ const EditModal = ({
               isShadow
             />
             {errors.description && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.description.message}
               </span>
             )}
           </div>
 
           {error && (
-            <div
-              style={{ color: "red", fontSize: "14px", marginBottom: "10px" }}
-            >
+            <div className={styles.errorMessage}>
               {error}
+            </div>
+          )}
+
+          {showDeleteConfirm && (
+            <div className={styles.deleteConfirmContainer}>
+              <p className={styles.deleteConfirmTitle}>
+                Вы уверены, что хотите удалить этот курс?
+              </p>
+              <p className={styles.deleteConfirmText}>
+                Это действие нельзя будет отменить.
+              </p>
+              <div className={styles.deleteConfirmActions}>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={deletingCourse}
+                  className={styles.deleteConfirmButton}
+                >
+                  {deletingCourse ? "Удаление..." : "Да, удалить"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteCancel}
+                  disabled={deletingCourse}
+                  className={styles.deleteCancelButton}
+                >
+                  Отмена
+                </button>
+              </div>
             </div>
           )}
 
           <div className={styles.formActions}>
             <button
-              type="submit"
-              className={styles.saveButton}
-              disabled={updatingCourse}
-            >
-              {updatingCourse ? "Сохранение..." : "Сохранить"}
-            </button>
-            <button
               type="button"
-              className={styles.cancelButton}
-              onClick={onClose}
-              disabled={updatingCourse}
+              onClick={handleDeleteClick}
+              disabled={updatingCourse || deletingCourse || showDeleteConfirm}
+              className={styles.deleteCourseButton}
             >
-              Отмена
+              Удалить курс
             </button>
+            <div className={styles.formActionsInner}>
+              <button
+                type="button"
+                className={styles.cancelButton}
+                onClick={onClose}
+                disabled={updatingCourse || deletingCourse}
+              >
+                Отмена
+              </button>
+              <button
+                type="submit"
+                className={styles.saveButton}
+                disabled={updatingCourse || deletingCourse}
+              >
+                {updatingCourse ? "Сохранение..." : "Сохранить"}
+              </button>
+            </div>
           </div>
         </form>
       )}

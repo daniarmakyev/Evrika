@@ -11,49 +11,92 @@ interface PopupHeaderProps {
   isAuthenticated?: boolean;
 }
 
-const PopupHeader: React.FC<PopupHeaderProps> = ({ 
-  isOpen, 
-  user, 
-  onLogout, 
-  isAuthenticated 
+const PopupHeader: React.FC<PopupHeaderProps> = ({
+  isOpen,
+  user,
+  onLogout,
+  isAuthenticated,
 }) => {
-  const menuItems = isAuthenticated && user ? [
-    {
-      id: 1,
-      name: "Профиль",
-      link: "/profile/personal-info",
-    },
-    {
-      id: 3,
-      name: "Расписание",
-      link: "/profile/schedule",
-    },
-  ] : [
-    {
-      id: 4,
-      name: "Войти",
-      link: "/auth/login",
-    },
-  ];
+  let menuItems;
+
+  if (isAuthenticated && user) {
+    if (user.role === "admin") {
+      menuItems = [
+        {
+          id: 10,
+          name: "Меню",
+          link: "/profile/admin/teacher-list",
+        },
+        {
+          id: 11,
+          name: "Финансы",
+          link: "/financeAdmin",
+        },
+      ];
+    } else if (user.role === "student") {
+      menuItems = [
+        {
+          id: 1,
+          name: "Профиль",
+          link: "/profile/personal-info",
+        },
+        {
+          id: 3,
+          name: "Расписание",
+          link: "/profile/schedule",
+        },
+        {
+          id: 5,
+          name: "Финансы",
+          link: "/finance",
+        },
+      ];
+    } else {
+      menuItems = [
+        {
+          id: 1,
+          name: "Профиль",
+          link: "/profile/personal-info",
+        },
+        {
+          id: 3,
+          name: "Расписание",
+          link: "/profile/schedule",
+        },
+      ];
+    }
+  } else {
+    menuItems = [
+      {
+        id: 4,
+        name: "Войти",
+        link: "/auth/login",
+      },
+    ];
+  }
 
   return (
-    <div className={classNames(styles.popup, {
-      [styles.header__popup_isOpen]: isOpen,
-    })}>
+    <div
+      className={classNames(styles.popup, {
+        [styles.header__popup_isOpen]: isOpen,
+      })}
+    >
       <ul>
         {menuItems.map((item) => (
           <li key={item.id}>
-            <Link href={item.link}>
-              {item.name}
-            </Link>
+            <Link href={item.link}>{item.name}</Link>
           </li>
         ))}
-        
+
         {isAuthenticated && onLogout && (
           <li>
-            <a onClick={onLogout}>
+            <button
+              type="button"
+              onClick={onLogout}
+              className={styles.logoutBtn}
+            >
               Выйти
-            </a>
+            </button>
           </li>
         )}
       </ul>

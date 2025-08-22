@@ -77,7 +77,6 @@ export const courseGroupSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
-        // Существующие reducers для курсов
         builder
             .addCase(getCourses.pending, (state) => {
                 state.loadingCourses = true;

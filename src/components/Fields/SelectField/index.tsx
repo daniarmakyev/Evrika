@@ -10,6 +10,7 @@ interface SelectOption {
 interface SelectFieldProps
   extends Omit<SelectHTMLAttributes<HTMLSelectElement>, "style"> {
   label?: string;
+  labelLeft?: boolean;
   error?: string;
   fullWidth?: boolean;
   style?: React.CSSProperties;
@@ -31,6 +32,7 @@ const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
   (
     {
       label,
+      labelLeft = false,
       error,
       fullWidth = false,
       style = {},
@@ -53,9 +55,11 @@ const SelectField = forwardRef<HTMLSelectElement, SelectFieldProps>(
     return (
       <div
         style={style}
-        className={`${styles.inputWrapper} ${
-          fullWidth ? styles.fullWidth : ""
-        }`}
+        className={classNames(
+          styles.inputWrapper,
+          { [styles.fullWidth]: fullWidth },
+          { [styles.labelLeft]: labelLeft }
+        )}
       >
         {label && (
           <label htmlFor={id} className={styles.label}>

@@ -1,11 +1,14 @@
 import InputField from "@components/Fields/InputField";
 import SelectField from "@components/Fields/SelectField";
 import ProfileModal from "@components/ProfileModal";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styles from "./styles.module.scss";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { updateGroup } from "src/store/courseGroup/courseGroup.action";
+import {
+  updateGroup,
+  deleteGroup,
+} from "src/store/courseGroup/courseGroup.action";
 import { clearError } from "src/store/courseGroup/courseGroup.slice";
 import { Group, Teacher } from "src/consts/types";
 
@@ -38,9 +41,10 @@ const EditGroupModal = ({
   courseOptions,
 }: Props) => {
   const dispatch = useAppDispatch();
-  const { updatingGroup, error } = useAppSelector(
+  const { updatingGroup, deletingGroup, error } = useAppSelector(
     (state) => state.groupsCourses
   );
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const {
     register,
@@ -90,6 +94,7 @@ const EditGroupModal = ({
         teacher_id: data.teacher_id,
       });
       dispatch(clearError());
+      setShowDeleteConfirm(false);
     }
   }, [isOpen, data, reset, dispatch]);
 
@@ -101,6 +106,7 @@ const EditGroupModal = ({
 
   const handleClose = () => {
     dispatch(clearError());
+    setShowDeleteConfirm(false);
     onClose();
   };
 
@@ -130,6 +136,30 @@ const EditGroupModal = ({
     } catch (error) {
       console.error("Ошибка обновления группы:", error);
     }
+  };
+
+  const handleDelete = async () => {
+    if (!data) return;
+
+    try {
+      await dispatch(deleteGroup(data.id)).unwrap();
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        onClose();
+      }
+    } catch (error) {
+      console.error("Ошибка удаления группы:", error);
+    }
+  };
+
+  const handleDeleteClick = () => {
+    setShowDeleteConfirm(true);
+  };
+
+  const handleDeleteCancel = () => {
+    setShowDeleteConfirm(false);
   };
 
   const getCurrentStatus = () => {
@@ -167,16 +197,7 @@ const EditGroupModal = ({
       {data && (
         <form onSubmit={handleSubmit(onSubmit)} className={styles.modal__form}>
           {error && (
-            <div
-              style={{
-                color: "red",
-                backgroundColor: "#ffebee",
-                padding: "10px",
-                borderRadius: "4px",
-                border: "1px solid #ffcdd2",
-                marginBottom: "20px",
-              }}
-            >
+            <div className={styles.errorMessage}>
               {error}
             </div>
           )}
@@ -197,7 +218,7 @@ const EditGroupModal = ({
               style={{ width: "180px" }}
             />
             {errors.name && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.name.message}
               </span>
             )}
@@ -216,7 +237,7 @@ const EditGroupModal = ({
               isShadow
             />
             {errors.course_id && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.course_id.message}
               </span>
             )}
@@ -235,7 +256,7 @@ const EditGroupModal = ({
               isShadow
             />
             {errors.teacher_id && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.teacher_id.message}
               </span>
             )}
@@ -252,7 +273,7 @@ const EditGroupModal = ({
               isShadow
             />
             {errors.start_date && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.start_date.message}
               </span>
             )}
@@ -269,7 +290,7 @@ const EditGroupModal = ({
               isShadow
             />
             {errors.end_date && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+             <span className={styles.validationError}>
                 {errors.end_date.message}
               </span>
             )}
@@ -286,7 +307,7 @@ const EditGroupModal = ({
               isShadow
             />
             {errors.approximate_lesson_start && (
-              <span style={{ color: "red", fontSize: "14px" }}>
+              <span className={styles.validationError}>
                 {errors.approximate_lesson_start.message}
               </span>
             )}
@@ -307,22 +328,66 @@ const EditGroupModal = ({
           <input type="hidden" {...register("is_active")} />
           <input type="hidden" {...register("is_archived")} />
 
+          {showDeleteConfirm && (
+            <div className={styles.deleteConfirmContainer}>
+              <p className={styles.deleteConfirmTitle}>
+                Вы уверены, что хотите удалить эту группу?
+              </p>
+              <p className={styles.deleteConfirmText}>
+                Это действие нельзя будет отменить.
+              </p>
+              <div className={styles.deleteConfirmActions}>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  disabled={deletingGroup}
+                  className={styles.deleteConfirmButton}
+                >
+                  {deletingGroup ? "Удаление..." : "Да, удалить"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDeleteCancel}
+                  disabled={deletingGroup}
+                  className={styles.deleteCancelButton}
+                >
+                  Отмена
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className={styles.formActions}>
             <button
               type="button"
-              className={styles.cancelButton}
-              onClick={handleClose}
-              disabled={isSubmitting || updatingGroup}
+              onClick={handleDeleteClick}
+              disabled={
+                isSubmitting ||
+                updatingGroup ||
+                deletingGroup ||
+                showDeleteConfirm
+              }
+              className={styles.deleteGroupButton}
             >
-              Отмена
+              Удалить группу
             </button>
-            <button
-              type="submit"
-              className={styles.saveButton}
-              disabled={isSubmitting || updatingGroup}
-            >
-              {updatingGroup ? "Сохранение..." : "Сохранить"}
-            </button>
+            <div className={styles.formActionsInner}>
+              <button
+                type="button"
+                className={styles.cancelButton}
+                onClick={handleClose}
+                disabled={isSubmitting || updatingGroup || deletingGroup}
+              >
+                Отмена
+              </button>
+              <button
+                type="submit"
+                className={styles.saveButton}
+                disabled={isSubmitting || updatingGroup || deletingGroup}
+              >
+                {updatingGroup ? "Сохранение..." : "Сохранить"}
+              </button>
+            </div>
           </div>
         </form>
       )}
