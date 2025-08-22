@@ -17,7 +17,11 @@ import {
   useGetStudentListQuery,
   useDeleteStudentMutation,
 } from "src/store/admin/students/students";
-import { useAppSelector } from "src/store/store";
+import { useAppSelector, useAppDispatch } from "src/store/store";
+import {
+  getCourses,
+  getGroups,
+} from "src/store/courseGroup/courseGroup.action";
 import type { Student } from "src/consts/types";
 import { useRouter } from "next/navigation";
 
@@ -28,23 +32,35 @@ export default function StudentList() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const { courses, groups } = useAppSelector((state) => state.groupsCourses);
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
-  const size = 20; // items per pag
-  const groupId = selectedGroup?.match(/\d+/);
-  const user_id = groupId ? Number(groupId[0]) : null;
+  const size = 20;
+
+  useEffect(() => {
+    dispatch(getCourses());
+    dispatch(getGroups({ limit: 99, offset: 0 }));
+  }, [dispatch]);
+
+  const user_id = selectedGroup ? Number(selectedGroup) : null;
+
   const { data, error, isLoading, refetch } = useGetStudentListQuery(
     {
       page: currentPage,
       size,
       user_id: user_id,
     },
-    { skip: !user_id }
+    {
+      skip: !user_id,
+    }
   );
+
   console.log(data?.students, "Student", error);
+
   const filteredStudents = data?.students?.filter((student: Student) =>
     student.full_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
   const [deleteStudent] = useDeleteStudentMutation();
 
   const handleOptionClick = async (option: string, student: Student) => {
@@ -76,7 +92,6 @@ export default function StudentList() {
 
       case "Посмотреть":
         router.push(`/profile/admin/student-list/${student.id}`);
-
         break;
 
       default:
@@ -84,6 +99,7 @@ export default function StudentList() {
     }
     setOpenRowId(null);
   };
+
   const homeWorkColumns = [
     {
       key: "full_name",
@@ -97,9 +113,7 @@ export default function StudentList() {
               className={styles.table__button}
               onClick={() => setOpenRowId(isMenuOpen ? null : row.id)}
             >
-              {/* <div style={{position:'relative'}}> */}
               <Ellipsis style={{ cursor: "pointer" }} />
-              {/* </div> */}
               {isMenuOpen && (
                 <DropdownMenu
                   options={["Редактировать", "Удалить", "Посмотреть"]}
@@ -133,20 +147,19 @@ export default function StudentList() {
           <span
             style={{
               display: "inline-block",
-              maxWidth: "220px", // same as column width
+              maxWidth: "220px",
               overflow: "hidden",
               whiteSpace: "nowrap",
               textOverflow: "ellipsis",
               verticalAlign: "middle",
             }}
-            title={joined} // show full text on hover
+            title={joined}
           >
             {joined}
           </span>
         );
       },
     },
-
     {
       key: "email",
       title: "Почта",
@@ -154,10 +167,7 @@ export default function StudentList() {
       isButton: true,
       render: (value: string) => {
         return (
-          <button
-            // onClick={() => handleOpenTaskModal(row)}
-            className={styles.table__button}
-          >
+          <button className={styles.table__button}>
             <span>
               {value.length > 50 ? value.substring(0, 50) + "..." : value}
             </span>
@@ -197,22 +207,29 @@ export default function StudentList() {
   ];
 
   useEffect(() => {
-    if (courses?.length) {
-      const defaultCourse = courses[0];
-      setSelectedCourse(String(defaultCourse.id));
-      const firstGroup = groups?.find(
-        (group) => group.course_id === defaultCourse.id
-      );
-      setSelectedGroup(firstGroup ? String(firstGroup.id) : null);
+    if (courses?.length && groups?.length) {
+      if (!selectedCourse || !selectedGroup) {
+        const defaultCourse = courses[0];
+        setSelectedCourse(String(defaultCourse.id));
+
+        const firstGroup = groups.find(
+          (group) => group.course_id === defaultCourse.id
+        );
+
+        if (firstGroup) {
+          setSelectedGroup(String(firstGroup.id));
+        }
+      }
     }
-  }, [courses, groups]);
+  }, [courses, groups, selectedCourse, selectedGroup]);
+
   const groupOptions =
     groups
       ?.filter((group) =>
         selectedCourse ? group.course_id === Number(selectedCourse) : true
       )
       .map((group) => ({
-        value: group.id,
+        value: String(group.id),
         label: group.name,
       })) ?? [];
 
@@ -233,6 +250,13 @@ export default function StudentList() {
     } else {
       setSelectedGroup(null);
     }
+
+    setCurrentPage(1);
+  };
+
+  const handleGroupChange = (groupId: string | null) => {
+    setSelectedGroup(groupId);
+    setCurrentPage(1);
   };
 
   return (
@@ -246,6 +270,7 @@ export default function StudentList() {
         </button>
         <button className={styles.white__button}>Архив</button>
       </div>
+
       {error ? (
         <div className={styles.errorMessage}>
           <p>Произошла ошибка при загрузке студентов.</p>
@@ -270,11 +295,13 @@ export default function StudentList() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
+
             <div>
               <button className={styles.white__button}>
                 <Download /> Выгрузить
               </button>
             </div>
+
             <div className={styles.filter_container}>
               <div style={{ width: "210px", position: "relative" }}>
                 <SelectField
@@ -289,7 +316,7 @@ export default function StudentList() {
                 <SelectField
                   isShadow
                   value={selectedGroup ?? ""}
-                  onChange={(e) => setSelectedGroup(e.target.value || null)}
+                  onChange={(e) => handleGroupChange(e.target.value || null)}
                   options={groupOptions}
                   placeholder="Выбрать группу"
                 />
@@ -301,7 +328,11 @@ export default function StudentList() {
             <Table
               columns={homeWorkColumns}
               data={filteredStudents}
-              emptyMessage="Нет данных "
+              emptyMessage={
+                !selectedGroup
+                  ? "Выберите группу для просмотра студентов"
+                  : "Нет данных"
+              }
             />
           </div>
 
@@ -314,6 +345,7 @@ export default function StudentList() {
           )}
         </div>
       )}
+
       <AddStudent
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
