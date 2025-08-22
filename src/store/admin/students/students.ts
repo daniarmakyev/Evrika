@@ -27,13 +27,13 @@ interface StudentForm {
   role: string;
 }
 
-// Тип ошибки с сервера
-interface ValidationError {
-  type?: string;
-  loc?: string[];
-  msg: string;
-  input?: unknown;
-}
+
+// interface ValidationError {
+//   type?: string;
+//   loc?: string[];
+//   msg: string;
+//   input?: unknown;
+// }
 
 export const studentApi = createApi({
   reducerPath: "studentApi",
@@ -62,14 +62,15 @@ export const studentApi = createApi({
         body: studentData,
       }),
 
-      transformErrorResponse: (response: {
-        data?: ValidationError[];
-        status: number;
-      }) => {
-        // возвращаем массив ошибок или один объект с msg
-        if (response?.data) return response.data;
-        return [{ msg: "Не удалось зарегистрировать студента" }];
-      },
+      // transformErrorResponse: (response: {
+      //   data?: ValidationError[];
+      //   status: number;
+      // }) => {
+      //   // возвращаем массив ошибок или один объект с msg
+      //   if (response?.data) return response.data;
+      //   return [{ msg: "Не удалось зарегистрировать студента" }];
+      // },
+      invalidatesTags: ["Students"]
     }),
     getStudentList: builder.query<StudentsResponse, GetStudentsParams>({
       query: ({ user_id, page = 1, size = 20 }) =>

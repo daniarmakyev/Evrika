@@ -64,8 +64,12 @@ export default function StudentList() {
           try {
             await deleteStudent(student.id).unwrap();
             alert(`Студент ${student.full_name} успешно удалён`);
-          } catch (err: any) {
-            alert(`Ошибка при удалении: ${err.message}`);
+          } catch (err: unknown) {
+            if (err instanceof Error) {
+              alert(`Ошибка при удалении: ${err.message}`);
+            } else {
+              alert(`Ошибка при удалении: ${JSON.stringify(err)}`);
+            }
           }
         }
         break;

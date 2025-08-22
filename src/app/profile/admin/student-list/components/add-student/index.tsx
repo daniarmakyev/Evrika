@@ -1,16 +1,13 @@
 import ProfileModal from "@components/ProfileModal";
-// import TextArea from "@components/Fields/TextAreaField";
 import InputField from "@components/Fields/InputField";
 import React from "react";
 import styles from "./styles.module.scss";
 import { ChevronDown } from "lucide-react";
 import { useAppSelector } from "src/store/store";
 import { useRegisterStudentMutation } from "src/store/admin/students/students";
-import type { Course} from "src/consts/types";
-
+import type { Course } from "src/consts/types";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-// import SelectField from "@components/Fields/SelectField";
-// import { FolderUp } from "lucide-react";
+import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 
 type Props = {
   isOpen: boolean;
@@ -24,18 +21,24 @@ interface FormData {
   full_name: string;
   role: string;
 }
-type ValidationError = {
-  type: string;
-  loc: string | string[];
-  msg: string;
-  input?: unknown;
+type PostForm = {
+  phone_number: string;
+  email: string;
+  full_name: string;
+  role: string;
 };
+// type ValidationError = {
+//   type: string;
+//   loc: string | string[];
+//   msg: string;
+//   input?: unknown;
+// };
 type CoursesByLanguage = Record<string, Course[]>;
 const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
   const { courses, groups } = useAppSelector((state) => state.groupsCourses);
-  const [registerStudent, { error, isLoading, isSuccess }] =
+  const [registerStudent, { isLoading, isSuccess }] =
     useRegisterStudentMutation();
 
   const {
@@ -43,7 +46,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
     reset,
     watch,
     register,
-    setError,
+    // setError,
     formState: { errors },
     handleSubmit,
   } = useForm<FormData>({
@@ -59,53 +62,39 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const selectedGroupIds =
-        groups?.filter((g) => data.group.includes(g.name)).map((g) => g.id) ?? [];
+        groups?.filter((g) => data.group.includes(g.name)).map((g) => g.id) ??
+        [];
 
       if (selectedGroupIds.length === 0) {
-        setError("group", {
-          type: "manual",
-          message: "Нужно выбрать хотя бы одну группу",
-        });
+        alert("Нужно выбрать хотя бы одну группу");
         return;
       }
 
-      const payload = {
+      const payload: PostForm = {
         full_name: data.full_name,
         email: data.email,
         phone_number: data.phone_number,
         role: data.role,
       };
 
-      // Ждем промис и обрабатываем ошибки
-      await registerStudent({ groupIds: selectedGroupIds, studentData: payload }).unwrap();
+      await registerStudent({
+        groupIds: selectedGroupIds,
+        studentData: payload,
+      }).unwrap();
 
-      // Если успешно — сбрасываем форму и закрываем модалку
+      alert(`Студент ${data.full_name} успешно зарегистрирован`);
       reset();
       onClose();
-    } catch (err: any) {
-      console.error("Ошибка при добавлении студента:", err);
-
-      // Если сервер вернул объект с detail
-      if (err?.detail) {
-        if (Array.isArray(err.detail)) {
-          err.detail.forEach((e: any) => {
-            // Можно отображать ошибки по полям, если они есть
-            if (e.loc?.[1] === "email") {
-              setError("email", { type: "manual", message: e.msg });
-            } else if (e.loc?.[1] === "group_id") {
-              setError("group", { type: "manual", message: e.msg });
-            }
-          });
-        } else {
-          setError("email", { type: "manual", message: err.detail });
-        }
+    } catch (err) {
+      const error = err as FetchBaseQueryError 
+      if ("status" in error && error.status === "FETCH_ERROR") {
+        console.warn("Запрос прошел, но ответ не обработан:", error);
+        // Можно не показывать alert, если знаете, что сервер добавил студента
       } else {
-        // Общая ошибка
-        setError("email", { type: "manual", message: "Не удалось зарегистрировать студента" });
+        alert("Не удалось зарегистрировать студента. Попробуйте позже.");
       }
     }
   };
-
 
   return (
     <ProfileModal
@@ -136,7 +125,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
 
         <div className={styles.input_container}>
           <InputField
-            {...register("phone", {
+            {...register("phone_number", {
               required: "Телефон обязателен",
               pattern: {
                 value: /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/,
@@ -149,9 +138,9 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
             label="Телефон"
             placeholder="+7 (999) 999-99-99"
           />
-          {errors.phone && (
+          {errors.phone_number && (
             <span style={{ color: "red", fontSize: "14px" }}>
-              {errors.phone.message}
+              {errors.phone_number.message}
             </span>
           )}
         </div>
@@ -306,20 +295,6 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
             {isLoading ? "Сохраняем..." : "Добавить"}
           </button>
         </div>
-        {error && (
-          <div style={{ color: "red" }}>
-            {Array.isArray(error) ? (
-              error.map((err: ValidationError, idx: number) => (
-                <p key={idx}>{err.msg}</p>
-              ))
-            ) : typeof error === "string" ? (
-              <p>{error}</p>
-            ) : (
-              <p>Не удалось зарегистрировать студента</p>
-            )}
-          </div>
-        )}
-
         {isSuccess && <p style={{ color: "green" }}>Успешная регистрация!</p>}
       </form>
     </ProfileModal>

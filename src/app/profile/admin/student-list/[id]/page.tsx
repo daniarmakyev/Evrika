@@ -14,7 +14,7 @@ const StudentDetailPage = () => {
   const { data, error, isLoading, refetch } = useGetUserInfoQuery({
     user_id: id,
   });
-  const{data:groupList, error:groupListError,isLoading:groupListLoading}=useGetGroupListQuery()
+  const{data:groupList}=useGetGroupListQuery()
   console.log(groupList)
   if (error) {
     return (
