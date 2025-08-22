@@ -211,14 +211,15 @@ export interface Lesson {
   lesson_end: string;
 }
 
-export interface Pagination {
-  current_page_size: number;
-  current_page: number;
-  total_pages: number;
-}
+
 
 export type GetAttendanceStudentParams = {
-  user_id: string;
+  user_id: string|null
+  page?: number;
+  size?: number;
+};
+export type GetStudentsParams = {
+  user_id: number|null
   page?: number;
   size?: number;
 };
@@ -354,6 +355,80 @@ export interface FinanceResponse {
   pagination: PaginationType;
 }
 
+
+export type GroupStudent = {
+  id: number;
+  name: string;
+};
+
+export type Student = {
+  id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  role: "teacher" | "student" | string; // если роль может быть не только teacher
+  is_active: boolean;
+  groups: GroupStudent[];
+};
+
+export type Pagination = {
+  current_page_size: number;
+  current_page: number;
+  total_pages: number;
+};
+
+export type StudentsResponse = {
+  students: Student[];
+  pagination: Pagination;
+};
+
+export type User = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  role: "teacher" | "student" | "admin"; 
+  password: string;
+};
+
+type Teacher2 = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  role: string;
+  password: string;
+};
+
+type Student2 = {
+  id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  role: string; // хотя тут у тебя указано "teacher", наверное должно быть "student"
+  is_active: boolean;
+  payment_status: "Оплачено" | "Не оплачено" | string;
+};
+
+type Course2 = {
+  id: number;
+  name: string;
+  created_at: string; // ISO string
+  start_date: string; // YYYY-MM-DD
+  end_date: string;   // YYYY-MM-DD
+  approximate_lesson_start: string; // время в ISO формате
+  is_active: boolean;
+  is_archived: boolean;
+  course_id: number;
+  teacher: Teacher2;
+  teacher_id: number;
+  students: Student2[];
+};
+
+// это твой полный ответ от API
+export type CoursesResponse = Course2[];
 export interface PaymentDetail {
   id: number;
   student_id: number;
