@@ -4,27 +4,20 @@ import classNames from "classnames";
 import styles from "./styles.module.scss";
 import Attendance from "./Attendance";
 import Homework from "./Homework";
-type GroupTableItem = {
-  id: number;
-  group: string;
-  course: string;
-  startDate: string; // or Date if you store actual Date objects
-  endDate: string; // same here
-  status: "active" | "non-active";
-};
+import type { Course2 } from "src/consts/types";
 
-const StudentGroups = () => {
+const StudentGroups: React.FC<{ groups: Course2[] }> = ({ groups }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [selectedGroup, setSelectedGroup] = React.useState<string | null>(null);
   const [isHomeworkOpen, setIsHomeworkOpen] = React.useState(false);
   const homeWorkColumns = [
     {
-      key: "group",
+      key: "name",
       title: "Группа",
       width: "230px",
     },
     {
-      key: "startDate",
+      key: "start_date",
       title: "Дата начала",
       width: "220px",
       isButton: false,
@@ -37,7 +30,7 @@ const StudentGroups = () => {
       },
     },
     {
-      key: "endDate",
+      key: "end_date",
       title: "Дата окончания",
       width: "220px",
       isButton: false,
@@ -54,12 +47,20 @@ const StudentGroups = () => {
       title: "Успеваемость",
       width: "220px",
       isButton: true,
-      render: (_: string, row: GroupTableItem) => {
+      render: (_: string, row: Course2) => {
         return (
-          <div style={{ display: "flex", flexDirection: "column", gap: "2px", justifyContent:"flex-start",alignItems:"flex-start" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "2px",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+            }}
+          >
             <button
               onClick={() => {
-                setSelectedGroup(row.group);
+                setSelectedGroup(row.name);
                 setIsModalOpen(true);
               }}
             >
@@ -78,31 +79,21 @@ const StudentGroups = () => {
     },
 
     {
-      key: "status",
+      key: "is_active",
       title: "Статус",
       width: "140px",
       render: (value: string) => {
         return (
           <div
             className={classNames(styles.status, {
-              [styles.active]: value === "active",
-              [styles.inactive]: value === "non-active",
+              [styles.active]: value,
+              [styles.inactive]: !value,
             })}
           >
-            {value === "active" ? "Активен" : "Не активен"}
+            {value ? "Активен" : "Не активен"}
           </div>
         );
       },
-    },
-  ];
-  const tableData = [
-    {
-      id: 1,
-      group: "Английский A1-0925",
-      course: "Английский A1",
-      startDate: "09.09.2025",
-      endDate: "09.11.2025",
-      status: "active",
     },
   ];
   return (
@@ -122,7 +113,7 @@ const StudentGroups = () => {
         <div className={styles.homework__table}>
           <Table
             columns={homeWorkColumns}
-            data={tableData}
+            data={groups}
             emptyMessage="Нет данных о посещаемости"
           />
         </div>

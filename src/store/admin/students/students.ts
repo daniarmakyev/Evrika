@@ -81,7 +81,7 @@ export const studentApi = createApi({
       query: ({ user_id }) => `/user/${user_id}`,
     }),
     getGroupList: builder.query<CoursesResponse, void>({
-      query: () => `/group-students/detail-list`,
+      query: () => `/group-students`,
     }),
     deleteStudent: builder.mutation<void, number>({
       query: (id) => ({

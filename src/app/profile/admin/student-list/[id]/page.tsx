@@ -6,6 +6,8 @@ import styles from "./styles.module.scss";
 import StudentGroups from "./_components/StudentGroups";
 import { useParams } from "next/navigation";
 import { useGetUserInfoQuery, useGetGroupListQuery } from "src/store/admin/students/students";
+import { useSelector } from 'react-redux';
+import { selectGroupsByStudent } from "src/store/admin/students/groupStudents";
 
 
 const StudentDetailPage = () => {
@@ -14,8 +16,10 @@ const StudentDetailPage = () => {
   const { data, error, isLoading, refetch } = useGetUserInfoQuery({
     user_id: id,
   });
-  const{data:groupList}=useGetGroupListQuery()
-  console.log(groupList)
+  useGetGroupListQuery()
+  const studentGroups = useSelector(selectGroupsByStudent(Number(id)));
+  console.log(studentGroups,"STUDENTGROUPS")
+ 
   if (error) {
     return (
       <div className={styles.errorMessage}>
@@ -73,7 +77,7 @@ const StudentDetailPage = () => {
           </div>
         )}
       </div>
-      <StudentGroups />
+      <StudentGroups groups={studentGroups} />
     </div>
   );
 };

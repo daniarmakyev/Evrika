@@ -412,7 +412,7 @@ type Student2 = {
   payment_status: "Оплачено" | "Не оплачено" | string;
 };
 
-type Course2 = {
+export type Course2 = {
   id: number;
   name: string;
   created_at: string; // ISO string

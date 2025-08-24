@@ -86,7 +86,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
       reset();
       onClose();
     } catch (err) {
-      const error = err as FetchBaseQueryError 
+      const error = err as FetchBaseQueryError;
       if ("status" in error && error.status === "FETCH_ERROR") {
         console.warn("Запрос прошел, но ответ не обработан:", error);
         // Можно не показывать alert, если знаете, что сервер добавил студента
@@ -128,15 +128,15 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
             {...register("phone_number", {
               required: "Телефон обязателен",
               pattern: {
-                value: /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/,
-                message: "Введите телефон в формате +7 (999) 999-99-99",
+                value: /^\+996\d{9}$/,
+                message: "Введите телефон в формате +996XXXXXXXXX",
               },
             })}
             isShadow
             fullWidth
             // style={{ width: "45%" }}
             label="Телефон"
-            placeholder="+7 (999) 999-99-99"
+            placeholder="+996707707707"
           />
           {errors.phone_number && (
             <span style={{ color: "red", fontSize: "14px" }}>
