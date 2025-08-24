@@ -6,10 +6,16 @@ import Attendance from "./Attendance";
 import Homework from "./Homework";
 import type { Course2 } from "src/consts/types";
 
-const StudentGroups: React.FC<{ groups: Course2[],userId:number|null|undefined }> = ({ groups,userId }) => {
+const StudentGroups: React.FC<{
+  groups: Course2[];
+  userId: number | null | undefined;
+}> = ({ groups, userId }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const [selectedGroup, setSelectedGroup] = React.useState<number | null>(null);
   const [isHomeworkOpen, setIsHomeworkOpen] = React.useState(false);
+  const [selectedHomeworkGroup, setSelectedHomeworkGroup] = React.useState<
+    number | null
+  >(null);
   const homeWorkColumns = [
     {
       key: "name",
@@ -68,6 +74,7 @@ const StudentGroups: React.FC<{ groups: Course2[],userId:number|null|undefined }
             </button>
             <button
               onClick={() => {
+                setSelectedHomeworkGroup(row.id);
                 setIsHomeworkOpen(true); // Homework
               }}
             >
@@ -90,7 +97,7 @@ const StudentGroups: React.FC<{ groups: Course2[],userId:number|null|undefined }
               [styles.inactive]: !value,
             })}
           >
-            {value ? "Активен" : "Не активен"}
+            {value ? "Активная" : "Не активная"}
           </div>
         );
       },
@@ -101,13 +108,6 @@ const StudentGroups: React.FC<{ groups: Course2[],userId:number|null|undefined }
       <div className={styles.homework__content}>
         <div className={styles.homework__title}>
           <h3>Группы</h3>
-          {/* <div style={{ width: "210px", position: "relative" }}>
-              <SelectField
-                value={selectedGroup}
-                onChange={(e) => setSelectedGroup(e.target.value)}
-                options={groupOptions}
-              />
-            </div> */}
         </div>
 
         <div className={styles.homework__table}>
@@ -117,14 +117,6 @@ const StudentGroups: React.FC<{ groups: Course2[],userId:number|null|undefined }
             emptyMessage="Нет данных о группе"
           />
         </div>
-
-        {/* {data?.pagination && data.pagination.total_pages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={data?.pagination.total_pages}
-            handlePageChange={setCurrentPage}
-          />
-        )} */}
       </div>
       <Attendance
         isOpen={isModalOpen}
@@ -135,6 +127,8 @@ const StudentGroups: React.FC<{ groups: Course2[],userId:number|null|undefined }
       <Homework
         isOpen={isHomeworkOpen}
         onClose={() => setIsHomeworkOpen(false)}
+        groupId={selectedHomeworkGroup}
+        userId={userId}
       />
     </div>
   );

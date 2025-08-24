@@ -223,6 +223,13 @@ export type GetStudentsParams = {
   page?: number;
   size?: number;
 };
+export type GetHomeworkParams = {
+  user_id: number|null|undefined;
+  group_id:number|null|undefined;
+   page?: number;
+  size?: number;
+ 
+};
 
 
 export type AuthLoginResponse = {
@@ -489,4 +496,23 @@ export interface Check {
   };
 }
 
+interface Review {
+  id: number;
+  comment: string;
+}
+
+export interface HomeworkItem {
+  id: number;
+  homework_id: number;
+  student_id: number;
+  file_path: string;
+  content: string;
+  submitted_at: string; // ISO date string
+  review: Review;
+}
+
+export interface HomeworkResponse {
+  items: HomeworkItem[];
+  pagination: Pagination;
+}
 

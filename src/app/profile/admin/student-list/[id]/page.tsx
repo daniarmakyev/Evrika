@@ -19,9 +19,16 @@ const StudentDetailPage = () => {
   const { data, error, isLoading, refetch } = useGetUserInfoQuery({
     user_id: id,
   });
-  const { isLoading: isGroupsLoading,isError,error:errorGroup } = useGetGroupListQuery();
+  const {
+    isLoading: isGroupsLoading,
+    isError,
+    error: errorGroup,
+  } = useGetGroupListQuery();
   const studentGroups = useSelector(selectGroupsByStudent(Number(id)));
   console.log(studentGroups, "STUDENTGROUPS");
+  const student = studentGroups
+    ?.flatMap((group) => group.students)
+    .find((student) => student.id === Number(id));
 
   if (error) {
     return (
@@ -40,7 +47,13 @@ const StudentDetailPage = () => {
       <div className={styles.personalInfoWrapper}>
         <div className={styles.personalInfoHeader}>
           <h2>Личная информация</h2>
-          <button className={styles.status}>Активен</button>
+          <button className={styles.status}>
+            {isLoading
+              ? "Загрузка..."
+              : student?.is_active
+              ? "Активен"
+              : "Не активен"}
+          </button>
         </div>
         {isLoading ? (
           <PersonalInfoSkeleton />
@@ -83,17 +96,14 @@ const StudentDetailPage = () => {
       {isGroupsLoading ? (
         <TableSkeleton />
       ) : isError ? (
-              <div className={styles.errorMessage}>
-                <p>Произошла ошибка при загрузке посещаемости.</p>
-                <pre>{JSON.stringify(errorGroup, null, 2)}</pre>
-                <button
-                  onClick={() => refetch()}
-                  className={styles.retryButton}
-                >
-                  Повторить попытку
-                </button>
-              </div>
-            ) :  (
+        <div className={styles.errorMessage}>
+          <p>Произошла ошибка при загрузке посещаемости.</p>
+          <pre>{JSON.stringify(errorGroup, null, 2)}</pre>
+          <button onClick={() => refetch()} className={styles.retryButton}>
+            Повторить попытку
+          </button>
+        </div>
+      ) : (
         <StudentGroups groups={studentGroups} userId={data?.id} />
       )}
     </div>

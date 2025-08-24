@@ -7,6 +7,8 @@ import type {
   GetStudentsParams,
   User,
   CoursesResponse,
+  HomeworkResponse,
+  GetHomeworkParams,
 } from "src/consts/types";
 import qs from "qs";
 
@@ -26,7 +28,6 @@ interface StudentForm {
   phone_number: string;
   role: string;
 }
-
 
 // interface ValidationError {
 //   type?: string;
@@ -70,7 +71,7 @@ export const studentApi = createApi({
       //   if (response?.data) return response.data;
       //   return [{ msg: "Не удалось зарегистрировать студента" }];
       // },
-      invalidatesTags: ["Students"]
+      invalidatesTags: ["Students"],
     }),
     getStudentList: builder.query<StudentsResponse, GetStudentsParams>({
       query: ({ user_id, page = 1, size = 20 }) =>
@@ -83,6 +84,14 @@ export const studentApi = createApi({
     getGroupList: builder.query<CoursesResponse, void>({
       query: () => `/group-students`,
     }),
+    getStudentHomeworkGroupId: builder.query<
+      HomeworkResponse,
+      GetHomeworkParams
+    >({
+      query: ({ user_id, group_id, page = 1, size = 20 }) =>
+        `/submissions/user/${user_id}?${group_id}&page=${page}&size=${size}`,
+    }),
+    
     deleteStudent: builder.mutation<void, number>({
       query: (id) => ({
         url: `/user/${id}`,
@@ -99,4 +108,5 @@ export const {
   useGetUserInfoQuery,
   useGetGroupListQuery,
   useDeleteStudentMutation,
+  useGetStudentHomeworkGroupIdQuery,
 } = studentApi;
