@@ -6,9 +6,9 @@ import Attendance from "./Attendance";
 import Homework from "./Homework";
 import type { Course2 } from "src/consts/types";
 
-const StudentGroups: React.FC<{ groups: Course2[] }> = ({ groups }) => {
+const StudentGroups: React.FC<{ groups: Course2[],userId:number|null|undefined }> = ({ groups,userId }) => {
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [selectedGroup, setSelectedGroup] = React.useState<string | null>(null);
+  const [selectedGroup, setSelectedGroup] = React.useState<number | null>(null);
   const [isHomeworkOpen, setIsHomeworkOpen] = React.useState(false);
   const homeWorkColumns = [
     {
@@ -60,7 +60,7 @@ const StudentGroups: React.FC<{ groups: Course2[] }> = ({ groups }) => {
           >
             <button
               onClick={() => {
-                setSelectedGroup(row.name);
+                setSelectedGroup(row.id);
                 setIsModalOpen(true);
               }}
             >
@@ -114,7 +114,7 @@ const StudentGroups: React.FC<{ groups: Course2[] }> = ({ groups }) => {
           <Table
             columns={homeWorkColumns}
             data={groups}
-            emptyMessage="Нет данных о посещаемости"
+            emptyMessage="Нет данных о группе"
           />
         </div>
 
@@ -129,7 +129,8 @@ const StudentGroups: React.FC<{ groups: Course2[] }> = ({ groups }) => {
       <Attendance
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        groupName={selectedGroup}
+        groupId={selectedGroup}
+        userId={userId}
       />
       <Homework
         isOpen={isHomeworkOpen}

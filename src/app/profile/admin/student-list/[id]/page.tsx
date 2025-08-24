@@ -5,10 +5,13 @@ import classNames from "classnames";
 import styles from "./styles.module.scss";
 import StudentGroups from "./_components/StudentGroups";
 import { useParams } from "next/navigation";
-import { useGetUserInfoQuery, useGetGroupListQuery } from "src/store/admin/students/students";
-import { useSelector } from 'react-redux';
+import {
+  useGetUserInfoQuery,
+  useGetGroupListQuery,
+} from "src/store/admin/students/students";
+import { useSelector } from "react-redux";
 import { selectGroupsByStudent } from "src/store/admin/students/groupStudents";
-
+import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
 
 const StudentDetailPage = () => {
   const params = useParams();
@@ -16,10 +19,10 @@ const StudentDetailPage = () => {
   const { data, error, isLoading, refetch } = useGetUserInfoQuery({
     user_id: id,
   });
-  useGetGroupListQuery()
+  const { isLoading: isGroupsLoading,isError,error:errorGroup } = useGetGroupListQuery();
   const studentGroups = useSelector(selectGroupsByStudent(Number(id)));
-  console.log(studentGroups,"STUDENTGROUPS")
- 
+  console.log(studentGroups, "STUDENTGROUPS");
+
   if (error) {
     return (
       <div className={styles.errorMessage}>
@@ -77,14 +80,29 @@ const StudentDetailPage = () => {
           </div>
         )}
       </div>
-      <StudentGroups groups={studentGroups} />
+      {isGroupsLoading ? (
+        <TableSkeleton />
+      ) : isError ? (
+              <div className={styles.errorMessage}>
+                <p>Произошла ошибка при загрузке посещаемости.</p>
+                <pre>{JSON.stringify(errorGroup, null, 2)}</pre>
+                <button
+                  onClick={() => refetch()}
+                  className={styles.retryButton}
+                >
+                  Повторить попытку
+                </button>
+              </div>
+            ) :  (
+        <StudentGroups groups={studentGroups} userId={data?.id} />
+      )}
     </div>
   );
 };
 
 export default StudentDetailPage;
 
- const InputSkeleton = () => (
+const InputSkeleton = () => (
   <div className={styles.inputSkeleton}>
     <div className={styles.skeletonLabel}></div>
     <div className={styles.skeletonInput}></div>

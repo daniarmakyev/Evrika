@@ -1,18 +1,29 @@
 import React from "react";
 import Table from "@components/Table";
+import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import ProfileModal from "@components/ProfileModal";
+import { useGetAttendanceStudentQuery } from "src/store/attendance/attendance";
 interface AttendanceProps {
   isOpen: boolean;
   onClose: () => void;
-  groupName: string | null;
+  groupId: number | null;
+  userId: number | null|undefined;
 }
 const Attendance: React.FC<AttendanceProps> = ({
   isOpen,
   onClose,
-  groupName,
+  groupId,
+  userId,
 }) => {
+  const user_id = userId?.toString() ?? null;
+
+  const { data, isLoading, isError, error, refetch } =
+    useGetAttendanceStudentQuery({ user_id });
+  const attendanceForGroup =
+    data?.attendance_groups.find((g) => g.group.id === groupId)?.attendance ??
+    [];
   const attendanceColumns = [
     {
       key: "group",
@@ -84,25 +95,6 @@ const Attendance: React.FC<AttendanceProps> = ({
       },
     },
   ];
-  const tableData = [
-    {
-      id: 1,
-      group: "Английский A1-0925",
-      lesson: "Чтение",
-      date: "09.09.2025",
-      time: "09.11.2025",
-      status: "absent",
-    },
-    {
-      id: 2,
-      group: "Английский A1-0925",
-      lesson: "Чтение",
-      date: "09.09.2025",
-      time: "09.11.2025",
-      status: "attended",
-    },
-  ].filter((item) => item.group === groupName);
-
   return (
     <ProfileModal
       isOpen={isOpen}
@@ -113,11 +105,26 @@ const Attendance: React.FC<AttendanceProps> = ({
       <div className={classNames(styles.homework__container)}>
         <div className={styles.homework__content}>
           <div className={styles.homework__table}>
-            <Table
-              columns={attendanceColumns}
-              data={tableData}
-              emptyMessage="Нет данных о посещаемости"
-            />
+            {isLoading ? (
+              <TableSkeleton />
+            ) : isError ? (
+              <div className={styles.errorMessage}>
+                <p>Произошла ошибка при загрузке посещаемости.</p>
+                <pre>{JSON.stringify(error, null, 2)}</pre>
+                <button
+                  onClick={() => refetch()}
+                  className={styles.retryButton}
+                >
+                  Повторить попытку
+                </button>
+              </div>
+            ) : (
+              <Table
+                columns={attendanceColumns}
+                data={attendanceForGroup}
+                emptyMessage="Нет данных о посещаемости"
+              />
+            )}
           </div>
 
           {/* {data?.pagination && data.pagination.total_pages > 1 && (
