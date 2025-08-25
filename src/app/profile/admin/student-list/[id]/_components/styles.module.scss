@@ -278,3 +278,125 @@
   align-items: center;
   height: 30px;
 }
+
+.taskModal,
+.lessonModal,
+.submissionModal {
+  .taskInfo,
+  .lessonInfo,
+  .submissionInfo {
+    margin-bottom: 20px;
+
+    h4 {
+      color: $black;
+      margin-bottom: 8px;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .taskDescription,
+    .submissionContent {
+      background-color: $White;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid #e9ecef;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      font-size: 14px;
+    }
+  }
+
+  .taskDeadline,
+  .submissionDate {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    h4 {
+      color: $black;
+      margin: 0;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    span {
+      color: $White-ligth;
+      font-size: 14px;
+    }
+  }
+
+  .reviewComment {
+    background-color: $White;
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+  }
+
+  .taskFile,
+  .submissionFile {
+    margin-bottom: 15px;
+
+    h4 {
+      color: $black;
+      margin-bottom: 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+
+  .lessonDescription {
+    margin-bottom: 20px;
+
+    h4 {
+      color: $black;
+      margin-bottom: 8px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    div {
+      background-color: $White;
+      padding: 12px;
+      border-radius: 6px;
+      border: 1px solid $White-ligth;
+      line-height: 1.5;
+    }
+  }
+
+  .lessonDetails {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+
+    div {
+      h4 {
+        color: $black;
+        margin-bottom: 4px;
+        font-size: 16px;
+        font-weight: 600;
+      }
+
+      span {
+        color: $placeholder;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .lessonLink {
+    border-top: 1px solid #e9ecef;
+    padding-top: 15px;
+  }
+
+  .submissionReview {
+    border-top: 1px solid #e9ecef;
+    padding-top: 15px;
+    margin-top: 15px;
+
+    div {
+      font-size: 14px;
+    }
+  }
+}
