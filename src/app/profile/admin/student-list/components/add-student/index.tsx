@@ -4,14 +4,19 @@ import React from "react";
 import styles from "./styles.module.scss";
 import { ChevronDown } from "lucide-react";
 import { useAppSelector } from "src/store/store";
-import { useRegisterStudentMutation } from "src/store/admin/students/students";
+import {
+  useRegisterStudentMutation,
+  useUpdateStudentMutation,
+} from "src/store/admin/students/students";
 import type { Course } from "src/consts/types";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+// import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
+import type { Student } from "src/consts/types";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  student?: Student | null|undefined;
 };
 
 interface FormData {
@@ -34,12 +39,13 @@ type PostForm = {
 //   input?: unknown;
 // };
 type CoursesByLanguage = Record<string, Course[]>;
-const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
+const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
   const { courses, groups } = useAppSelector((state) => state.groupsCourses);
   const [registerStudent, { isLoading, isSuccess }] =
     useRegisterStudentMutation();
+  const [updateStudent] = useUpdateStudentMutation();
 
   const {
     control,
@@ -58,17 +64,37 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
       role: "student",
     },
   });
+  React.useEffect(() => {
+    if (student?.id) {
+      reset({
+        full_name: student?.full_name,
+        email: student?.email,
+        phone_number: student?.phone_number,
+        role: student?.role,
+      });
+    } else {
+      reset({
+      full_name: "",
+      email: "",
+      phone_number: "",
+      role: "student",
+      group: [],
+    });
+    }
+  }, [student, reset]);
   const selectedCourse = watch("group");
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    try {
-      const selectedGroupIds =
-        groups?.filter((g) => data.group.includes(g.name)).map((g) => g.id) ??
-        [];
+ const onSubmit: SubmitHandler<FormData> = async (data) => {
+     try {
+    // Если добавляем студента — получаем выбранные группы
+    const selectedGroupIds = !student
+      ? groups?.filter((g) => data.group.includes(g.name)).map((g) => g.id) ?? []
+      : [];
 
-      if (selectedGroupIds.length === 0) {
-        alert("Нужно выбрать хотя бы одну группу");
-        return;
-      }
+    if (!student && selectedGroupIds.length === 0) {
+      alert("Нужно выбрать хотя бы одну группу");
+      return;
+    }
+
 
       const payload: PostForm = {
         full_name: data.full_name,
@@ -77,30 +103,38 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
         role: data.role,
       };
 
-      await registerStudent({
-        groupIds: selectedGroupIds,
-        studentData: payload,
-      }).unwrap();
+      if (student?.id) {
+        await updateStudent({
+          studentId: student?.id,
+          studentData: {
+            full_name: data.full_name,
+            email: data.email,
+            phone_number: data.phone_number,
+          },
+        }).unwrap()
+        alert("Студент обновлён");
+      } else {
+        await registerStudent({
+          groupIds: selectedGroupIds,
+          studentData: payload,
+        })
+        alert(`Студент ${data.full_name} успешно зарегистрирован`);
+      }
 
-      alert(`Студент ${data.full_name} успешно зарегистрирован`);
       reset();
       onClose();
     } catch (err) {
-      const error = err as FetchBaseQueryError;
-      if ("status" in error && error.status === "FETCH_ERROR") {
-        console.warn("Запрос прошел, но ответ не обработан:", error);
-        // Можно не показывать alert, если знаете, что сервер добавил студента
-      } else {
-        alert("Не удалось зарегистрировать студента. Попробуйте позже.");
-      }
+      console.error(err);
+      alert("Ошибка, попробуйте позже");
     }
   };
+
 
   return (
     <ProfileModal
       isOpen={isOpen}
       onClose={onClose}
-      title="Добавление студента"
+      title={student?.id ? "Редактирование студента" : "Добавление студента"}
       size="lg"
     >
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
@@ -169,20 +203,22 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
         </div>
         <div className={styles.dropdown}>
           {/* Dropdown trigger */}
-          <button
-            type="button"
-            className={styles.dropdown__trigger}
-            onClick={() => setOpenDropdown(!openDropdown)}
-          >
-            {selectedCourse && selectedCourse.length > 0
-              ? selectedCourse.length === 1
-                ? selectedCourse
-                : selectedCourse.length >= 2 && selectedCourse.length <= 4
-                ? `Выбрано ${selectedCourse.length} группы`
-                : `Выбрано ${selectedCourse.length} групп`
-              : "Выберите группы"}
-            <ChevronDown className={styles.dropdown__icon} />
-          </button>
+          {!student?.id && (
+            <button
+              type="button"
+              className={styles.dropdown__trigger}
+              onClick={() => setOpenDropdown(!openDropdown)}
+            >
+              {selectedCourse && selectedCourse.length > 0
+                ? selectedCourse.length === 1
+                  ? selectedCourse
+                  : selectedCourse.length >= 2 && selectedCourse.length <= 4
+                  ? `Выбрано ${selectedCourse.length} группы`
+                  : `Выбрано ${selectedCourse.length} групп`
+                : "Выберите группы"}
+              <ChevronDown className={styles.dropdown__icon} />
+            </button>
+          )}
 
           {/* Dropdown content */}
           {openDropdown && (
@@ -292,7 +328,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose }) => {
           </button>
           <button className={styles.save__button} disabled={isLoading}>
             {" "}
-            {isLoading ? "Сохраняем..." : "Добавить"}
+            {isLoading ? "Сохраняем..." : student?.id ? "Сохранить" : "Добавить"}
           </button>
         </div>
         {isSuccess && <p style={{ color: "green" }}>Успешная регистрация!</p>}

@@ -9,6 +9,7 @@ import type {
   CoursesResponse,
   HomeworkResponse,
   GetHomeworkParams,
+  UpdateStudent
 } from "src/consts/types";
 import qs from "qs";
 
@@ -28,6 +29,10 @@ interface StudentForm {
   phone_number: string;
   role: string;
 }
+type UpdateStudentArgs = {
+  studentId: number|undefined;
+  studentData: UpdateStudent;
+};
 
 // interface ValidationError {
 //   type?: string;
@@ -91,6 +96,14 @@ export const studentApi = createApi({
       query: ({ user_id, group_id, page = 1, size = 20 }) =>
         `/submissions/user/${user_id}?${group_id}&page=${page}&size=${size}`,
     }),
+    updateStudent: builder.mutation<UpdateStudent,UpdateStudentArgs>({
+      query: ({studentId, studentData} ) => ({
+        url: `user/${studentId}`,
+        method: "PATCH",
+        body: studentData,
+      }),
+      invalidatesTags: ["Students"]
+    }),
     
     deleteStudent: builder.mutation<void, number>({
       query: (id) => ({
@@ -109,4 +122,5 @@ export const {
   useGetGroupListQuery,
   useDeleteStudentMutation,
   useGetStudentHomeworkGroupIdQuery,
+  useUpdateStudentMutation
 } = studentApi;
