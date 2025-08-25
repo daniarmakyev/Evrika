@@ -496,10 +496,6 @@ export type UpdateStudent = {
 
 };
 
-interface Review {
-  id: number;
-  comment: string;
-}
 
 
 export interface HomeworkItem {
