@@ -546,4 +546,10 @@ export interface TeachersResponse {
   pagination: Pagination;
 }
 
+export type BackendError = {
+  loc: (string | number)[];
+  msg: string;
+  type: string;
+};
+
 

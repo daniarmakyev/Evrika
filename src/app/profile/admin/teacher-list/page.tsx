@@ -294,7 +294,7 @@ export default function TeachersList() {
           setSelectedTeacher(null);
           setIsAddModalOpen(false);
         }}
-        selectedTeacher={selectedTeacher}
+        teacher={selectedTeacher}
       />
     </div>
   );

@@ -2,14 +2,9 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "src/consts/api";
-import type {
-  TeachersResponse,
-  GetTeachersParams
-  
-} from "src/consts/types";
-import qs from "qs";
+import type { TeachersResponse, GetTeachersParams } from "src/consts/types";
 
-interface Student {
+interface Teacher {
   id: number;
   full_name: string;
   email: string;
@@ -19,15 +14,23 @@ interface Student {
   group_ids?: number[];
 }
 
-interface StudentForm {
+interface TeacherForm {
   full_name: string;
   email: string;
   phone_number: string;
   role: string;
+  description: string;
 }
-type UpdateStudentArgs = {
-  studentId: number|undefined;
-  studentData: UpdateStudent;
+
+interface UpdateTeacher{
+  full_name:string;
+  email:string;
+  phone_number:string;
+  description:string
+}
+type UpdateTeacherArgs = {
+  teacherId: number|null;
+  teacherData: UpdateTeacher;
 };
 
 // interface ValidationError {
@@ -51,29 +54,17 @@ export const teacherApi = createApi({
   }),
   tagTypes: ["teachers"],
   endpoints: (builder) => ({
-    // registerStudent: builder.mutation<
-    //   Student,
-    //   { groupIds: number[]; studentData: StudentForm }
-    // >({
-    //   query: ({ groupIds, studentData }) => ({
-    //     url: `/auth/register-student-with-group?${qs.stringify(
-    //       { group_id: groupIds },
-    //       { arrayFormat: "repeat" }
-    //     )}`,
-    //     method: "POST",
-    //     body: studentData,
-    //   }),
-
-      // transformErrorResponse: (response: {
-      //   data?: ValidationError[];
-      //   status: number;
-      // }) => {
-      //   // возвращаем массив ошибок или один объект с msg
-      //   if (response?.data) return response.data;
-      //   return [{ msg: "Не удалось зарегистрировать студента" }];
-      // },
-    //   invalidatesTags: ["Students"],
-    // }),
+    registerTeacher: builder.mutation<
+      Teacher,
+      { groupId: number|null; teacherData: TeacherForm }
+    >({
+      query: ({ groupId, teacherData }) => ({
+        url: `/auth/register-teacher-with-group?${groupId}`,
+        method: "POST",
+        body: teacherData,
+      }),
+        invalidatesTags: ["teachers"],
+    }),
     getTeacherList: builder.query<TeachersResponse, GetTeachersParams>({
       query: ({ course_id, page = 1, size = 20 }) =>
         `/user/teachers/?page=${page}&size=${size}&cours_id=${course_id}`,
@@ -92,15 +83,15 @@ export const teacherApi = createApi({
     //   query: ({ user_id, group_id, page = 1, size = 20 }) =>
     //     `/submissions/user/${user_id}?${group_id}&page=${page}&size=${size}`,
     // }),
-    // updateStudent: builder.mutation<UpdateStudent,UpdateStudentArgs>({
-    //   query: ({studentId, studentData} ) => ({
-    //     url: `user/${studentId}`,
-    //     method: "PATCH",
-    //     body: studentData,
-    //   }),
-    //   invalidatesTags: ["Students"]
-    // }),
-    
+    updateTeacher: builder.mutation<UpdateTeacher,UpdateTeacherArgs>({
+      query: ({teacherId, teacherData} ) => ({
+        url: `user/teacher/${teacherId}`,
+        method: "PATCH",
+        body: teacherData,
+      }),
+      invalidatesTags: ["teachers"]
+    }),
+
     deleteTeacher: builder.mutation<void, number>({
       query: (id) => ({
         url: `/user/${id}`,
@@ -112,11 +103,11 @@ export const teacherApi = createApi({
 });
 
 export const {
-
   useGetTeacherListQuery,
+  useRegisterTeacherMutation,
   // useGetUserInfoQuery,
   // useGetGroupListQuery,
   useDeleteTeacherMutation,
   // useGetStudentHomeworkGroupIdQuery,
-  // useUpdateStudentMutation
+  useUpdateTeacherMutation
 } = teacherApi;
