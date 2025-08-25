@@ -112,11 +112,18 @@ const Header = () => {
           <button
             onClick={() =>
               setTestUser(
-                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTU4OTU2NzN9.D-ND4Ygj9uTz8pzoKQ9ctxI9UicyZMnHvLUA6rXBQlc"
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiYXVkIjpbImZhc3RhcGktdXNlcnM6YXV0aCJdLCJleHAiOjE3NTg2OTExMTB9.NWwfCuU4zxt1kWwBAssmyfIk0HV9oh8iGJek9ceO4jk"
               )
             }
           >
-            <Link href={"/profile/admin/teacher-list"}>Админ</Link>
+            <Link
+              href={"/profile/admin/teacher-list"}
+              onClick={() => {
+                setTestUser("TOKEN_2");
+              }}
+            >
+              Админ
+            </Link>
           </button>
         </div>
 
