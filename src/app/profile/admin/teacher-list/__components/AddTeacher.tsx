@@ -6,10 +6,13 @@ import styles from "./styles.module.scss";
 
 import { useForm, Controller } from "react-hook-form";
 import SelectField from "@components/Fields/SelectField";
+import type { AdminTeacher } from "src/consts/types";
+
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  teacher?: AdminTeacher | null|undefined;
 };
 
 interface FormData {

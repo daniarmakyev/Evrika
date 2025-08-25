@@ -221,6 +221,11 @@ export type GetStudentsParams = {
   page?: number;
   size?: number;
 };
+export type GetTeachersParams = {
+  course_id: number | null;
+  page?: number;
+  size?: number;
+};
 export type GetHomeworkParams = {
   user_id: number | null | undefined;
   group_id: number | null | undefined;
@@ -427,7 +432,7 @@ export type Course2 = {
   students: Student2[];
 };
 
-// это твой полный ответ от API
+
 export type CoursesResponse = Course2[];
 export interface PaymentDetail {
   id: number;
@@ -516,6 +521,28 @@ export interface HomeworkItem {
 
 export interface HomeworkResponse {
   items: HomeworkItem[];
+  pagination: Pagination;
+}
+
+
+interface TeacherCourse {
+  id: number;
+  name: string;
+}
+
+
+export interface AdminTeacher {
+  id: number;
+  full_name: string;
+  email: string;
+  phone_number: string;
+  role: "teacher"; 
+  is_active: boolean;
+  courses: TeacherCourse[];
+}
+
+export interface TeachersResponse {
+  teachers: AdminTeacher[];
   pagination: Pagination;
 }
 

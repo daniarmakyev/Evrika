@@ -6,6 +6,7 @@ import { lessonSlice } from "./lesson/lesson.slice";
 import { userSlice } from "./user/user.slice";
 import { attendanceApi } from "./attendance/attendance";
 import { studentApi } from "./admin/students/students";
+import { teacherApi } from "./admin/teachers/teachers";
 import { courseGroupSlice } from "./courseGroup/courseGroup.slice";
 import { financeSlice } from "./finance/finance.slice";
 
@@ -17,11 +18,12 @@ export const store = configureStore({
     groupsCourses: courseGroupSlice.reducer,
     finance: financeSlice.reducer,
     [attendanceApi.reducerPath]: attendanceApi.reducer,
-    [studentApi.reducerPath]:studentApi.reducer
+    [studentApi.reducerPath]:studentApi.reducer,
+    [teacherApi.reducerPath]:teacherApi.reducer
     
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(attendanceApi.middleware, studentApi.middleware),
+    getDefaultMiddleware().concat(attendanceApi.middleware, studentApi.middleware,teacherApi.middleware),
 });
 setupListeners(store.dispatch);
 
