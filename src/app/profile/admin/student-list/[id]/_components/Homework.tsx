@@ -3,113 +3,117 @@ import Table from "@components/Table";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import ProfileModal from "@components/ProfileModal";
+import TextArea from "@components/Fields/TextAreaField";
+import Pagination from "@components/Pagination";
+import { useGetStudentHomeworkGroupIdQuery } from "src/store/admin/students/students";
+import type { HomeworkItem } from "src/consts/types";
+import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
 interface AttendanceProps {
   isOpen: boolean;
   onClose: () => void;
+  groupId: number | null | undefined;
+  userId: number | null | undefined;
 }
-const Homework: React.FC<AttendanceProps> = ({ isOpen, onClose }) => {
+const Homework: React.FC<AttendanceProps> = ({
+  isOpen,
+  onClose,
+  groupId,
+  userId,
+}) => {
+  const [noteModal, setNoteModal] = React.useState<{
+    open: boolean;
+    note: string | null;
+  }>({ open: false, note: null });
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const size = 20;
+  const { data, isLoading, error, refetch } = useGetStudentHomeworkGroupIdQuery(
+    {
+      user_id: userId,
+      group_id: groupId,
+      page: currentPage,
+      size,
+    }
+  );
+  console.log(data, "HomeworkData");
+  const getSubmissionForHomework = (
+    homeworkId: number
+  ): HomeworkItem | undefined => {
+    return data?.items.find(
+      (submission) => submission.homework_id === homeworkId
+    );
+  };
   const homeWorkColumns = [
     {
-      key: "group",
-      title: "Группа",
-      width: "230px",
-    },
-    {
-      key: "lesson",
-      title: "Урок",
-      width: "220px",
-      isButton: true,
-      render: (value: string) => {
-        return (
-          <button
-            // onClick={() => handleOpenLessonModal(row)}
-            className={styles.table__button}
-          >
-            <span>
-              {value.length > 50 ? value.substring(0, 50) + "..." : value}
-            </span>
-          </button>
-        );
-      },
-    },
-    {
-      key: "task",
+      key: "content",
       title: "Задание",
       width: "220px",
-      isButton: true,
       render: (value: string) => {
         return (
-          <button
-            // onClick={() => handleOpenTaskModal(row)}
-            className={styles.table__button}
-          >
-            <span>
-              {value.length > 50 ? value.substring(0, 50) + "..." : value}
-            </span>
-          </button>
+          <span>
+            {value.length > 50 ? value.substring(0, 50) + "..." : value}
+          </span>
         );
       },
     },
     {
-      key: "note",
+      key: "review",
       title: "Примечание",
       width: "180px",
-      isButton:true,
-      render: () => {
-        return (
-          <button
-            // onClick={() => handleOpenTaskModal(row)}
-            className={styles.table__button}
-          >
-            <span>Посмотреть</span>
-          </button>
-        );
+      isButton: true,
+      render: (_: string, row: HomeworkItem) => {
+        const submission = getSubmissionForHomework(row.homework_id);
+        if (submission && submission.review) {
+          return (
+            <button
+              className={styles.table__button}
+              style={{
+                color: "#8399ff",
+                textDecoration: "underline",
+                cursor: "pointer",
+              }}
+              onClick={() =>
+                setNoteModal({ open: true, note: submission.review!.comment })
+              }
+            >
+              {submission.review.comment.length > 30
+                ? submission.review.comment.substring(0, 30) + "..."
+                : submission.review.comment}
+            </button>
+          );
+        }
+        return null;
       },
     },
     {
-      key: "deadline",
-      title: "Срок сдачи",
-      width: "140px",
-    },
-    {
-      key: "status",
+      key: "submitted-at",
       title: "Статус",
       width: "140px",
       render: (value: string) => {
-        const isSubmitted = value === "submitted";
         return (
           <span
             className={classNames(styles.status, {
-              [styles.active]: isSubmitted === true,
-              [styles.inactive]: isSubmitted === false,
+              [styles.active]: value,
+              [styles.inactive]: !value,
             })}
           >
-            {isSubmitted ? "Отправлено" : "В ожидании"}
+            {value ? "Отправлено" : "В ожидании"}
           </span>
         );
       },
     },
   ];
-  const tableData = [
-    {
-      id: 1,
-      group: "Английский A1-0925",
-      lesson: "Чтение",
-      task: "Прочитать текст №3",
-      note: "Обратить внимание на произношение",
-      deadline: "15.09.2025",
-      status: "submitted",
-    },
-    {
-      id: 2,
-      group: "Английский A1-0925",
-      lesson: "Письмо",
-      task: "Написать эссе",
-      note: "Использовать лексику урока 5",
-      deadline: "20.09.2025",
-      status: "waiting",
-    },
-  ];
+
+  if (error) {
+    return (
+      <div className={styles.errorMessage}>
+        <p>Произошла ошибка при загрузке личную информацию студента.</p>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+        <button onClick={() => refetch()} className={styles.retryButton}>
+          Повторить попытку
+        </button>
+      </div>
+    );
+  }
   return (
     <ProfileModal
       isOpen={isOpen}
@@ -120,20 +124,35 @@ const Homework: React.FC<AttendanceProps> = ({ isOpen, onClose }) => {
       <div className={classNames(styles.homework__container)}>
         <div className={styles.homework__content}>
           <div className={styles.homework__table}>
-            <Table
-              columns={homeWorkColumns}
-              data={tableData}
-              emptyMessage="Нет данных о посещаемости"
-            />
+            {isLoading ? (
+              <TableSkeleton />
+            ) : (
+              <Table
+                columns={homeWorkColumns}
+                data={data?.items}
+                emptyMessage="Нет данных о домашнем задании по данной группе"
+              />
+            )}
           </div>
 
-          {/* {data?.pagination && data.pagination.total_pages > 1 && (
-          <Pagination
-            currentPage={currentPage}
-            totalPages={data?.pagination.total_pages}
-            handlePageChange={setCurrentPage}
-          />
-        )} */}
+          {data?.pagination && data.pagination.total_pages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={data?.pagination.total_pages}
+              handlePageChange={setCurrentPage}
+            />
+          )}
+          <ProfileModal
+            isOpen={noteModal.open}
+            onClose={() => setNoteModal({ open: false, note: null })}
+            title="Примечание от учителя"
+            size="md"
+          >
+            <div>
+              <h4>Комментарий:</h4>
+              <TextArea readOnly fullWidth value={noteModal.note || ""} />
+            </div>
+          </ProfileModal>
         </div>
       </div>
     </ProfileModal>

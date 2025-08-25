@@ -211,24 +211,27 @@ export interface Lesson {
   lesson_end: string;
 }
 
-
-
 export type GetAttendanceStudentParams = {
-  user_id: string|null
+  user_id: string | null;
   page?: number;
   size?: number;
 };
 export type GetStudentsParams = {
-  user_id: number|null
+  user_id: number | null;
+  page?: number;
+  size?: number;
+};
+export type GetHomeworkParams = {
+  user_id: number | null | undefined;
+  group_id: number | null | undefined;
   page?: number;
   size?: number;
 };
 
-
 export type AuthLoginResponse = {
   access_token: string;
   token_type: string;
-}
+};
 
 export interface Course {
   id: number;
@@ -251,18 +254,16 @@ export interface CourseTableItem {
   description: string;
 }
 
-
 export type Level = {
-  id: number | string
-  code: string
-  description: string
-}
+  id: number | string;
+  code: string;
+  description: string;
+};
 
 export type Language = {
   id: number | string;
   name: string;
-}
-
+};
 
 export interface Group {
   id: number;
@@ -355,7 +356,6 @@ export interface FinanceResponse {
   pagination: PaginationType;
 }
 
-
 export type GroupStudent = {
   id: number;
   name: string;
@@ -383,12 +383,12 @@ export type StudentsResponse = {
 };
 
 export type User = {
-  id: number;
+  id: number | null;
   first_name: string;
   last_name: string;
   email: string;
   phone_number: string;
-  role: "teacher" | "student" | "admin"; 
+  role: "teacher" | "student" | "admin";
   password: string;
 };
 
@@ -412,12 +412,12 @@ type Student2 = {
   payment_status: "Оплачено" | "Не оплачено" | string;
 };
 
-type Course2 = {
+export type Course2 = {
   id: number;
   name: string;
   created_at: string; // ISO string
   start_date: string; // YYYY-MM-DD
-  end_date: string;   // YYYY-MM-DD
+  end_date: string; // YYYY-MM-DD
   approximate_lesson_start: string; // время в ISO формате
   is_active: boolean;
   is_archived: boolean;
@@ -460,7 +460,7 @@ export interface PaymentDetail {
     phone_number: string;
     role: "teacher" | "student" | "admin";
   };
-};
+}
 export interface Check {
   id: number;
   check: string;
@@ -489,4 +489,29 @@ export interface Check {
   };
 }
 
+export type UpdateStudent = {
+  full_name: string;
+  email: string;
+  phone_number: string;
 
+};
+
+interface Review {
+  id: number;
+  comment: string;
+}
+
+export interface HomeworkItem {
+  id: number;
+  homework_id: number;
+  student_id: number;
+  file_path: string;
+  content: string;
+  submitted_at: string; // ISO date string
+  review: Review;
+}
+
+export interface HomeworkResponse {
+  items: HomeworkItem[];
+  pagination: Pagination;
+}

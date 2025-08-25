@@ -27,6 +27,7 @@ import { useRouter } from "next/navigation";
 
 export default function StudentList() {
   const [openRowId, setOpenRowId] = useState<number | null>(null);
+  const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
@@ -67,7 +68,8 @@ export default function StudentList() {
     switch (option) {
       case "Редактировать":
         console.log("Edit student:", student);
-        router.push(`/profile/admin/student-list/${student.id}`);
+        setSelectedStudent(student);
+        setIsAddModalOpen(true);
         break;
 
       case "Удалить":
@@ -348,7 +350,11 @@ export default function StudentList() {
 
       <AddStudent
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {
+          setSelectedStudent(null);
+          setIsAddModalOpen(false);
+        }}
+        student={selectedStudent}
       />
     </div>
   );

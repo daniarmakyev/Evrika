@@ -7,6 +7,9 @@ import type {
   GetStudentsParams,
   User,
   CoursesResponse,
+  HomeworkResponse,
+  GetHomeworkParams,
+  UpdateStudent
 } from "src/consts/types";
 import qs from "qs";
 
@@ -26,7 +29,10 @@ interface StudentForm {
   phone_number: string;
   role: string;
 }
-
+type UpdateStudentArgs = {
+  studentId: number|undefined;
+  studentData: UpdateStudent;
+};
 
 // interface ValidationError {
 //   type?: string;
@@ -70,7 +76,7 @@ export const studentApi = createApi({
       //   if (response?.data) return response.data;
       //   return [{ msg: "Не удалось зарегистрировать студента" }];
       // },
-      invalidatesTags: ["Students"]
+      invalidatesTags: ["Students"],
     }),
     getStudentList: builder.query<StudentsResponse, GetStudentsParams>({
       query: ({ user_id, page = 1, size = 20 }) =>
@@ -81,8 +87,24 @@ export const studentApi = createApi({
       query: ({ user_id }) => `/user/${user_id}`,
     }),
     getGroupList: builder.query<CoursesResponse, void>({
-      query: () => `/group-students/detail-list`,
+      query: () => `/group-students`,
     }),
+    getStudentHomeworkGroupId: builder.query<
+      HomeworkResponse,
+      GetHomeworkParams
+    >({
+      query: ({ user_id, group_id, page = 1, size = 20 }) =>
+        `/submissions/user/${user_id}?${group_id}&page=${page}&size=${size}`,
+    }),
+    updateStudent: builder.mutation<UpdateStudent,UpdateStudentArgs>({
+      query: ({studentId, studentData} ) => ({
+        url: `user/${studentId}`,
+        method: "PATCH",
+        body: studentData,
+      }),
+      invalidatesTags: ["Students"]
+    }),
+    
     deleteStudent: builder.mutation<void, number>({
       query: (id) => ({
         url: `/user/${id}`,
@@ -99,4 +121,6 @@ export const {
   useGetUserInfoQuery,
   useGetGroupListQuery,
   useDeleteStudentMutation,
+  useGetStudentHomeworkGroupIdQuery,
+  useUpdateStudentMutation
 } = studentApi;
