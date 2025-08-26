@@ -6,6 +6,7 @@ import type {
   TeachersResponse,
   GetTeachersParams,
   WeekSchedule,
+  AdminTeacher,
 } from "src/consts/types";
 
 interface Teacher {
@@ -60,25 +61,23 @@ export const teacherApi = createApi({
         method: "POST",
         body: teacherData,
       }),
-     invalidatesTags: ["teachers"],
+      invalidatesTags: ["teachers"],
     }),
     getTeacherList: builder.query<TeachersResponse, GetTeachersParams>({
       query: ({ course_id, page = 1, size = 20 }) =>
         `/user/teachers/?page=${page}&size=${size}&course_id=${course_id}`,
-      providesTags: ['teachers'],
-    // getUserInfo: builder.query<User, { user_id: string }>({
-    //   query: ({ user_id }) => `/user/${user_id}`,
-    // }),
-    // getGroupList: builder.query<CoursesResponse, void>({
-    //   query: () => `/group-students`,
+      providesTags: ["teachers"],
+    }),
+    getTeacherInfo: builder.query<AdminTeacher, { user_id: string }>({
+      query: ({ user_id }) => `/user/teacher/${user_id}`,
     }),
     getTeacherSchedule: builder.query<WeekSchedule, { user_id: number | null }>(
       {
-        query: ({ user_id }) => `/schedule/teacher/${user_id}`,
+        query: ({ user_id }) => `/shedule/teacher/${user_id}`,
       }
     ),
     updateTeacher: builder.mutation<UpdateTeacher, UpdateTeacherArgs>({
-      query: ({ teacherId, teacherData }) => ({
+      query: ({ teacherId, ...teacherData }) => ({
         url: `user/teacher/${teacherId}`,
         method: "PATCH",
         body: teacherData,
@@ -99,8 +98,7 @@ export const teacherApi = createApi({
 export const {
   useGetTeacherListQuery,
   useRegisterTeacherMutation,
-  // useGetUserInfoQuery,
-  // useGetGroupListQuery,
+  useGetTeacherInfoQuery,
   useDeleteTeacherMutation,
   useGetTeacherScheduleQuery,
   useUpdateTeacherMutation,

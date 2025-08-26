@@ -539,6 +539,7 @@ export interface AdminTeacher {
   role: "teacher"; 
   is_active: boolean;
   courses: TeacherCourse[];
+  description?:string
 }
 
 export interface TeachersResponse {

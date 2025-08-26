@@ -51,10 +51,10 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
   } = useForm<FormData>({
     defaultValues: {
       full_name: "",
-      group: "",
       phone_number: "",
       email: "",
-      role: "student",
+      role: "teacher",
+      description:""
     },
   });
   React.useEffect(() => {
@@ -64,6 +64,7 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
         email: teacher?.email,
         phone_number: teacher?.phone_number,
         role: teacher?.role,
+        description:teacher?.description
       });
     } else {
       reset({
@@ -71,7 +72,8 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
         email: "",
         phone_number: "",
         role: "teacher",
-        group: "",
+        description:""
+        
       });
     }
   }, [teacher, reset]);

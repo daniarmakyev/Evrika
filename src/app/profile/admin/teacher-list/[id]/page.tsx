@@ -1,30 +1,50 @@
 "use client";
 import React from "react";
 import InputField from "@components/Fields/InputField";
+import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
-import { useRouter } from "next/navigation";
-// import { useGetTeacherListQuery } from "src/store/admin/teachers/teachers";
+import { useRouter, useParams } from "next/navigation";
+import { useGetTeacherInfoQuery } from "src/store/admin/teachers/teachers";
+
 
 const TeacherDetailPage = () => {
   const router = useRouter();
-  //  const params = useParams();
-    // const id = Array.isArray(params.id) ? params.id[0] : params.id;
-  //   const course
-  //  const { data, error, isLoading, refetch } = useGetTeacherListQuery(
-  //   {
-  //     page: 1,
-  //     size:100,
-  //     course_id:id
-  //   },
-  //   {
-  //     skip: !id,
-  //   }
-  // );
+  const params = useParams();
+  const user_id = Array.isArray(params.id) ? params.id[0] : params.id;
+
+  const {
+    data: teacherData,
+    error,
+    isLoading,
+    refetch,
+  } = useGetTeacherInfoQuery(
+    {
+      user_id,
+    },
+    {
+      skip: !user_id,
+    }
+  );
 
   const handleClick = () => {
-    router.push("/profile/admin/teacher-list/1/1"); 
+    router.push(
+      `/profile/admin/teacher-list/${teacherData?.id}/${teacherData?.id}`
+    );
   };
+
+  if (isLoading) return <TableSkeleton />;
+  if (error) {
+    return (
+      <div className={styles.errorMessage}>
+        <p>Произошла ошибка при загрузке студентов.</p>
+        <pre>{JSON.stringify(error, null, 2)}</pre>
+        <button onClick={() => refetch()} className={styles.retryButton}>
+          Повторить попытку
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className={classNames(styles.personalInfoContainer, "container")}>
@@ -36,13 +56,15 @@ const TeacherDetailPage = () => {
       <div className={styles.personalInfoWrapper}>
         <div className={styles.personalInfoHeader}>
           <h2>Личная информация</h2>
-          <button className={styles.status}>Активен</button>
+          <button className={styles.status}>
+            {teacherData?.is_active ? "Aктивен" : "Не активен"}
+          </button>
         </div>
         <div className={styles.form}>
           <div className={styles.innerForm}>
             <InputField
               label="Имя и фамилия"
-              placeholder="Айкокул Чаргынова"
+              placeholder={teacherData?.full_name}
               disabled
               fullWidth
               isShadow
@@ -51,7 +73,7 @@ const TeacherDetailPage = () => {
 
             <InputField
               label="Телефон"
-              placeholder="+7 (999) 999-99-99"
+              placeholder={teacherData?.phone_number}
               disabled
               fullWidth
               isShadow
@@ -62,7 +84,7 @@ const TeacherDetailPage = () => {
             <InputField
               label="Почта"
               type="email"
-              placeholder="example@mail.com"
+              placeholder={teacherData?.email}
               disabled
               fullWidth
               isShadow
@@ -71,7 +93,7 @@ const TeacherDetailPage = () => {
             <InputField
               label="Курс преподавания"
               type="text"
-              placeholder="Английский A1"
+              placeholder={teacherData?.courses?.join(", ") || ""}
               disabled
               fullWidth
               isShadow
