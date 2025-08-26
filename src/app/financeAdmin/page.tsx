@@ -33,10 +33,6 @@ const FinanceAdminPage = () => {
     updateRequisiteLoading,
   } = useAppSelector((state) => state.finance);
 
-  const [paymentType, setPaymentType] = useState<"offline" | "online">(
-    "offline"
-  );
-
   const [isEditingBank, setIsEditingBank] = useState(false);
   const [isEditingAccount, setIsEditingAccount] = useState(false);
   const [editBankValue, setEditBankValue] = useState("");
@@ -48,10 +44,6 @@ const FinanceAdminPage = () => {
   }, [dispatch]);
 
   const currentRequisite = paymentRequisites?.[0];
-
-  const handlePaymentTypeChange = (type: "offline" | "online") => {
-    setPaymentType(type);
-  };
 
   const handleCopyAccount = (account: string) => {
     navigator.clipboard.writeText(account);
@@ -364,12 +356,6 @@ const FinanceAdminPage = () => {
     );
   };
 
-  const renderOnlinePayment = () => (
-    <div className={styles.finance__onlinePayment}>
-      <p>Онлайн оплата - в разработке</p>
-    </div>
-  );
-
   return (
     <>
       <Header />
@@ -385,30 +371,7 @@ const FinanceAdminPage = () => {
                 Нажимайте на элементы ниже для их редактирования
               </p>
 
-              <div className={styles.paymentSwitcher}>
-                <button
-                  className={classNames(styles.paymentSwitcher__button, {
-                    [styles.paymentSwitcher__button_active]:
-                      paymentType === "offline",
-                  })}
-                  onClick={() => handlePaymentTypeChange("offline")}
-                >
-                  По лицевому счету и QR-коду
-                </button>
-                <button
-                  className={classNames(styles.paymentSwitcher__button, {
-                    [styles.paymentSwitcher__button_active]:
-                      paymentType === "online",
-                  })}
-                  onClick={() => handlePaymentTypeChange("online")}
-                >
-                  Оплата visa/mastercard
-                </button>
-              </div>
-
-              {paymentType === "offline"
-                ? renderOfflinePayment()
-                : renderOnlinePayment()}
+              {renderOfflinePayment()}
 
               {paymentRequisitesError && (
                 <div className={styles.finance__error}>
