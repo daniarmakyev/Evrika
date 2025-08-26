@@ -5,7 +5,6 @@ import classNames from "classnames";
 import styles from "./styles.module.scss";
 import { useRouter } from "next/navigation";
 // import { useGetTeacherListQuery } from "src/store/admin/teachers/teachers";
-import { useParams } from "next/navigation";
 
 const TeacherDetailPage = () => {
   const router = useRouter();
