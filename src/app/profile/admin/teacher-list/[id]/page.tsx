@@ -4,12 +4,27 @@ import InputField from "@components/Fields/InputField";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 import { useRouter } from "next/navigation";
+// import { useGetTeacherListQuery } from "src/store/admin/teachers/teachers";
+import { useParams } from "next/navigation";
 
 const TeacherDetailPage = () => {
   const router = useRouter();
+   const params = useParams();
+    const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  //   const course
+  //  const { data, error, isLoading, refetch } = useGetTeacherListQuery(
+  //   {
+  //     page: 1,
+  //     size:100,
+  //     course_id:id
+  //   },
+  //   {
+  //     skip: !id,
+  //   }
+  // );
 
   const handleClick = () => {
-    router.push("/profile/admin/teacher-list/1/1"); // navigate to /target-page
+    router.push("/profile/admin/teacher-list/1/1"); 
   };
 
   return (

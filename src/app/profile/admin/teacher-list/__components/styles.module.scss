@@ -36,17 +36,111 @@
 }
 
 .form {
-  display: flex;
-  flex-wrap: wrap;
-  width: 100%;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 40px;
   row-gap: 10px;
+  > * {
+    width: 100%;
+  }
+}
+.textarea_container {
+  grid-column: 1 / -1; // растянуть на две колонки
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 
 .button_container {
+   grid-column: 1 / -1;
   display: flex;
   gap: 50px;
   justify-content: end;
-  margin: 20px 20px;
+  margin: 20px 0px;
   width: 100%;
+}
+.dropdown {
+  width: 100%;
+  position: relative;
+  margin-top: 20px;
+
+  &__trigger {
+    padding: 9px;
+    border: 1px solid $white-ligth;
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: $White;
+    transition: all 0.2s ease;
+    outline: none;
+    color: $black-dark;
+    width: 100%;
+    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    display: flex;
+    justify-content: left;
+    position: relative;
+
+    .dropdown__icon {
+      position: absolute;
+      transform: translateY(-50%); 
+      pointer-events: none;
+      right: 10px;
+      top: 50%;
+      width: 20px;
+    }
+  }
+  &__content {
+    position: absolute;
+    margin-top: 5px;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    z-index: 100;
+  }
+  &__accordion_header {
+    width: 100%;
+    text-align: left;
+    padding: 10px;
+    border-bottom: 1px solid whitesmoke;
+    background-color: #b7ccfe;
+    box-sizing: border-box;
+    margin: 0 auto;
+    color: white;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s ease;
+    &.open {
+      background-color: #1268e9; // ✅ светлее при открытии
+    }
+  }
+  &__checkbox{
+    width:18px;
+    height:18px;
+    border:1px solid rgb(142, 138, 138)
+
+  }
+
+  &__input_container {
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+   
+    &_label {
+      display: flex;
+      align-items:end;
+      justify-content: start;
+      gap:5px;
+      
+      
+    }
+  }
+}
+
+.input_container{
+  display: flex;
+  flex-direction: column;
+  gap:5px;
+  width:100%;
 }
