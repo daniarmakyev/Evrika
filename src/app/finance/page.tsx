@@ -4,8 +4,12 @@ import { useAppDispatch, useAppSelector } from "src/store/store";
 import {
   getMyPayments,
   getPaymentRequisites,
+  stripePayments,
 } from "src/store/finance/finance.action";
-import { getCourse } from "src/store/courseGroup/courseGroup.action";
+import {
+  getCourse,
+  getCourses,
+} from "src/store/courseGroup/courseGroup.action";
 import Footer from "@components/Footer";
 import Header from "@components/Header";
 import HeroBanner from "@components/HeroBanner";
@@ -37,17 +41,26 @@ const FinancePage = () => {
     paymentRequisites,
     paymentRequisitesLoading,
     paymentRequisitesError,
+    stripeSession,
   } = useAppSelector((state) => state.finance);
 
-  const { error: courseError } = useAppSelector((state) => state.groupsCourses);
+  const {
+    error: courseError,
+    courses: allCourses,
+    loadingCourses,
+  } = useAppSelector((state) => state.groupsCourses);
 
   const [loadedCourses, setLoadedCourses] = useState<Course[]>([]);
-  const [loadingCourses, setLoadingCourses] = useState(false);
+  const [courseLoading, setcourseLoading] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("");
   const [groupFilter, setGroupFilter] = useState<string>("");
   const [paymentType, setPaymentType] = useState<"offline" | "online">(
     "offline"
   );
+
+  const [selectedCourse, setSelectedCourse] = useState<string>("");
+  const [stripeLoading, setStripeLoading] = useState(false);
+  const [stripeError, setStripeError] = useState<string | null>(null);
 
   const loadPayments = useCallback(
     (status?: "Оплачено" | "Не оплачено") => {
@@ -59,6 +72,8 @@ const FinancePage = () => {
   useEffect(() => {
     loadPayments();
     dispatch(getPaymentRequisites());
+
+    dispatch(getCourses());
   }, [dispatch, loadPayments]);
 
   useEffect(() => {
@@ -68,7 +83,7 @@ const FinancePage = () => {
       );
 
       if (uniqueCourseIds.length > 0) {
-        setLoadingCourses(true);
+        setcourseLoading(true);
         setLoadedCourses([]);
 
         const loadCourses = async () => {
@@ -86,7 +101,7 @@ const FinancePage = () => {
           }
 
           setLoadedCourses(courses);
-          setLoadingCourses(false);
+          setcourseLoading(false);
         };
 
         loadCourses();
@@ -94,8 +109,19 @@ const FinancePage = () => {
     }
   }, [myPayments, dispatch]);
 
+  useEffect(() => {
+    if (stripeSession?.checkout_url) {
+      window.location.href = stripeSession.checkout_url;
+    }
+  }, [stripeSession]);
+
   const handlePaymentTypeChange = (type: "offline" | "online") => {
     setPaymentType(type);
+
+    if (type === "offline") {
+      setSelectedCourse("");
+      setStripeError(null);
+    }
   };
 
   const handleStatusFilterChange = (value: "Оплачено" | "Не оплачено") => {
@@ -110,6 +136,51 @@ const FinancePage = () => {
   const handleCopyAccount = (account: string) => {
     navigator.clipboard.writeText(account);
     alert("Лицевой счет скопирован!");
+  };
+
+  const handleCourseSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedCourse(event.target.value);
+    setStripeError(null);
+  };
+
+  const handleStripePayment = async () => {
+    if (!selectedCourse) {
+      setStripeError("Пожалуйста, выберите курс для оплаты");
+      return;
+    }
+
+    const selectedCourseData = allCourses?.find(
+      (course) => course.id.toString() === selectedCourse
+    );
+
+    if (!selectedCourseData) {
+      setStripeError("Выбранный курс не найден");
+      return;
+    }
+
+    setStripeLoading(true);
+    setStripeError(null);
+
+    try {
+      const payload = {
+        group_id: selectedCourseData.id,
+        amount: selectedCourseData.price,
+        currency: "kgs",
+        success_url: `${window.location.origin}/finance`,
+        cancel_url: `${window.location.origin}/finance`,
+      };
+
+      const result = await dispatch(stripePayments(payload));
+
+      if (stripePayments.rejected.match(result)) {
+        setStripeError(result.payload || "Ошибка создания платежа");
+      }
+    } catch (error) {
+      console.error("Stripe payment error:", error);
+      setStripeError("Произошла ошибка при создании платежа");
+    } finally {
+      setStripeLoading(false);
+    }
   };
 
   const getCoursePrice = (courseId: number): string => {
@@ -254,11 +325,72 @@ const FinancePage = () => {
     );
   };
 
-  const renderOnlinePayment = () => (
-    <div className={styles.finance__onlinePayment}>
-      <p>Онлайн оплата - в разработке</p>
-    </div>
-  );
+  const renderOnlinePayment = () => {
+    const courseOptions = [
+      { label: "Выберите курс для оплаты", value: "" },
+      ...(allCourses?.map((course) => ({
+        label: `${course.name} - ${course.price} сом`,
+        value: course.id.toString(),
+      })) || []),
+    ];
+
+    const selectedCourseData = allCourses?.find(
+      (course) => course.id.toString() === selectedCourse
+    );
+
+    return (
+      <div className={styles.finance__onlinePayment}>
+        <div className={styles.stripePayment}>
+          <h3 className={styles.stripePayment__title}>
+            Оплата банковской картой
+          </h3>
+
+          {loadingCourses ? (
+            <div className={styles.stripePayment__loading}>
+              <p>Загружаем список курсов...</p>
+            </div>
+          ) : (
+            <div className={styles.stripePayment__form}>
+              <SelectField
+                isShadow
+                options={courseOptions}
+                label="Курс для оплаты"
+                labelLeft
+                value={selectedCourse}
+                onChange={handleCourseSelect}
+                placeholder="Выберите курс"
+                disabled={stripeLoading}
+              />
+
+              {stripeError && (
+                <div className={styles.stripeError}>{stripeError}</div>
+              )}
+
+              <button
+                className={classNames(styles.stripePayment__button, {
+                  [styles.stripePayment__button_disabled]:
+                    !selectedCourse || stripeLoading,
+                })}
+                onClick={handleStripePayment}
+                disabled={!selectedCourse || stripeLoading}
+              >
+                {stripeLoading ? (
+                  <>
+                    <LoadingSpinner />
+                    Создание платежа...
+                  </>
+                ) : (
+                  `Оплатить ${
+                    selectedCourseData ? `${selectedCourseData.price} сом` : ""
+                  }`
+                )}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const statusOptions = [
     { label: "Все статусы", value: "" },
@@ -279,7 +411,7 @@ const FinancePage = () => {
       ) || []),
   ];
 
-  const isLoading = myPaymentsLoading || loadingCourses;
+  const isLoading = myPaymentsLoading || courseLoading;
 
   return (
     <>

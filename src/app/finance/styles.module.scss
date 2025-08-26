@@ -119,13 +119,64 @@
     background-color: $danger;
     color: $White;
   }
-  &__onlinePayment {
+
+  .stripePayment {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    row-gap: 20px;
     min-height: 200px;
     color: $White-ligth;
     font-size: 16px;
+    &__title {
+      font-size: 24px;
+      font-weight: 700;
+      color: $black;
+    }
+
+    &__form {
+      display: flex;
+      flex-direction: column;
+      row-gap: 20px;
+    }
+
+    &__button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: fit-content;
+      padding: 8px 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.2;
+
+      background: $primary;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(99, 91, 255, 0.4);
+      transition: all 0.25s ease;
+
+      &:hover {
+        background: darker($primary, 0.5);
+      }
+
+      &.stripePayment__button_disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        background: lighten($color: $primary, $amount: 0.5);
+        box-shadow: none;
+        transform: none;
+      }
+      div {
+        max-height: fit-content;
+        max-width: fit-content;
+      }
+    }
   }
 }
 

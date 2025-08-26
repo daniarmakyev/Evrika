@@ -614,3 +614,13 @@ export interface BackendErrorResponse {
     detail?: BackendValidationError[] | string;
   };
 }
+export interface StripeCheckoutResponse {
+  checkout_url: string;
+  session_id: string;
+}
+
+export interface StripeCheckoutPayload {
+  group_id: number;
+  success_url: string;
+  cancel_url: string;
+}

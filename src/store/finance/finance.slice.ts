@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { PaymentDetail, Check, FinanceItem } from "src/consts/types";
-import { getMyPayments, getMyChecks, createCheck, downloadCheck, getFinance, getPaymentRequisites, createPaymentRequisite, updatePaymentRequisite } from "./finance.action";
+import { getMyPayments, getMyChecks, createCheck, downloadCheck, getFinance, getPaymentRequisites, createPaymentRequisite, updatePaymentRequisite, stripePayments } from "./finance.action";
 
 interface PaymentRequisite {
     id: number;
@@ -39,6 +39,7 @@ interface FinanceState {
     createRequisiteError: boolean;
     updateRequisiteLoading: boolean;
     updateRequisiteError: boolean;
+    stripeSession: { checkout_url: string; session_id: string } | null;
 }
 
 const INIT_STATE: FinanceState = {
@@ -62,6 +63,7 @@ const INIT_STATE: FinanceState = {
     createRequisiteError: false,
     updateRequisiteLoading: false,
     updateRequisiteError: false,
+    stripeSession: null,
 };
 
 export const financeSlice = createSlice({
@@ -183,7 +185,9 @@ export const financeSlice = createSlice({
             .addCase(updatePaymentRequisite.rejected, (state) => {
                 state.updateRequisiteLoading = false;
                 state.updateRequisiteError = true;
-            });
+            }).addCase(stripePayments.fulfilled, (state, { payload }) => {
+                state.stripeSession = payload;
+            })
     }
 });
 
