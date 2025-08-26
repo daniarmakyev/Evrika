@@ -59,12 +59,10 @@ const page = () => {
     };
   
     const handleLessonClick = (lesson: LessonShedule, groupId?: number) => {
-      if (role === "teacher") {
+     
         const lessonWithGroup = { ...lesson, group_id: groupId };
         lessonEditModal.openModal(lessonWithGroup);
-      } else {
-        lessonModal.openModal(lesson);
-      }
+     
     };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
