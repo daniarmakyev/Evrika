@@ -56,23 +56,22 @@ export const teacherApi = createApi({
       { groupId: number | null; teacherData: TeacherForm }
     >({
       query: ({ groupId, teacherData }) => ({
-        url: `/auth/register-teacher-with-group?${groupId}`,
+        url: `/auth/register-teacher-with-group/${groupId}`,
         method: "POST",
         body: teacherData,
       }),
-      invalidatesTags: ["teachers"],
+     invalidatesTags: ["teachers"],
     }),
     getTeacherList: builder.query<TeachersResponse, GetTeachersParams>({
       query: ({ course_id, page = 1, size = 20 }) =>
-        `/user/teachers/?page=${page}&size=${size}&cours_id=${course_id}`,
-      providesTags: ["teachers"],
-    }),
+        `/user/teachers/?page=${page}&size=${size}&course_id=${course_id}`,
+      providesTags: ['teachers'],
     // getUserInfo: builder.query<User, { user_id: string }>({
     //   query: ({ user_id }) => `/user/${user_id}`,
     // }),
     // getGroupList: builder.query<CoursesResponse, void>({
     //   query: () => `/group-students`,
-    // }),
+    }),
     getTeacherSchedule: builder.query<WeekSchedule, { user_id: number | null }>(
       {
         query: ({ user_id }) => `/schedule/teacher/${user_id}`,

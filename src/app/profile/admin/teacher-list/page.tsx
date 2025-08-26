@@ -45,9 +45,7 @@ export default function TeachersList() {
       size,
       course_id: course_id,
     },
-    {
-      skip: !course_id,
-    }
+    
   );
 
   console.log(data, "TeacherData");

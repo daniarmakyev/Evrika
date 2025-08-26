@@ -603,3 +603,14 @@ export type WeekSchedule = {
 };
 
 
+export interface BackendValidationError {
+  loc: string[];
+  msg: string;
+  type?: string;
+}
+
+export interface BackendErrorResponse {
+  data?: {
+    detail?: BackendValidationError[] | string;
+  };
+}

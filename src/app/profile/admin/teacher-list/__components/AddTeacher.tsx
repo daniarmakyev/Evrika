@@ -10,7 +10,11 @@ import {
 } from "src/store/admin/teachers/teachers";
 import type { Course } from "src/consts/types";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import type { AdminTeacher, BackendError } from "src/consts/types";
+import type {
+  AdminTeacher,
+  BackendValidationError,
+  BackendErrorResponse,
+} from "src/consts/types";
 import TextArea from "@components/Fields/TextAreaField";
 
 type Props = {
@@ -70,7 +74,7 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
         full_name: "",
         email: "",
         phone_number: "",
-        role: "student",
+        role: "teacher",
         group: "",
       });
     }
@@ -79,10 +83,10 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
       const selectedGroupId = !teacher
-        ? groups?.find((g) => data.group.includes(g.name))?.id ?? null
+        ? groups?.find((g) => g.name === data.group)?.id ?? null
         : null;
 
-      if (!teacher && selectedGroupId) {
+      if (!teacher && !selectedGroupId) {
         alert("Нужно выбрать хотя бы одну группу");
         return;
       }
@@ -110,20 +114,17 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
         await registerTeacher({
           groupId: selectedGroupId,
           teacherData: payload,
-        });
+        }).unwrap();
         alert(`Преподаватель ${data.full_name} успешно зарегистрирован`);
       }
 
       reset();
       onClose();
     } catch (err) {
-      const validationErrors = (
-        err as {
-          data?: { detail?: BackendError[] };
-        }
-      )?.data?.detail;
+      const backendErr = err as BackendErrorResponse;
+      const validationErrors = backendErr.data?.detail;
 
-      if (validationErrors) {
+      if (Array.isArray(validationErrors)) {
         validationErrors.forEach((e) => {
           const field = e.loc[e.loc.length - 1] as keyof BaseForm;
 
@@ -131,10 +132,16 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
             setError(field, { message: e.msg });
           }
         });
+      } else if (validationErrors) {
+        alert(
+          typeof validationErrors === "string"
+            ? validationErrors
+            : "Ошибка валидации, попробуйте снова"
+        );
+      } else {
+        console.error(err);
+        alert("Ошибка, попробуйте позже");
       }
-
-      console.error(err);
-      alert("Ошибка, попробуйте позже");
     }
   };
 
@@ -221,13 +228,9 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
               className={styles.dropdown__trigger}
               onClick={() => setOpenDropdown(!openDropdown)}
             >
-              {selectedCourse && selectedCourse.length > 0
-                ? selectedCourse.length === 1
-                  ? selectedCourse
-                  : selectedCourse.length >= 2 && selectedCourse.length <= 4
-                  ? `Выбрано ${selectedCourse.length} группы`
-                  : `Выбрано ${selectedCourse.length} групп`
-                : "Выберите группы"}
+              {selectedCourse
+                ? selectedCourse // просто строка с названием группы
+                : "Выберите группу"}
               <ChevronDown className={styles.dropdown__icon} />
             </button>
           )}
@@ -285,7 +288,7 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
                                   }
                                 >
                                   <input
-                                   className={styles.dropdown__checkbox}
+                                    className={styles.dropdown__checkbox}
                                     type="radio"
                                     value={group.name}
                                     checked={field.value === group.name}
