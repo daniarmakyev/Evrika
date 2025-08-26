@@ -139,18 +139,18 @@ const Schedulepage = () => {
       return <TableSkeleton />;
     }
 
-    if (error) {
-      return (
-        <div className={styles.errorContainer}>
-          <div className={styles.errorIcon}>⚠️</div>
-          <h3 className={styles.errorTitle}>Ошибка загрузки расписания</h3>
-          <p className={styles.errorMessage}>{(error as any)?.data}</p>
-          <button className={styles.retryButton} onClick={() => refetch()}>
-            <span>Попробовать снова</span>
-          </button>
-        </div>
-      );
-    }
+    // if (error) {
+    //   return (
+    //     <div className={styles.errorContainer}>
+    //       <div className={styles.errorIcon}>⚠️</div>
+    //       <h3 className={styles.errorTitle}>Ошибка загрузки расписания</h3>
+    //       <p className={styles.errorMessage}>{(error as any)?.data}</p>
+    //       <button className={styles.retryButton} onClick={() => refetch()}>
+    //         <span>Попробовать снова</span>
+    //       </button>
+    //     </div>
+    //   );
+    // }
 
     return (
       <Table
