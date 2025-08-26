@@ -10,11 +10,7 @@ import {
 } from "src/store/admin/teachers/teachers";
 import type { Course } from "src/consts/types";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import type {
-  AdminTeacher,
-  BackendValidationError,
-  BackendErrorResponse,
-} from "src/consts/types";
+import type { AdminTeacher, BackendErrorResponse } from "src/consts/types";
 import TextArea from "@components/Fields/TextAreaField";
 
 type Props = {
@@ -40,7 +36,7 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
   const { courses, groups } = useAppSelector((state) => state.groupsCourses);
-  const [registerTeacher, { isLoading, isSuccess }] =
+  const [registerTeacher, { isLoading }] =
     useRegisterTeacherMutation();
   const [updateTeacher] = useUpdateTeacherMutation();
 

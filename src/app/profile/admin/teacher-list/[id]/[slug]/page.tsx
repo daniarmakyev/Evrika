@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import ProfileSchedule from "src/app/profile/schedule/page";
 import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
 import Table from "@components/Table";
 import ProfileModal from "@components/ProfileModal";
@@ -13,7 +12,6 @@ import { useGetTeacherScheduleQuery } from "src/store/admin/teachers/teachers";
 import { useParams } from "next/navigation";
 import type {
   LessonShedule,
-  Lesson2,
   GroupWithLessons,
   WeekSchedule,
 } from "src/consts/types";
@@ -32,38 +30,32 @@ const Schedulepage = () => {
   const user_id = Number(id);
   const {
     data: schedule,
-    error,
     isLoading,
-    refetch,
   } = useGetTeacherScheduleQuery({
     user_id,
   });
 
-  
-    // const { shedule, loading, error } = useAppSelector((state) => state.shedule);
-    // const { user, groups, attendance, attendanceLoading } = useAppSelector(
-    //   (state) => state.user
-    // );
-    // const { classrooms } = useAppSelector((state) => state.lesson);
-  
-    const dispatch = useAppDispatch();
-  
-    const lessonModal = useModal<LessonShedule>("lesson");
-    const lessonEditModal = useModal<LessonShedule>("lesson-edit");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const createLessonModal = useModal("create-lesson");
-    
-    
-    const handleCreateLessonClick = () => {
-      createLessonModal.openModal({});
-    };
-  
-    const handleLessonClick = (lesson: LessonShedule, groupId?: number) => {
-     
-        const lessonWithGroup = { ...lesson, group_id: groupId };
-        lessonEditModal.openModal(lessonWithGroup);
-     
-    };
+  // const { shedule, loading, error } = useAppSelector((state) => state.shedule);
+  // const { user, groups, attendance, attendanceLoading } = useAppSelector(
+  //   (state) => state.user
+  // );
+  // const { classrooms } = useAppSelector((state) => state.lesson);
+
+  const dispatch = useAppDispatch();
+
+  const lessonModal = useModal<LessonShedule>("lesson");
+  const lessonEditModal = useModal<LessonShedule>("lesson-edit");
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const createLessonModal = useModal("create-lesson");
+
+  const handleCreateLessonClick = () => {
+    createLessonModal.openModal({});
+  };
+
+  const handleLessonClick = (lesson: LessonShedule, groupId?: number) => {
+    const lessonWithGroup = { ...lesson, group_id: groupId };
+    lessonEditModal.openModal(lessonWithGroup);
+  };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const transformScheduleData = (entries: GroupWithLessons[] = []) => {

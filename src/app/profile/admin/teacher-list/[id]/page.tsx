@@ -9,8 +9,8 @@ import { useParams } from "next/navigation";
 
 const TeacherDetailPage = () => {
   const router = useRouter();
-   const params = useParams();
-    const id = Array.isArray(params.id) ? params.id[0] : params.id;
+  //  const params = useParams();
+    // const id = Array.isArray(params.id) ? params.id[0] : params.id;
   //   const course
   //  const { data, error, isLoading, refetch } = useGetTeacherListQuery(
   //   {
