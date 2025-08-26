@@ -553,3 +553,53 @@ export type BackendError = {
 };
 
 
+// Учитель
+interface Teacher1 {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+  role: "teacher" | "student" | "admin"; // можно расширить при необходимости
+}
+
+
+// interface Classroom {
+//   id: number;
+//   name: string;
+// }
+
+
+export interface Lesson2 {
+  id: number;
+  name: string;
+  description: string;
+  link: string;
+  day: string; // можно заменить на Date, если парсишь дату
+  lesson_start: string; // или Date
+  lesson_end: string;   // или Date
+  teacher: Teacher1;
+  classroom: Classroom;
+}
+
+
+export interface GroupWithLessons {
+  group: {
+    id: number;
+    name: string;
+  };
+  lessons: Lesson2[];
+}
+
+
+export type WeekSchedule = {
+  MON?: GroupWithLessons[];
+  TUE?: GroupWithLessons[];
+  WED?: GroupWithLessons[];
+  THU?: GroupWithLessons[];
+  FRI?: GroupWithLessons[];
+  SAT?: GroupWithLessons[];
+  SUN?: GroupWithLessons[];
+};
+
+

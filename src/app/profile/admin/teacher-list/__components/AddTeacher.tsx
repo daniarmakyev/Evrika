@@ -285,6 +285,7 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
                                   }
                                 >
                                   <input
+                                   className={styles.dropdown__checkbox}
                                     type="radio"
                                     value={group.name}
                                     checked={field.value === group.name}
@@ -310,7 +311,7 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
             </span>
           )}
         </div>
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%" }} className={styles.textarea_container}>
           <Controller
             name="description"
             control={control}

@@ -12,7 +12,10 @@ import { Search } from "lucide-react";
 import SelectField from "@components/Fields/SelectField";
 import { Download } from "lucide-react";
 import AddTeacher from "./__components/AddTeacher";
-import { useGetTeacherListQuery,useDeleteTeacherMutation } from "src/store/admin/teachers/teachers";
+import {
+  useGetTeacherListQuery,
+  useDeleteTeacherMutation,
+} from "src/store/admin/teachers/teachers";
 import { useAppSelector, useAppDispatch } from "src/store/store";
 import { getCourses } from "src/store/courseGroup/courseGroup.action";
 import type { AdminTeacher } from "src/consts/types";
@@ -290,7 +293,7 @@ export default function TeachersList() {
       )}
       <AddTeacher
         isOpen={isAddModalOpen}
-      onClose={() => {
+        onClose={() => {
           setSelectedTeacher(null);
           setIsAddModalOpen(false);
         }}

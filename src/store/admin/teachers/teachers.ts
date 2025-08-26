@@ -2,7 +2,11 @@
 
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { API_URL } from "src/consts/api";
-import type { TeachersResponse, GetTeachersParams } from "src/consts/types";
+import type {
+  TeachersResponse,
+  GetTeachersParams,
+  WeekSchedule,
+} from "src/consts/types";
 
 interface Teacher {
   id: number;
@@ -22,23 +26,16 @@ interface TeacherForm {
   description: string;
 }
 
-interface UpdateTeacher{
-  full_name:string;
-  email:string;
-  phone_number:string;
-  description:string
+interface UpdateTeacher {
+  full_name: string;
+  email: string;
+  phone_number: string;
+  description: string;
 }
 type UpdateTeacherArgs = {
-  teacherId: number|null;
+  teacherId: number | null;
   teacherData: UpdateTeacher;
 };
-
-// interface ValidationError {
-//   type?: string;
-//   loc?: string[];
-//   msg: string;
-//   input?: unknown;
-// }
 
 export const teacherApi = createApi({
   reducerPath: "teacherApi",
@@ -56,14 +53,14 @@ export const teacherApi = createApi({
   endpoints: (builder) => ({
     registerTeacher: builder.mutation<
       Teacher,
-      { groupId: number|null; teacherData: TeacherForm }
+      { groupId: number | null; teacherData: TeacherForm }
     >({
       query: ({ groupId, teacherData }) => ({
         url: `/auth/register-teacher-with-group?${groupId}`,
         method: "POST",
         body: teacherData,
       }),
-        invalidatesTags: ["teachers"],
+      invalidatesTags: ["teachers"],
     }),
     getTeacherList: builder.query<TeachersResponse, GetTeachersParams>({
       query: ({ course_id, page = 1, size = 20 }) =>
@@ -76,20 +73,18 @@ export const teacherApi = createApi({
     // getGroupList: builder.query<CoursesResponse, void>({
     //   query: () => `/group-students`,
     // }),
-    // getStudentHomeworkGroupId: builder.query<
-    //   HomeworkResponse,
-    //   GetHomeworkParams
-    // >({
-    //   query: ({ user_id, group_id, page = 1, size = 20 }) =>
-    //     `/submissions/user/${user_id}?${group_id}&page=${page}&size=${size}`,
-    // }),
-    updateTeacher: builder.mutation<UpdateTeacher,UpdateTeacherArgs>({
-      query: ({teacherId, teacherData} ) => ({
+    getTeacherSchedule: builder.query<WeekSchedule, { user_id: number | null }>(
+      {
+        query: ({ user_id }) => `/schedule/teacher/${user_id}`,
+      }
+    ),
+    updateTeacher: builder.mutation<UpdateTeacher, UpdateTeacherArgs>({
+      query: ({ teacherId, teacherData }) => ({
         url: `user/teacher/${teacherId}`,
         method: "PATCH",
         body: teacherData,
       }),
-      invalidatesTags: ["teachers"]
+      invalidatesTags: ["teachers"],
     }),
 
     deleteTeacher: builder.mutation<void, number>({
@@ -108,6 +103,6 @@ export const {
   // useGetUserInfoQuery,
   // useGetGroupListQuery,
   useDeleteTeacherMutation,
-  // useGetStudentHomeworkGroupIdQuery,
-  useUpdateTeacherMutation
+  useGetTeacherScheduleQuery,
+  useUpdateTeacherMutation,
 } = teacherApi;
