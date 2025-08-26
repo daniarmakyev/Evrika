@@ -25,7 +25,7 @@ import { useModal } from "@context/ModalContext";
 import { useAppDispatch } from "src/store/store";
 import { getShedule } from "src/store/shedule/shedule.action";
 
-const page = () => {
+const Schedulepage = () => {
   const params = useParams();
   const [activeDay, setActiveDay] = React.useState<keyof WeekSchedule>("MON");
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -251,4 +251,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Schedulepage;
