@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
 import Table from "@components/Table";
 import ProfileModal from "@components/ProfileModal";
@@ -22,6 +23,7 @@ import classNames from "classnames";
 import { useModal } from "@context/ModalContext";
 import { useAppDispatch } from "src/store/store";
 import { getShedule } from "src/store/shedule/shedule.action";
+
 
 const Schedulepage = () => {
   const params = useParams();
@@ -128,16 +130,22 @@ const Schedulepage = () => {
     }
 
     if (error) {
-      return (
-        <div className={styles.errorContainer}>
-          <div className={styles.errorIcon}>⚠️</div>
-          <h3 className={styles.errorTitle}>Ошибка загрузки расписания</h3>
-          <p className={styles.errorMessage}>{(error as any)?.data}</p>
-          <button className={styles.retryButton} onClick={() => refetch()}>
-            <span>Попробовать снова</span>
-          </button>
-        </div>
-      );
+      const err = error as FetchBaseQueryError;
+
+  return (
+    <div className={styles.errorContainer}>
+      <div className={styles.errorIcon}>⚠️</div>
+      <h3 className={styles.errorTitle}>Ошибка загрузки расписания</h3>
+      <p className={styles.errorMessage}>
+        {typeof err.data === "string"
+          ? err.data
+          : "Произошла ошибка. Попробуйте снова."}
+      </p>
+      <button className={styles.retryButton} onClick={() => refetch()}>
+        <span>Попробовать снова</span>
+      </button>
+    </div>
+  );
     }
 
     return (
