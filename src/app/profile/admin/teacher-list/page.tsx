@@ -17,7 +17,7 @@ import {
   useDeleteTeacherMutation,
 } from "src/store/admin/teachers/teachers";
 import { useAppSelector, useAppDispatch } from "src/store/store";
-import { getCourses } from "src/store/courseGroup/courseGroup.action";
+import { getCourses,getGroups } from "src/store/courseGroup/courseGroup.action";
 import type { AdminTeacher } from "src/consts/types";
 import { useRouter } from "next/navigation";
 
@@ -34,9 +34,11 @@ export default function TeachersList() {
   const size = 20;
   const { courses } = useAppSelector((state) => state.groupsCourses);
   const dispatch = useAppDispatch();
-  useEffect(() => {
+useEffect(() => {
     dispatch(getCourses());
+    dispatch(getGroups({ limit: 99, offset: 0 }));
   }, [dispatch]);
+
   const course_id = selectedCourse ? Number(selectedCourse) : null;
 
   const { data, error, isLoading, refetch } = useGetTeacherListQuery(
