@@ -83,7 +83,7 @@ export const studentApi = createApi({
         `/submissions/user/${user_id}?${group_id}&page=${page}&size=${size}`,
     }),
     updateStudent: builder.mutation<UpdateStudent,UpdateStudentArgs>({
-      query: ({studentId, studentData} ) => ({
+      query: ({studentId, ...studentData} ) => ({
         url: `/user/student/${studentId}`,
         method: "PATCH",
         body: studentData,
