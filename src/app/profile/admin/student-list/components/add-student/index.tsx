@@ -85,7 +85,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
   const selectedCourse = watch("group");
  const onSubmit: SubmitHandler<FormData> = async (data) => {
      try {
-    // Если добавляем студента — получаем выбранные группы
+    
     const selectedGroupIds = !student
       ? groups?.filter((g) => data.group.includes(g.name)).map((g) => g.id) ?? []
       : [];

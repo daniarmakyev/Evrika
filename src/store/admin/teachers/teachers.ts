@@ -6,7 +6,6 @@ import type {
   TeachersResponse,
   GetTeachersParams,
   WeekSchedule,
-  AdminTeacher,
 } from "src/consts/types";
 
 interface Teacher {
@@ -19,6 +18,17 @@ interface Teacher {
   group_ids?: number[];
 }
 
+interface Group {
+  id: number;
+  name: string;
+}
+
+type TeacherData = TeacherForm & {
+  id:number;
+  groups: Group[];
+  is_active:boolean,
+  courses:Group[]
+};
 interface TeacherForm {
   full_name: string;
   email: string;
@@ -68,7 +78,7 @@ export const teacherApi = createApi({
         `/user/teachers/?page=${page}&size=${size}&course_id=${course_id}`,
       providesTags: ["teachers"],
     }),
-    getTeacherInfo: builder.query<AdminTeacher, { user_id: string }>({
+    getTeacherInfo: builder.query<TeacherData, { user_id: string }>({
       query: ({ user_id }) => `/user/teacher/${user_id}`,
     }),
     getTeacherSchedule: builder.query<WeekSchedule, { user_id: number | null }>(
@@ -78,7 +88,7 @@ export const teacherApi = createApi({
     ),
     updateTeacher: builder.mutation<UpdateTeacher, UpdateTeacherArgs>({
       query: ({ teacherId, ...teacherData }) => ({
-        url: `user/teacher/${teacherId}`,
+        url: `/user/teacher/${teacherId}`,
         method: "PATCH",
         body: teacherData,
       }),

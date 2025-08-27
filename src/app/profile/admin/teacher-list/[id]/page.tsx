@@ -27,6 +27,8 @@ const TeacherDetailPage = () => {
     }
   );
 
+  console.log(teacherData)
+
   const handleClick = () => {
     router.push(
       `/profile/admin/teacher-list/${teacherData?.id}/${teacherData?.id}`
@@ -93,7 +95,7 @@ const TeacherDetailPage = () => {
             <InputField
               label="Курс преподавания"
               type="text"
-              placeholder={teacherData?.courses?.join(", ") || ""}
+              placeholder={teacherData?.groups?.map(group => group.name).join(", ") || ""}
               disabled
               fullWidth
               isShadow

@@ -34,12 +34,6 @@ type UpdateStudentArgs = {
   studentData: UpdateStudent;
 };
 
-// interface ValidationError {
-//   type?: string;
-//   loc?: string[];
-//   msg: string;
-//   input?: unknown;
-// }
 
 export const studentApi = createApi({
   reducerPath: "studentApi",
@@ -68,14 +62,6 @@ export const studentApi = createApi({
         body: studentData,
       }),
 
-      // transformErrorResponse: (response: {
-      //   data?: ValidationError[];
-      //   status: number;
-      // }) => {
-      //   // возвращаем массив ошибок или один объект с msg
-      //   if (response?.data) return response.data;
-      //   return [{ msg: "Не удалось зарегистрировать студента" }];
-      // },
       invalidatesTags: ["Students"],
     }),
     getStudentList: builder.query<StudentsResponse, GetStudentsParams>({
@@ -98,7 +84,7 @@ export const studentApi = createApi({
     }),
     updateStudent: builder.mutation<UpdateStudent,UpdateStudentArgs>({
       query: ({studentId, studentData} ) => ({
-        url: `user/${studentId}`,
+        url: `/user/student/${studentId}`,
         method: "PATCH",
         body: studentData,
       }),
