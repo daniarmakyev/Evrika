@@ -17,6 +17,7 @@ import {
   useGetStudentListQuery,
   useDeleteStudentMutation,
 } from "src/store/admin/students/students";
+import { useExportStudentsMutation } from "src/store/admin/export/export";
 import { useAppSelector, useAppDispatch } from "src/store/store";
 import {
   getCourses,
@@ -33,6 +34,7 @@ export default function StudentList() {
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
   const { courses, groups } = useAppSelector((state) => state.groupsCourses);
+  const [showExport, setShowExport] = useState(false);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -63,6 +65,8 @@ export default function StudentList() {
   );
 
   const [deleteStudent] = useDeleteStudentMutation();
+
+  const [exportStudents] = useExportStudentsMutation();
 
   const handleOptionClick = async (option: string, student: Student) => {
     switch (option) {
@@ -100,6 +104,23 @@ export default function StudentList() {
         break;
     }
     setOpenRowId(null);
+  };
+
+  const handleExport = async (format: "csv" | "xlsx") => {
+    try {
+      if (!exportStudents) return;
+
+      const blob = await exportStudents({ group_id: user_id, format }).unwrap();
+
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `students.${format}`;
+      link.click();
+    } catch (err) {
+      console.error("Ошибка при экспорте:", err);
+      alert("Не удалось скачать файл");
+    }
+    setShowExport(false)
   };
 
   const homeWorkColumns = [
@@ -298,10 +319,19 @@ export default function StudentList() {
               />
             </div>
 
-            <div>
-              <button className={styles.white__button}>
+            <div style={{ position: "relative" }}>
+              <button
+                className={styles.white__button}
+                onClick={() => setShowExport((prev) => !prev)}
+              >
                 <Download /> Выгрузить
               </button>
+              {showExport && (
+                <div className={styles.export_content}>
+                  <button onClick={() => handleExport("csv")}> CVS</button>
+                  <button onClick={() => handleExport("xlsx")}> XLSX</button>
+                </div>
+              )}
             </div>
 
             <div className={styles.filter_container}>

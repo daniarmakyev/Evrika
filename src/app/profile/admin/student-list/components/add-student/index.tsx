@@ -16,7 +16,7 @@ import type { Student } from "src/consts/types";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  student?: Student | null|undefined;
+  student?: Student | null | undefined;
 };
 
 interface FormData {
@@ -74,27 +74,26 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
       });
     } else {
       reset({
-      full_name: "",
-      email: "",
-      phone_number: "",
-      role: "student",
-      group: [],
-    });
+        full_name: "",
+        email: "",
+        phone_number: "",
+        role: "student",
+        group: [],
+      });
     }
   }, [student, reset]);
   const selectedCourse = watch("group");
- const onSubmit: SubmitHandler<FormData> = async (data) => {
-     try {
-    
-    const selectedGroupIds = !student
-      ? groups?.filter((g) => data.group.includes(g.name)).map((g) => g.id) ?? []
-      : [];
+  const onSubmit: SubmitHandler<FormData> = async (data) => {
+    try {
+      const selectedGroupIds = !student
+        ? groups?.filter((g) => data.group.includes(g.name)).map((g) => g.id) ??
+          []
+        : [];
 
-    if (!student && selectedGroupIds.length === 0) {
-      alert("Нужно выбрать хотя бы одну группу");
-      return;
-    }
-
+      if (!student && selectedGroupIds.length === 0) {
+        alert("Нужно выбрать хотя бы одну группу");
+        return;
+      }
 
       const payload: PostForm = {
         full_name: data.full_name,
@@ -111,13 +110,13 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
             email: data.email,
             phone_number: data.phone_number,
           },
-        }).unwrap()
+        }).unwrap();
         alert("Студент обновлён");
       } else {
         await registerStudent({
           groupIds: selectedGroupIds,
           studentData: payload,
-        })
+        });
         alert(`Студент ${data.full_name} успешно зарегистрирован`);
       }
 
@@ -128,7 +127,6 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
       alert("Ошибка, попробуйте позже");
     }
   };
-
 
   return (
     <ProfileModal
@@ -328,7 +326,11 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
           </button>
           <button className={styles.save__button} disabled={isLoading}>
             {" "}
-            {isLoading ? "Сохраняем..." : student?.id ? "Сохранить" : "Добавить"}
+            {isLoading
+              ? "Сохраняем..."
+              : student?.id
+              ? "Сохранить"
+              : "Добавить"}
           </button>
         </div>
         {isSuccess && <p style={{ color: "green" }}>Успешная регистрация!</p>}
