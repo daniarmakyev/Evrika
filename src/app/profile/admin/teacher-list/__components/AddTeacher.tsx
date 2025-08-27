@@ -12,6 +12,7 @@ import type { Course } from "src/consts/types";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import type { AdminTeacher, BackendErrorResponse } from "src/consts/types";
 import TextArea from "@components/Fields/TextAreaField";
+import { useGetTeacherInfoQuery } from "src/store/admin/teachers/teachers";
 
 type Props = {
   isOpen: boolean;
@@ -36,8 +37,17 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
   const { courses, groups } = useAppSelector((state) => state.groupsCourses);
-  const [registerTeacher, { isLoading }] =
-    useRegisterTeacherMutation();
+  const user_id=teacher?.id?.toString() ?? ""
+
+  const { data: teacherData } = useGetTeacherInfoQuery(
+    {
+      user_id
+    },
+    {
+      skip: !user_id,
+    }
+  );
+  const [registerTeacher, { isLoading }] = useRegisterTeacherMutation();
   const [updateTeacher] = useUpdateTeacherMutation();
 
   const {
@@ -51,10 +61,10 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
   } = useForm<FormData>({
     defaultValues: {
       full_name: "",
-      group: "",
       phone_number: "",
       email: "",
-      role: "student",
+      role: "teacher",
+      description: "",
     },
   });
   React.useEffect(() => {
@@ -64,6 +74,7 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
         email: teacher?.email,
         phone_number: teacher?.phone_number,
         role: teacher?.role,
+        description: teacherData?.description,
       });
     } else {
       reset({
@@ -71,10 +82,10 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
         email: "",
         phone_number: "",
         role: "teacher",
-        group: "",
+        description: "",
       });
     }
-  }, [teacher, reset]);
+  }, [teacher, reset,teacherData?.description]);
   const selectedCourse = watch("group");
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {

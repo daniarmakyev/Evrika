@@ -18,6 +18,17 @@ interface Teacher {
   group_ids?: number[];
 }
 
+interface Group {
+  id: number;
+  name: string;
+}
+
+type TeacherData = TeacherForm & {
+  id:number;
+  groups: Group[];
+  is_active:boolean,
+  courses:Group[]
+};
 interface TeacherForm {
   full_name: string;
   email: string;
@@ -60,26 +71,24 @@ export const teacherApi = createApi({
         method: "POST",
         body: teacherData,
       }),
-     invalidatesTags: ["teachers"],
+      invalidatesTags: ["teachers"],
     }),
     getTeacherList: builder.query<TeachersResponse, GetTeachersParams>({
       query: ({ course_id, page = 1, size = 20 }) =>
         `/user/teachers/?page=${page}&size=${size}&course_id=${course_id}`,
-      providesTags: ['teachers'],
-    // getUserInfo: builder.query<User, { user_id: string }>({
-    //   query: ({ user_id }) => `/user/${user_id}`,
-    // }),
-    // getGroupList: builder.query<CoursesResponse, void>({
-    //   query: () => `/group-students`,
+      providesTags: ["teachers"],
+    }),
+    getTeacherInfo: builder.query<TeacherData, { user_id: string }>({
+      query: ({ user_id }) => `/user/teacher/${user_id}`,
     }),
     getTeacherSchedule: builder.query<WeekSchedule, { user_id: number | null }>(
       {
-        query: ({ user_id }) => `/schedule/teacher/${user_id}`,
+        query: ({ user_id }) => `/shedule/teacher/${user_id}`,
       }
     ),
     updateTeacher: builder.mutation<UpdateTeacher, UpdateTeacherArgs>({
-      query: ({ teacherId, teacherData }) => ({
-        url: `user/teacher/${teacherId}`,
+      query: ({ teacherId, ...teacherData }) => ({
+        url: `/user/teacher/${teacherId}`,
         method: "PATCH",
         body: teacherData,
       }),
@@ -99,8 +108,7 @@ export const teacherApi = createApi({
 export const {
   useGetTeacherListQuery,
   useRegisterTeacherMutation,
-  // useGetUserInfoQuery,
-  // useGetGroupListQuery,
+  useGetTeacherInfoQuery,
   useDeleteTeacherMutation,
   useGetTeacherScheduleQuery,
   useUpdateTeacherMutation,
