@@ -291,12 +291,6 @@ export default function StudentList() {
         >
           Добавить
         </button>
-        <button
-          className={styles.white__button}
-          onClick={() => router.push("/profile/admin/student-list/archive")}
-        >
-          Архив
-        </button>
       </div>
 
       {error ? (

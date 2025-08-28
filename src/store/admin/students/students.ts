@@ -75,6 +75,7 @@ export const studentApi = createApi({
     }),
     getGroupList: builder.query<CoursesResponse, void>({
       query: () => `/group-students`,
+       providesTags: ["Students"]
     }),
     getGroupDetail: builder.query<CoursesResponse, void>({
       query: () => `/group-students/detail-list`,
@@ -96,7 +97,7 @@ export const studentApi = createApi({
       query: ({studentId, ...studentData} ) => ({
         url: `/user/student/${studentId}`,
         method: "PATCH",
-        body: studentData,
+        body:studentData,
       }),
       invalidatesTags: ["Students"]
     }),
