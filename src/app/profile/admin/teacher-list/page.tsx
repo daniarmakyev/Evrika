@@ -17,9 +17,13 @@ import {
   useDeleteTeacherMutation,
 } from "src/store/admin/teachers/teachers";
 import { useAppSelector, useAppDispatch } from "src/store/store";
-import { getCourses } from "src/store/courseGroup/courseGroup.action";
+import {
+  getCourses,
+  getGroups,
+} from "src/store/courseGroup/courseGroup.action";
 import type { AdminTeacher } from "src/consts/types";
 import { useRouter } from "next/navigation";
+import { useExportTeachersMutation } from "src/store/admin/export/export";
 
 export default function TeachersList() {
   const [openRowId, setOpenRowId] = useState<number | null>(null);
@@ -28,6 +32,7 @@ export default function TeachersList() {
   );
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+  const [showExport, setShowExport] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
@@ -36,19 +41,19 @@ export default function TeachersList() {
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(getCourses());
+    dispatch(getGroups({ limit: 99, offset: 0 }));
   }, [dispatch]);
+
   const course_id = selectedCourse ? Number(selectedCourse) : null;
 
-  const { data, error, isLoading, refetch } = useGetTeacherListQuery(
-    {
-      page: currentPage,
-      size,
-      course_id: course_id,
-    },
-    
-  );
+  const { data, error, isLoading, refetch } = useGetTeacherListQuery({
+    page: currentPage,
+    size,
+    course_id: course_id,
+  });
 
   console.log(data, "TeacherData");
+  const [exportTeachers] = useExportTeachersMutation();
 
   const filteredTeachers = data?.teachers?.filter((teacher: AdminTeacher) =>
     teacher.full_name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -110,6 +115,23 @@ export default function TeachersList() {
   const handleCourseChange = (courseId: string | null) => {
     setSelectedCourse(courseId);
     setCurrentPage(1);
+  };
+
+  const handleExport = async (format: "csv" | "xlsx") => {
+    try {
+      if (!exportTeachers) return;
+
+      const blob = await exportTeachers({ course_id, format }).unwrap();
+
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `teachers.${format}`;
+      link.click();
+    } catch (err) {
+      console.error("Ошибка при экспорте:", err);
+      alert("Не удалось скачать файл");
+    }
+    setShowExport(false)
   };
 
   const homeWorkColumns = [
@@ -254,10 +276,19 @@ export default function TeachersList() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <div>
-              <button className={styles.white__button}>
+            <div style={{ position: "relative" }}>
+              <button
+                className={styles.white__button}
+                onClick={() => setShowExport((prev) => !prev)}
+              >
                 <Download /> Выгрузить
               </button>
+              {showExport && (
+                <div className={styles.export_content}>
+                  <button onClick={() => handleExport("csv")}> CSV</button>
+                  <button onClick={() => handleExport("xlsx")}> XLSX</button>
+                </div>
+              )}
             </div>
             <div className={styles.filter_container}>
               <div style={{ width: "210px", position: "relative" }}>

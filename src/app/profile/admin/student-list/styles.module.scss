@@ -273,3 +273,31 @@
   align-items: center;
   height: 30px;
 }
+
+.export_content{
+  display: flex;
+  flex-direction: column;
+  background-color:#fafafa;
+  box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+  border-radius: 6px;
+  position:absolute;
+  top:40px;
+  left:0;
+  right:0;
+  width:100%;
+  
+  > :first-child {
+    border-bottom: 1px solid rgba(219, 219, 219, 1);
+  }
+  button{
+    padding-block: 8px;
+    text-align: left;
+    padding-left: 15px;
+     border-radius: 6px;
+    
+  &:hover{
+    background-color:rgba(219, 219, 219, 1)
+  }
+  }
+  
+}

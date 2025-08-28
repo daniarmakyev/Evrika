@@ -539,6 +539,7 @@ export interface AdminTeacher {
   role: "teacher"; 
   is_active: boolean;
   courses: TeacherCourse[];
+  description?:string
 }
 
 export interface TeachersResponse {
@@ -623,4 +624,9 @@ export interface StripeCheckoutPayload {
   group_id: number;
   success_url: string;
   cancel_url: string;
+}
+
+export type ResetPasswordResponse = {
+  success: boolean;
+  message: string;
 }

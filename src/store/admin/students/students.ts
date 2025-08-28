@@ -9,7 +9,8 @@ import type {
   CoursesResponse,
   HomeworkResponse,
   GetHomeworkParams,
-  UpdateStudent
+  UpdateStudent,
+  ResetPasswordResponse
 } from "src/consts/types";
 import qs from "qs";
 
@@ -34,12 +35,6 @@ type UpdateStudentArgs = {
   studentData: UpdateStudent;
 };
 
-// interface ValidationError {
-//   type?: string;
-//   loc?: string[];
-//   msg: string;
-//   input?: unknown;
-// }
 
 export const studentApi = createApi({
   reducerPath: "studentApi",
@@ -68,14 +63,6 @@ export const studentApi = createApi({
         body: studentData,
       }),
 
-      // transformErrorResponse: (response: {
-      //   data?: ValidationError[];
-      //   status: number;
-      // }) => {
-      //   // возвращаем массив ошибок или один объект с msg
-      //   if (response?.data) return response.data;
-      //   return [{ msg: "Не удалось зарегистрировать студента" }];
-      // },
       invalidatesTags: ["Students"],
     }),
     getStudentList: builder.query<StudentsResponse, GetStudentsParams>({
@@ -89,6 +76,15 @@ export const studentApi = createApi({
     getGroupList: builder.query<CoursesResponse, void>({
       query: () => `/group-students`,
     }),
+    getGroupDetail: builder.query<CoursesResponse, void>({
+      query: () => `/group-students/detail-list`,
+    }),
+    resetPassword: builder.mutation<ResetPasswordResponse, string>({
+  query: (userId) => ({
+    url: `/user/${userId}/reset-password`,
+    method: "GET", 
+  }),
+}),
     getStudentHomeworkGroupId: builder.query<
       HomeworkResponse,
       GetHomeworkParams
@@ -97,8 +93,8 @@ export const studentApi = createApi({
         `/submissions/user/${user_id}?${group_id}&page=${page}&size=${size}`,
     }),
     updateStudent: builder.mutation<UpdateStudent,UpdateStudentArgs>({
-      query: ({studentId, studentData} ) => ({
-        url: `user/${studentId}`,
+      query: ({studentId, ...studentData} ) => ({
+        url: `/user/student/${studentId}`,
         method: "PATCH",
         body: studentData,
       }),
@@ -122,5 +118,7 @@ export const {
   useGetGroupListQuery,
   useDeleteStudentMutation,
   useGetStudentHomeworkGroupIdQuery,
-  useUpdateStudentMutation
+  useUpdateStudentMutation,
+  useGetGroupDetailQuery,
+  useResetPasswordMutation
 } = studentApi;
