@@ -4,7 +4,7 @@
 .table {
   display: flex;
   flex-direction: column;
-
+  position: relative;
   &__header {
     font-size: 16px;
     font-weight: 600;
@@ -24,6 +24,8 @@
     color: $White;
     padding-bottom: 15px;
     padding-top: 15px;
+    position: sticky;
+    top: 0;
   }
 
   &__cell:first-child {
