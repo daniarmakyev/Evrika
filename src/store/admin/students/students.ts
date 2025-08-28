@@ -31,10 +31,9 @@ interface StudentForm {
   role: string;
 }
 type UpdateStudentArgs = {
-  studentId: number|undefined;
+  studentId: number | null;
   studentData: UpdateStudent;
 };
-
 
 export const studentApi = createApi({
   reducerPath: "studentApi",
@@ -48,7 +47,7 @@ export const studentApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Students"],
+  tagTypes: ["Students", "Student"],
   endpoints: (builder) => ({
     registerStudent: builder.mutation<
       Student,
@@ -62,7 +61,6 @@ export const studentApi = createApi({
         method: "POST",
         body: studentData,
       }),
-
       invalidatesTags: ["Students"],
     }),
     getStudentList: builder.query<StudentsResponse, GetStudentsParams>({
@@ -72,20 +70,23 @@ export const studentApi = createApi({
     }),
     getUserInfo: builder.query<User, { user_id: string }>({
       query: ({ user_id }) => `/user/${user_id}`,
+      providesTags: (result, error, { user_id }) => [
+        { type: "Student", id: user_id }
+      ],
     }),
     getGroupList: builder.query<CoursesResponse, void>({
       query: () => `/group-students`,
-       providesTags: ["Students"]
+      providesTags: ["Students"]
     }),
     getGroupDetail: builder.query<CoursesResponse, void>({
       query: () => `/group-students/detail-list`,
     }),
     resetPassword: builder.mutation<ResetPasswordResponse, string>({
-  query: (userId) => ({
-    url: `/user/${userId}/reset-password`,
-    method: "GET", 
-  }),
-}),
+      query: (userId) => ({
+        url: `/user/${userId}/reset-password`,
+        method: "GET",
+      }),
+    }),
     getStudentHomeworkGroupId: builder.query<
       HomeworkResponse,
       GetHomeworkParams
@@ -93,15 +94,17 @@ export const studentApi = createApi({
       query: ({ user_id, group_id, page = 1, size = 20 }) =>
         `/submissions/user/${user_id}?${group_id}&page=${page}&size=${size}`,
     }),
-    updateStudent: builder.mutation<UpdateStudent,UpdateStudentArgs>({
-      query: ({studentId, ...studentData} ) => ({
+    updateStudent: builder.mutation<UpdateStudent, UpdateStudentArgs>({
+      query: ({ studentId, studentData }) => ({
         url: `/user/student/${studentId}`,
         method: "PATCH",
-        body:studentData,
+        body: studentData,
       }),
-      invalidatesTags: ["Students"]
+      invalidatesTags: (result, error, { studentId }) => [
+        "Students",
+        { type: "Student", id: studentId?.toString() }
+      ],
     }),
-    
     deleteStudent: builder.mutation<void, number>({
       query: (id) => ({
         url: `/user/${id}`,
