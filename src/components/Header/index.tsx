@@ -58,11 +58,11 @@ const Header = () => {
     router.push("/");
   };
 
-  const setTestUser = (token: string) => {
-    localStorage.setItem("evrika-access-token", token);
-    dispatch(initializeAuth());
-    dispatch(getUser());
-  };
+  // const setTestUser = (token: string) => {
+  //   localStorage.setItem("evrika-access-token", token);
+  //   dispatch(initializeAuth());
+  //   dispatch(getUser());
+  // };
 
   return (
     <header className={styles.header}>
@@ -89,7 +89,7 @@ const Header = () => {
             ))}
           </ul> */}
         </nav>
-
+        {/* 
         <div className={styles.buttons}>
           <button
             onClick={() =>
@@ -125,7 +125,7 @@ const Header = () => {
               Админ
             </Link>
           </button>
-        </div>
+        </div> */}
 
         {isAuthenticated ? (
           <div
