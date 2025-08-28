@@ -120,7 +120,7 @@ export default function StudentList() {
       console.error("Ошибка при экспорте:", err);
       alert("Не удалось скачать файл");
     }
-    setShowExport(false)
+    setShowExport(false);
   };
 
   const homeWorkColumns = [
@@ -291,7 +291,12 @@ export default function StudentList() {
         >
           Добавить
         </button>
-        <button className={styles.white__button}>Архив</button>
+        <button
+          className={styles.white__button}
+          onClick={() => router.push("/profile/admin/student-list/archive")}
+        >
+          Архив
+        </button>
       </div>
 
       {error ? (
@@ -328,7 +333,7 @@ export default function StudentList() {
               </button>
               {showExport && (
                 <div className={styles.export_content}>
-                  <button onClick={() => handleExport("csv")}> CVS</button>
+                  <button onClick={() => handleExport("csv")}> CSV</button>
                   <button onClick={() => handleExport("xlsx")}> XLSX</button>
                 </div>
               )}

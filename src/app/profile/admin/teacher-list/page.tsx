@@ -285,7 +285,7 @@ export default function TeachersList() {
               </button>
               {showExport && (
                 <div className={styles.export_content}>
-                  <button onClick={() => handleExport("csv")}> CVS</button>
+                  <button onClick={() => handleExport("csv")}> CSV</button>
                   <button onClick={() => handleExport("xlsx")}> XLSX</button>
                 </div>
               )}

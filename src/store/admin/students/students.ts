@@ -9,7 +9,8 @@ import type {
   CoursesResponse,
   HomeworkResponse,
   GetHomeworkParams,
-  UpdateStudent
+  UpdateStudent,
+  ResetPasswordResponse
 } from "src/consts/types";
 import qs from "qs";
 
@@ -75,6 +76,15 @@ export const studentApi = createApi({
     getGroupList: builder.query<CoursesResponse, void>({
       query: () => `/group-students`,
     }),
+    getGroupDetail: builder.query<CoursesResponse, void>({
+      query: () => `/group-students/detail-list`,
+    }),
+    resetPassword: builder.mutation<ResetPasswordResponse, string>({
+  query: (userId) => ({
+    url: `/user/${userId}/reset-password`,
+    method: "GET", 
+  }),
+}),
     getStudentHomeworkGroupId: builder.query<
       HomeworkResponse,
       GetHomeworkParams
@@ -108,5 +118,7 @@ export const {
   useGetGroupListQuery,
   useDeleteStudentMutation,
   useGetStudentHomeworkGroupIdQuery,
-  useUpdateStudentMutation
+  useUpdateStudentMutation,
+  useGetGroupDetailQuery,
+  useResetPasswordMutation
 } = studentApi;
