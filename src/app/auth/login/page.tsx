@@ -40,8 +40,14 @@ const Login: React.FC = () => {
     if (isAuthenticated && user) {
       if (user.role) {
         localStorage.setItem("role", user.role);
+        if (user.role === "admin") {
+          router.push("/profile/admin/teacher-list");
+        } else {
+          router.push("/profile/personal-info");
+        }
+      } else {
+        router.push("/profile/personal-info");
       }
-      router.push("/");
     }
   }, [isAuthenticated, user, router]);
 

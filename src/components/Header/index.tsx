@@ -89,7 +89,7 @@ const Header = () => {
             ))}
           </ul>
         </nav>
-
+{/* 
         <div className={styles.buttons}>
           <button
             onClick={() =>
@@ -125,7 +125,7 @@ const Header = () => {
               Админ
             </Link>
           </button>
-        </div>
+        </div> */}
 
         {isAuthenticated ? (
           <div
