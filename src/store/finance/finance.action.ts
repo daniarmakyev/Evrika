@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { $apiPrivate } from "src/consts/api";
-import { CustomApiError, PaymentDetail, Check, FinanceItem, StripeCheckoutPayload, StripeCheckoutResponse } from "src/consts/types";
+import { CustomApiError, PaymentDetail, Check, FinanceItem, StripeCheckoutPayload, StripeCheckoutResponse, StripePayment } from "src/consts/types";
 
 interface PaymentRequisite {
     id: number;
@@ -457,6 +457,32 @@ export const stripePayments = createAsyncThunk<
             if (axios.isAxiosError(err)) {
                 return rejectWithValue(
                     err.response?.data?.detail || "Ошибка создания Stripe-сессии"
+                );
+            }
+            return rejectWithValue("Неизвестная ошибка!");
+        }
+    }
+);
+
+
+
+export const getStripePayments = createAsyncThunk<
+    StripePayment[],
+    void,
+    { rejectValue: string }
+>(
+    "finance/getStripePayments",
+    async (_, { rejectWithValue }) => {
+        try {
+            const response = await $apiPrivate.get<StripePayment[]>(
+                "/stripe/payments/"
+            );
+
+            return response.data;
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                return rejectWithValue(
+                    err.response?.data?.detail || "Ошибка получения Stripe-платежей"
                 );
             }
             return rejectWithValue("Неизвестная ошибка!");

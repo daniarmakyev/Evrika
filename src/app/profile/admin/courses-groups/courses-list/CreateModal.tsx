@@ -117,7 +117,7 @@ const CreateCourseModal = ({
             })}
             label="Язык"
             options={languageOptions.map((lang) => ({
-              value: lang.id,
+              value: lang.name,
               label: lang.name,
             }))}
             placeholder="Выберите язык"
@@ -137,7 +137,7 @@ const CreateCourseModal = ({
             })}
             label="Уровень"
             options={levelOptions.map((level) => ({
-              value: level.id,
+              value: level.code,
               label: level.code,
             }))}
             placeholder="Выберите уровень"

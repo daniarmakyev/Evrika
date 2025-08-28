@@ -326,13 +326,11 @@ const FinancePage = () => {
   };
 
   const renderOnlinePayment = () => {
-    const courseOptions = [
-      { label: "Выберите курс для оплаты", value: "" },
-      ...(allCourses?.map((course) => ({
+    const courseOptions =
+      allCourses?.map((course) => ({
         label: `${course.name} - ${course.price} сом`,
         value: course.id.toString(),
-      })) || []),
-    ];
+      })) || [];
 
     const selectedCourseData = allCourses?.find(
       (course) => course.id.toString() === selectedCourse
@@ -348,6 +346,10 @@ const FinancePage = () => {
           {loadingCourses ? (
             <div className={styles.stripePayment__loading}>
               <p>Загружаем список курсов...</p>
+            </div>
+          ) : courseOptions.length === 0 ? (
+            <div className={styles.stripePayment__noCourses}>
+              <p>Нет доступных курсов для оплаты</p>
             </div>
           ) : (
             <div className={styles.stripePayment__form}>

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import classNames from "classnames";
 import PopupHeader from "@components/Ui/Popup";
 import Logo from "@icons/logo.svg";
@@ -11,15 +11,15 @@ import { initializeAuth, logout } from "src/store/user/user.slice";
 import { getUser } from "src/store/user/user.action";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 
-const menu = [
-  { id: 1, name: "Главная", link: "/" },
-  { id: 2, name: "Курсы", link: "/courses" },
-  { id: 3, name: "Контакты", link: "/contacts" },
-  { id: 4, name: "Расписание", link: "/schedule" },
-];
+// const menu = [
+//   { id: 1, name: "Главная", link: "/" },
+//   { id: 2, name: "Курсы", link: "/courses" },
+//   { id: 3, name: "Контакты", link: "/contacts" },
+//   { id: 4, name: "Расписание", link: "/schedule" },
+// ];
 
 const Header = () => {
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const dispatch = useAppDispatch();
   const router = useRouter();
   const { isAuthenticated, user, loading } = useAppSelector(
@@ -74,7 +74,7 @@ const Header = () => {
         </div>
 
         <nav className={styles.header__menu}>
-          <ul>
+          {/* <ul>
             {menu.map((item) => (
               <li key={item.id}>
                 <Link
@@ -87,9 +87,9 @@ const Header = () => {
                 </Link>
               </li>
             ))}
-          </ul>
+          </ul> */}
         </nav>
-{/* 
+        {/* 
         <div className={styles.buttons}>
           <button
             onClick={() =>

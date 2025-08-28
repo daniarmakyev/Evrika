@@ -536,10 +536,10 @@ export interface AdminTeacher {
   full_name: string;
   email: string;
   phone_number: string;
-  role: "teacher"; 
+  role: "teacher";
   is_active: boolean;
   courses: TeacherCourse[];
-  description?:string
+  description?: string
 }
 
 export interface TeachersResponse {
@@ -629,4 +629,51 @@ export interface StripeCheckoutPayload {
 export type ResetPasswordResponse = {
   success: boolean;
   message: string;
+}
+
+
+export interface PaymentOwner {
+  hashed_password: string;
+  is_active: boolean;
+  last_name: string;
+  is_superuser: boolean;
+  phone_number: string | null;
+  is_verified: boolean;
+  created_at: string;
+  first_name: string;
+  role: "admin" | "student" | "teacher";
+  description: string | null;
+  id: number;
+  email: string;
+}
+
+
+export interface PaymentGroup {
+  id: number;
+  name: string;
+  start_date: string;
+  approximate_lesson_start: string;
+  is_archived: boolean;
+  teacher_id: number;
+  created_at: string;
+  end_date: string;
+  is_active: boolean;
+  course_id: number;
+}
+
+
+export interface StripePayment {
+  created_at: string;
+  payment_status: "pending" | "paid" | "failed" | "cancelled";
+  stripe_session_id: string;
+  customer_email: string;
+  group_id: number;
+  id: number;
+  amount: number;
+  payment_method: "stripe";
+  currency: "KGS" | "USD" | "EUR";
+  stripe_payment_intent_id: string | null;
+  owner_id: number;
+  owner: PaymentOwner;
+  group: PaymentGroup;
 }

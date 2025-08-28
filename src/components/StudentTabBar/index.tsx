@@ -16,6 +16,7 @@ const studentData = [
   { tab: "Расписание", icon: <CalendarIcon />, link: "/schedule" },
   { tab: "Домашнее задание", icon: <HomeIcon />, link: "/homework" },
   { tab: "Чеки", icon: <GroupsAdminIcon />, link: "/checks" },
+  { tab: "Платежи", icon: <DollatIcon />, link: "/studentPayments" },
 ];
 
 const teacherData = [
@@ -34,7 +35,7 @@ const adminData = [
     link: "/admin/courses-groups/courses-list",
     matchPattern: "/admin/courses-groups",
   },
-  { tab: "Финансы", icon: <DollatIcon />, link: "/admin/payments-list" },
+  { tab: "Платежи", icon: <DollatIcon />, link: "/admin/payments-list" },
 ];
 
 export default function StudentTabBar({

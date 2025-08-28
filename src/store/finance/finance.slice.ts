@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { PaymentDetail, Check, FinanceItem } from "src/consts/types";
-import { getMyPayments, getMyChecks, createCheck, downloadCheck, getFinance, getPaymentRequisites, createPaymentRequisite, updatePaymentRequisite, stripePayments } from "./finance.action";
+import { PaymentDetail, Check, FinanceItem, StripePayment } from "src/consts/types";
+import { getMyPayments, getMyChecks, createCheck, downloadCheck, getFinance, getPaymentRequisites, createPaymentRequisite, updatePaymentRequisite, stripePayments, getStripePayments } from "./finance.action";
 
 interface PaymentRequisite {
     id: number;
@@ -32,6 +32,9 @@ interface FinanceState {
     financeData: FinanceResponse | null;
     financeLoading: boolean;
     financeError: boolean;
+    stripeData: StripePayment[] | null;
+    stripeLoading: boolean;
+    stripeError: boolean;
     paymentRequisites: PaymentRequisite[] | null;
     paymentRequisitesLoading: boolean;
     paymentRequisitesError: boolean;
@@ -56,6 +59,9 @@ const INIT_STATE: FinanceState = {
     financeData: null,
     financeLoading: false,
     financeError: false,
+    stripeData: null,
+    stripeLoading: false,
+    stripeError: false,
     paymentRequisites: null,
     paymentRequisitesLoading: false,
     paymentRequisitesError: false,
@@ -64,6 +70,7 @@ const INIT_STATE: FinanceState = {
     updateRequisiteLoading: false,
     updateRequisiteError: false,
     stripeSession: null,
+
 };
 
 export const financeSlice = createSlice({
@@ -146,6 +153,18 @@ export const financeSlice = createSlice({
             .addCase(getFinance.rejected, (state) => {
                 state.financeLoading = false;
                 state.financeError = true;
+            }).addCase(getStripePayments.pending, (state) => {
+                state.stripeLoading = true;
+                state.stripeError = false;
+            })
+            .addCase(getStripePayments.fulfilled, (state, { payload }) => {
+                state.stripeLoading = false;
+                state.stripeData = payload;
+                state.stripeError = false;
+            })
+            .addCase(getStripePayments.rejected, (state) => {
+                state.stripeLoading = false;
+                state.stripeError = true;
             })
             .addCase(getPaymentRequisites.pending, (state) => {
                 state.paymentRequisitesLoading = true;
