@@ -24,11 +24,12 @@ interface Group {
 }
 
 type TeacherData = TeacherForm & {
-  id:number;
+  id: number;
   groups: Group[];
-  is_active:boolean,
-  courses:Group[]
+  is_active: boolean;
+  courses: Group[];
 };
+
 interface TeacherForm {
   full_name: string;
   email: string;
@@ -43,6 +44,7 @@ interface UpdateTeacher {
   phone_number: string;
   description: string;
 }
+
 type UpdateTeacherArgs = {
   teacherId: number | null;
   teacherData: UpdateTeacher;
@@ -60,7 +62,7 @@ export const teacherApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ["teachers"],
+  tagTypes: ["teachers", "teacher"],
   endpoints: (builder) => ({
     registerTeacher: builder.mutation<
       Teacher,
@@ -80,6 +82,9 @@ export const teacherApi = createApi({
     }),
     getTeacherInfo: builder.query<TeacherData, { user_id: string }>({
       query: ({ user_id }) => `/user/teacher/${user_id}`,
+      providesTags: (result, error, { user_id }) => [
+        { type: "teacher", id: user_id }
+      ],
     }),
     getTeacherSchedule: builder.query<WeekSchedule, { user_id: number | null }>(
       {
@@ -87,14 +92,16 @@ export const teacherApi = createApi({
       }
     ),
     updateTeacher: builder.mutation<UpdateTeacher, UpdateTeacherArgs>({
-      query: ({ teacherId, ...teacherData }) => ({
+      query: ({ teacherId, teacherData }) => ({
         url: `/user/teacher/${teacherId}`,
         method: "PATCH",
         body: teacherData,
       }),
-      invalidatesTags: ["teachers"],
+      invalidatesTags: (result, error, { teacherId }) => [
+        "teachers",
+        { type: "teacher", id: teacherId?.toString() }
+      ],
     }),
-
     deleteTeacher: builder.mutation<void, number>({
       query: (id) => ({
         url: `/user/${id}`,
