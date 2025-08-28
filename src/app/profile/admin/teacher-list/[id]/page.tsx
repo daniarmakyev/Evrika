@@ -6,12 +6,14 @@ import classNames from "classnames";
 import styles from "./styles.module.scss";
 import { useRouter, useParams } from "next/navigation";
 import { useGetTeacherInfoQuery } from "src/store/admin/teachers/teachers";
-
+import { useResetPasswordMutation } from "src/store/admin/students/students";
 
 const TeacherDetailPage = () => {
   const router = useRouter();
   const params = useParams();
   const user_id = Array.isArray(params.id) ? params.id[0] : params.id;
+  const [resetPassword, { isLoading: resetLoading }] =
+    useResetPasswordMutation();
 
   const {
     data: teacherData,
@@ -27,7 +29,18 @@ const TeacherDetailPage = () => {
     }
   );
 
-  console.log(teacherData)
+  const handleResset = async () => {
+    try {
+      const result = await resetPassword(user_id).unwrap();
+      alert("Письмо для сброса пароля отправлено на почту.");
+      console.log("Ответ сервера:", result);
+    } catch (error) {
+      alert("Ошибка при сбросе пароля");
+      console.error(error);
+    }
+  };
+
+  console.log(teacherData);
 
   const handleClick = () => {
     router.push(
@@ -95,7 +108,9 @@ const TeacherDetailPage = () => {
             <InputField
               label="Курс преподавания"
               type="text"
-              placeholder={teacherData?.groups?.map(group => group.name).join(", ") || ""}
+              placeholder={
+                teacherData?.groups?.map((group) => group.name).join(", ") || ""
+              }
               disabled
               fullWidth
               isShadow
@@ -104,7 +119,13 @@ const TeacherDetailPage = () => {
           </div>
         </div>
 
-        <button className={styles.button}>Сбросить пароль</button>
+        <button
+          className={styles.button}
+          onClick={handleResset}
+          disabled={resetLoading}
+        >
+          {resetLoading ? "Загрузка..." : "Сбросить пароль"}
+        </button>
       </div>
     </div>
   );

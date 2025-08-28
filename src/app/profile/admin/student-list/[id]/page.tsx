@@ -8,6 +8,7 @@ import { useParams } from "next/navigation";
 import {
   useGetUserInfoQuery,
   useGetGroupListQuery,
+  useResetPasswordMutation,
 } from "src/store/admin/students/students";
 import { useSelector } from "react-redux";
 import { selectGroupsByStudent } from "src/store/admin/students/groupStudents";
@@ -19,6 +20,8 @@ const StudentDetailPage = () => {
   const { data, error, isLoading, refetch } = useGetUserInfoQuery({
     user_id: id,
   });
+  const [resetPassword, { isLoading: resetLoading }] =
+    useResetPasswordMutation();
   const {
     isLoading: isGroupsLoading,
     isError,
@@ -29,6 +32,17 @@ const StudentDetailPage = () => {
   const student = studentGroups
     ?.flatMap((group) => group.students)
     .find((student) => student.id === Number(id));
+
+  const handleClick = async () => {
+    try {
+      const result = await resetPassword(id).unwrap();
+      alert("Письмо для сброса пароля отправлено на почту.");
+      console.log("Ответ сервера:", result);
+    } catch (error) {
+      alert("Ошибка при сбросе пароля");
+      console.error(error);
+    }
+  };
 
   if (error) {
     return (
@@ -87,7 +101,9 @@ const StudentDetailPage = () => {
                 style={{ width: "45%" }}
               />
               <div className={styles.button_container}>
-                <button className={styles.button}>Сбросить пароль</button>
+                <button className={styles.button} onClick={handleClick} disabled={resetLoading}>
+                  {resetLoading ? "Загрузка..." : "Сбросить пароль"}
+                </button>
               </div>
             </div>
           </div>

@@ -625,3 +625,8 @@ export interface StripeCheckoutPayload {
   success_url: string;
   cancel_url: string;
 }
+
+export type ResetPasswordResponse = {
+  success: boolean;
+  message: string;
+}
