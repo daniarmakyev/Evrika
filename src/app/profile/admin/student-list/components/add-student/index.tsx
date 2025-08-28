@@ -43,8 +43,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
   const { courses, groups } = useAppSelector((state) => state.groupsCourses);
-  const [registerStudent, { isLoading, isSuccess }] =
-    useRegisterStudentMutation();
+  const [registerStudent, { isLoading }] = useRegisterStudentMutation();
   const [updateStudent] = useUpdateStudentMutation();
 
   const {
@@ -104,13 +103,14 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
 
       if (student?.id) {
         await updateStudent({
-          studentId: student?.id,
+          studentId: student.id,
           studentData: {
             full_name: data.full_name,
             email: data.email,
             phone_number: data.phone_number,
           },
         }).unwrap();
+
         alert("Студент обновлён");
       } else {
         await registerStudent({
@@ -333,7 +333,6 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
               : "Добавить"}
           </button>
         </div>
-        {isSuccess && <p style={{ color: "green" }}>Успешная регистрация!</p>}
       </form>
     </ProfileModal>
   );

@@ -251,7 +251,6 @@ export default function TeachersList() {
         >
           Добавить
         </button>
-        <button className={styles.white__button}>Архив</button>
       </div>
       {error ? (
         <div className={styles.errorMessage}>
