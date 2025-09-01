@@ -16,7 +16,7 @@ export const exportApi = createApi({
   endpoints: (builder) => ({
     exportTeachers: builder.mutation<
       Blob,
-      { course_id: number|null; search?: string; format: "csv" | "xlsx" }
+      { course_id?: number|null; search?: string; format: "csv" | "xlsx" }
     >({
       query: (params) => ({
         url: "/export/teachers",

@@ -26,6 +26,7 @@ import { useRouter } from "next/navigation";
 import { useExportTeachersMutation } from "src/store/admin/export/export";
 import { Loader2 } from "lucide-react";
 
+
 export default function TeachersList() {
   const [openRowId, setOpenRowId] = useState<number | null>(null);
   const [selectedTeacher, setSelectedTeacher] = useState<AdminTeacher | null>(
@@ -38,7 +39,7 @@ export default function TeachersList() {
   const [currentPage, setCurrentPage] = useState(1);
   const [tableLoading, setTableLoading] = useState(false);
   const router = useRouter();
-
+ 
   const { courses } = useAppSelector((state) => state.groupsCourses);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -48,18 +49,13 @@ export default function TeachersList() {
 
   const course_id = selectedCourse ? Number(selectedCourse) : null;
 
-  const {
-    data: allTeachersData,
-    error,
-    isLoading,
-    refetch,
-  } = useGetAllTeacherListQuery();
+
+  const{data:allTeachersData,error,isLoading,refetch}=useGetAllTeacherListQuery()
 
   const [exportTeachers] = useExportTeachersMutation();
 
-  const filteredTeachers = allTeachersData?.teachers.filter(
-    (teacher: AdminTeacher) =>
-      teacher.full_name?.toLowerCase().includes(searchTerm.toLowerCase())
+ const filteredTeachers = allTeachersData?.teachers.filter((teacher: AdminTeacher) =>
+    teacher.full_name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const displayedTeachers = filteredTeachers?.filter((teacher: AdminTeacher) =>
@@ -81,7 +77,7 @@ export default function TeachersList() {
         console.log("Delete student:", teacher.id);
         if (
           window.confirm(
-            `Вы уверены, что хотите удалить студента: ${teacher.full_name}?`
+            `Вы уверены, что хотите удалить преподавателя: ${teacher.full_name}?`
           )
         ) {
           try {
@@ -124,26 +120,29 @@ export default function TeachersList() {
   ];
 
   const handleCourseChange = (courseId: string | null) => {
-    setSelectedCourse(courseId || null);
+    setSelectedCourse(courseId||null);
     setCurrentPage(1);
   };
 
   const handleExport = async (format: "csv" | "xlsx") => {
-    try {
-      if (!exportTeachers) return;
+  try {
+    if (!exportTeachers) return;
 
-      const blob = await exportTeachers({ course_id, format }).unwrap();
+    const params: { format: "csv" | "xlsx"; course_id?: number } = { format };
+    if (course_id != null) params.course_id = course_id;
 
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `teachers.${format}`;
-      link.click();
-    } catch (err) {
-      console.error("Ошибка при экспорте:", err);
-      alert("Не удалось скачать файл");
-    }
-    setShowExport(false);
-  };
+    const blob = await exportTeachers(params).unwrap();
+
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `teachers.${format}`;
+    link.click();
+  } catch (err) {
+    console.error("Ошибка при экспорте:", err);
+    alert("Не удалось скачать файл");
+  }
+  setShowExport(false);
+};
 
   const homeWorkColumns = [
     {
@@ -208,12 +207,17 @@ export default function TeachersList() {
       key: "email",
       title: "Почта",
       width: "220px",
-
+      isButton: true,
       render: (value: string) => {
         return (
-          <span>
-            {value.length > 50 ? value.substring(0, 50) + "..." : value}
-          </span>
+          <button
+            // onClick={() => handleOpenTaskModal(row)}
+            className={styles.table__button}
+          >
+            <span>
+              {value.length > 50 ? value.substring(0, 50) + "..." : value}
+            </span>
+          </button>
         );
       },
     },
@@ -323,14 +327,13 @@ export default function TeachersList() {
             />
           </div>
 
-          {allTeachersData?.pagination &&
-            allTeachersData.pagination.total_pages > 1 && (
-              <Pagination
-                currentPage={currentPage}
-                totalPages={allTeachersData?.pagination.total_pages}
-                handlePageChange={setCurrentPage}
-              />
-            )}
+          {allTeachersData?.pagination && allTeachersData.pagination.total_pages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={allTeachersData?.pagination.total_pages}
+              handlePageChange={setCurrentPage}
+            />
+          )}
         </div>
       )}
       <AddTeacher
