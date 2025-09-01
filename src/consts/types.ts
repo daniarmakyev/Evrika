@@ -149,7 +149,7 @@ export type CreateLessonRequest = {
   day: string;
   lesson_start: string;
   lesson_end: string;
-  teacher_id: number;
+  teacher_id: number|undefined;
   classroom_id: number;
   passed?: boolean;
 };
@@ -676,4 +676,17 @@ export interface StripePayment {
   owner_id: number;
   owner: PaymentOwner;
   group: PaymentGroup;
+}
+
+export interface LessonEdit {
+  name: string;
+  description: string;
+  day: string;            
+  link: string;          
+  lesson_start: string;   
+  lesson_end: string;    
+  teacher_id: number;
+  group_id: number|undefined;
+  classroom_id: number;
+  passed: boolean;
 }
