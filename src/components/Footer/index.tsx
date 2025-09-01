@@ -23,18 +23,18 @@ const menu = [
     name: "Главная",
     link: "/",
   },
-  {
-    name: "Курсы",
-    link: "/courses",
-  },
+  // {
+  //   name: "Курсы",
+  //   link: "/courses",
+  // },
   {
     name: "Контакты",
     link: "/contacts",
   },
-  {
-    name: "Расписание",
-    link: "/schedule",
-  },
+  // {
+  //   name: "Расписание",
+  //   link: "/schedule",
+  // },
 ];
 
 const Footer = ({}) => {

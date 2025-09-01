@@ -1,40 +1,30 @@
-'use client';
+"use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
 import classNames from "classnames";
-import InputField from "@components/Fields/InputField";
-import UserId from "@icons/user-id.svg"
-import Phone from "@icons/phone.svg"
-import UserIcon from "@icons/user.svg"
 import styles from "./styles.module.scss";
 
-interface SignupFormData {
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-}
+// interface SignupFormData {
+//   first_name: string;
+//   last_name: string;
+//   phone: string;
+//   email: string;
+// }
 
 const SignupSection: React.FC = ({}) => {
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<SignupFormData>({
-    defaultValues: {
-      first_name: "",
-      last_name: "",
-      phone: "",
-      email: "",
-    },
-  });
+  // const { handleSubmit, reset } = useForm<SignupFormData>({
+  //   defaultValues: {
+  //     first_name: "",
+  //     last_name: "",
+  //     phone: "",
+  //     email: "",
+  //   },
+  // });
 
-  const onSubmit = (data: SignupFormData) => {
-    console.log("Форма отправлена", data);
-    reset();
-  };
+  // const onSubmit = (data: SignupFormData) => {
+  //   console.log("Форма отправлена", data);
+  //   reset();
+  // };
 
   return (
     <section id="signup" className={classNames(styles.signup, "container")}>
@@ -44,10 +34,19 @@ const SignupSection: React.FC = ({}) => {
             <h3>Ответим на все вопросы - начнем вмёсте!</h3>
           </div>
           <div className={styles.signup__description}>
-            <p>Если Вы хотите узнать больше о школе “Эврика”, или не знаете какую программу выбрать - оставьте заявку и наши менеджеры свяжутся с Вами в течениe рабочего дня с 10:00 до 18:00.</p>
+            <p>
+              Если Вы хотите узнать больше о школе “Эврика”, или не знаете какую
+              программу выбрать - оставьте заявку и наши менеджеры свяжутся с
+              Вами в течениe рабочего дня с 10:00 до 18:00.
+            </p>
           </div>
+          <button
+            onClick={() => window.open("https://wa.me/996555123456", "_blank")}
+          >
+            <span>Записаться</span>
+          </button>
         </div>
-        <form onSubmit={handleSubmit(onSubmit)} className={styles.signup__form}>
+        {/*     <form onSubmit={handleSubmit(onSubmit)} className={styles.signup__form}>
           <div className={styles.signup__wrapper}>
             <InputField
               label="Имя"
@@ -97,14 +96,11 @@ const SignupSection: React.FC = ({}) => {
                 },
               })}
             />
-          </div>
-          <button type="submit">
-            <span>Отправить</span>
-          </button>
-        </form>
+          </div> 
+      </form> */}
       </div>
     </section>
-  )
+  );
 };
 
 export default SignupSection;

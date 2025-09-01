@@ -2,9 +2,6 @@ import Header from "@components/Header";
 import Footer from "@components/Footer";
 import HeroBanner from "@components/HeroBanner";
 import GroupSection from "@components/GroupSection";
-import ComingCoursesSection from "@components/ComingCoursesSection";
-import SignupSection from "@components/SignupSection/indext";
-import AsideButton from "@components/AsideButton";
 
 const homePageBanner = {
   title: "От первых слов - к свободной речи",
@@ -21,10 +18,10 @@ export default function Home() {
       <Header />
       <main className="App">
         <HeroBanner data={homePageBanner} />
-        <AsideButton />
+        {/* <AsideButton /> */}
         <GroupSection />
-        <ComingCoursesSection />
-        <SignupSection />
+        {/* <ComingCoursesSection />
+        <SignupSection /> */}
       </main>
       <Footer />
     </>

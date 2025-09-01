@@ -20,16 +20,16 @@ interface HeroBannerProps {
 }
 
 const HeroBanner: React.FC<HeroBannerProps> = ({ data, button = true }) => {
-  const scrollToSignup = () => {
-    setTimeout(() => {
-      const section = document.getElementById("signup");
-      if (section) {
-        const offset =
-          section.getBoundingClientRect().top + window.scrollY - 100;
-        window.scrollTo({ top: offset, behavior: "smooth" });
-      }
-    }, 0);
-  };
+  // const scrollToSignup = () => {
+  //   setTimeout(() => {
+  //     const section = document.getElementById("signup");
+  //     if (section) {
+  //       const offset =
+  //         section.getBoundingClientRect().top + window.scrollY - 100;
+  //       window.scrollTo({ top: offset, behavior: "smooth" });
+  //     }
+  //   }, 0);
+  // };
 
   return (
     <section className={styles.quote}>
@@ -43,8 +43,12 @@ const HeroBanner: React.FC<HeroBannerProps> = ({ data, button = true }) => {
           </div>
           {button && (
             <div className={styles.quote__btn}>
-              <button onClick={scrollToSignup}>
-                <span>Записаться</span>
+              <button
+                onClick={() =>
+                  window.open("https://wa.me/996555123456", "_blank")
+                }
+              >
+                Записаться
               </button>
             </div>
           )}

@@ -1,11 +1,12 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "src/store/store";
 import {
   editFinanceStatus,
   getFinance,
   downloadCheck,
+  getStripePayments,
 } from "src/store/finance/finance.action";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
@@ -16,7 +17,12 @@ import SearchIcon from "@icons/searchIcon.svg";
 import { useModal } from "@context/ModalContext";
 import ProfileModal from "@components/ProfileModal";
 import Pagination from "@components/Pagination";
-import { FinanceTableItem, Check, Group } from "src/consts/types";
+import {
+  FinanceTableItem,
+  Check,
+  Group,
+  StripePayment,
+} from "src/consts/types";
 
 const TableSkeleton = () => (
   <div className={styles.tableSkeleton}>
@@ -46,10 +52,22 @@ interface ChecksModalData {
   checks: Check[];
 }
 
+interface PaymentHistoryModalData {
+  studentName: string;
+  studentId: number;
+  payments: StripePayment[];
+}
+
 export default function FinancePage() {
   const dispatch = useAppDispatch();
-  const { financeData, financeLoading, financeError, downloadCheckError } =
-    useAppSelector((state) => state.finance);
+  const {
+    financeData,
+    financeLoading,
+    financeError,
+    downloadCheckError,
+    stripeData,
+    stripeLoading,
+  } = useAppSelector((state) => state.finance);
 
   const [filteredFinance, setFilteredFinance] = useState<FinanceTableItem[]>(
     []
@@ -64,8 +82,13 @@ export default function FinancePage() {
   const [downloadingCheckId, setDownloadingCheckId] = useState<number | null>(
     null
   );
+  const [paymentHistorySort, setPaymentHistorySort] = useState<
+    "date-asc" | "date-desc" | "amount-asc" | "amount-desc"
+  >("date-desc");
 
   const checksModal = useModal<ChecksModalData>("checks");
+  const paymentHistoryModal =
+    useModal<PaymentHistoryModalData>("paymentHistory");
 
   const statusOptions = [
     { label: "Все статусы", value: "" },
@@ -105,7 +128,8 @@ export default function FinancePage() {
 
   useEffect(() => {
     fetchFinanceData();
-  }, [fetchFinanceData]);
+    dispatch(getStripePayments());
+  }, [fetchFinanceData, dispatch]);
 
   useEffect(() => {
     if (financeData?.items) {
@@ -159,6 +183,30 @@ export default function FinancePage() {
     ];
   }, [financeData]);
 
+  const sortedPaymentHistory = useMemo(() => {
+    if (!paymentHistoryModal.data?.payments) return [];
+
+    return [...paymentHistoryModal.data.payments].sort((a, b) => {
+      if (paymentHistorySort === "date-asc") {
+        return (
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+      }
+      if (paymentHistorySort === "date-desc") {
+        return (
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        );
+      }
+      if (paymentHistorySort === "amount-asc") {
+        return a.amount - b.amount;
+      }
+      if (paymentHistorySort === "amount-desc") {
+        return b.amount - a.amount;
+      }
+      return 0;
+    });
+  }, [paymentHistoryModal.data?.payments, paymentHistorySort]);
+
   const getPaymentStatus = (monthsPaid: number, currentMonth: number) => {
     return monthsPaid < currentMonth ? "Не оплачено" : "Оплачено";
   };
@@ -177,6 +225,19 @@ export default function FinancePage() {
       groupId: financeItem.group_id,
       groupName: financeItem.group_name,
       checks: financeItem.checks,
+    });
+  };
+
+  const handleViewPaymentHistory = async (financeItem: FinanceTableItem) => {
+    const studentPayments =
+      stripeData?.filter(
+        (payment) => payment.owner_id === financeItem.student_id
+      ) || [];
+
+    paymentHistoryModal.openModal({
+      studentName: financeItem.student_name,
+      studentId: financeItem.student_id,
+      payments: studentPayments,
     });
   };
 
@@ -256,6 +317,19 @@ export default function FinancePage() {
     setSelectedStatus(e.target.value);
   };
 
+  const statusMap: Record<string, { label: string; style: string }> = {
+    paid: { label: "Оплачено", style: styles["payments__status--paid"] },
+    pending: {
+      label: "В ожидании",
+      style: styles["payments__status--pending"],
+    },
+    failed: { label: "Неудачно", style: styles["payments__status--failed"] },
+    cancelled: {
+      label: "Отменено",
+      style: styles["payments__status--cancelled"],
+    },
+  };
+
   const financeColumns = [
     {
       key: "group_name",
@@ -283,6 +357,31 @@ export default function FinancePage() {
           </button>
         </div>
       ),
+    },
+    {
+      key: "payment_history",
+      title: "История",
+      width: "120px",
+      isButton: true,
+      render: (_: string, row: FinanceTableItem) => {
+        const studentPayments =
+          stripeData?.filter(
+            (payment) => payment.owner_id === row.student_id
+          ) || [];
+
+        return (
+          <div className={styles.actionButtons}>
+            <button
+              onClick={() => handleViewPaymentHistory(row)}
+              className={styles.actionButton}
+              title="История платежей"
+              disabled={stripeLoading}
+            >
+              История ({studentPayments.length})
+            </button>
+          </div>
+        );
+      },
     },
     {
       key: "payment_status",
@@ -345,6 +444,48 @@ export default function FinancePage() {
           {downloadingCheckId === row.id ? "Скачивание..." : "Скачать"}
         </button>
       ),
+    },
+  ];
+
+  const paymentHistoryColumns = [
+    {
+      key: "created_at",
+      title: "Дата",
+      width: "200px",
+      render: (value: string) =>
+        new Date(value).toLocaleDateString("ru-RU", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+    },
+    {
+      key: "amount",
+      title: "Сумма",
+      width: "150px",
+      render: (value: number, row: StripePayment) => `${value} ${row.currency}`,
+    },
+    {
+      key: "payment_status",
+      title: "Статус",
+      width: "180px",
+      render: (value: string) => {
+        const status = statusMap[value] || { label: value, style: "" };
+        return (
+          <span className={`${styles["payments__status"]} ${status.style}`}>
+            {status.label}
+          </span>
+        );
+      },
+    },
+    {
+      key: "group",
+      title: "Группа",
+      width: "200px",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      render: (_: any, row: StripePayment) => row.group?.name || "-",
     },
   ];
 
@@ -437,6 +578,42 @@ export default function FinancePage() {
                 emptyMessage="Чеки не найдены"
               />
             </div>
+          </div>
+        )}
+      </ProfileModal>
+
+      <ProfileModal
+        isOpen={paymentHistoryModal.isOpen}
+        onClose={paymentHistoryModal.closeModal}
+        title={`История платежей - ${
+          paymentHistoryModal.data?.studentName || ""
+        }`}
+        size="xl"
+      >
+        {paymentHistoryModal.data && (
+          <div className={styles.paymentsModalContent}>
+            <div className={styles.payments__filters}>
+              <SelectField
+                label="Сортировка"
+                value={paymentHistorySort}
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                onChange={(e) => setPaymentHistorySort(e.target.value as any)}
+                options={[
+                  { value: "date-desc", label: "По дате ↓" },
+                  { value: "date-asc", label: "По дате ↑" },
+                  { value: "amount-desc", label: "По сумме ↓" },
+                  { value: "amount-asc", label: "По сумме ↑" },
+                ]}
+              />
+            </div>
+            <div className={styles.tableContainer}>
+              <Table
+                columns={paymentHistoryColumns}
+                data={sortedPaymentHistory}
+                emptyMessage="История платежей не найдена"
+              />
+            </div>
+            {stripeLoading && <p>Загрузка платежей...</p>}
           </div>
         )}
       </ProfileModal>

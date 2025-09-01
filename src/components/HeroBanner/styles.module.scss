@@ -9,7 +9,6 @@
   justify-content: center;
   background: $bg-gradient-secondary;
 
-
   &__container {
     width: 100%;
     height: 100%;
@@ -72,7 +71,7 @@
       transition: all 0.3s ease-in-out;
       cursor: pointer;
       padding: 14px 30px;
-
+      color: $White;
       span {
         font-size: 16px;
       }
@@ -196,8 +195,6 @@
 
 @include respond-above(lg) {
   .quote {
-
-
     &__container {
       padding: 17px 179px;
     }
@@ -243,8 +240,6 @@
 
 @include respond-above(mac) {
   .quote {
-
-
     &__container {
       padding: 20px 215px;
     }
@@ -290,8 +285,6 @@
 
 @include respond-above(xlg) {
   .quote {
-
-
     &__container {
       padding: 22px 150px;
     }
@@ -337,8 +330,6 @@
 
 @include respond-above(fhd) {
   .quote {
-
-
     &__container {
       padding: 27px 150px;
     }
@@ -384,8 +375,6 @@
 
 @include respond-above(fhd-plus) {
   .quote {
-
-
     &__container {
       padding: 28px 150px;
     }
@@ -432,8 +421,6 @@
 
 @include respond-above(qhd) {
   .quote {
-
-
     &__container {
       padding: 31px 150px;
     }
@@ -483,8 +470,6 @@
 
 @include respond-above(uhd) {
   .quote {
-
-
     &__container {
       padding: 47px 150px;
     }
