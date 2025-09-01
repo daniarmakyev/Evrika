@@ -24,6 +24,7 @@ import {
 import type { AdminTeacher } from "src/consts/types";
 import { useRouter } from "next/navigation";
 import { useExportTeachersMutation } from "src/store/admin/export/export";
+import { Loader2 } from "lucide-react";
 
 export default function TeachersList() {
   const [openRowId, setOpenRowId] = useState<number | null>(null);
@@ -35,6 +36,7 @@ export default function TeachersList() {
   const [showExport, setShowExport] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [tableLoading, setTableLoading] = useState(false);
   const router = useRouter();
 
   const { courses } = useAppSelector((state) => state.groupsCourses);
@@ -114,7 +116,7 @@ export default function TeachersList() {
   // }, [courses, selectedCourse]);
 
   const courseOptions = [
-    { value: "", label: "Все преподаватели" }, // добавили эту опцию
+    { value: "", label: "Все преподаватели" },
     ...(courses?.map((item) => ({
       value: String(item.id),
       label: item.name,
@@ -306,6 +308,13 @@ export default function TeachersList() {
             </div>
           </div>
 
+          {tableLoading && (
+            <div className={styles.loader_overlay}>
+              <Loader2 className={styles.loader_spinner} />
+              <span>Обновляем данные...</span>
+            </div>
+          )}
+
           <div className={styles.homework__table}>
             <Table
               columns={homeWorkColumns}
@@ -331,6 +340,7 @@ export default function TeachersList() {
           setIsAddModalOpen(false);
         }}
         teacher={selectedTeacher}
+        onTableLoading={setTableLoading}
       />
     </div>
   );

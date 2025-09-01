@@ -464,7 +464,7 @@ export default function ProfileHomeWork() {
           <TableSkeleton />
         ) : (
           <div className={styles.homework__table}>
-            <Table columns={homeWorkColumns} data={tableData} emptyMessage="" />
+            <Table columns={homeWorkColumns} data={tableData} emptyMessage="Нету домашнего задания" />
           </div>
         )}
 
