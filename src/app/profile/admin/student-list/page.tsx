@@ -58,8 +58,6 @@ export default function StudentList() {
     }
   );
 
-  console.log(data?.students, "Student", error);
-
   const filteredStudents = data?.students?.filter((student: Student) =>
     student.full_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -187,14 +185,11 @@ export default function StudentList() {
       key: "email",
       title: "Почта",
       width: "220px",
-      isButton: true,
       render: (value: string) => {
         return (
-          <button className={styles.table__button}>
-            <span>
-              {value.length > 50 ? value.substring(0, 50) + "..." : value}
-            </span>
-          </button>
+          <span>
+            {value.length > 50 ? value.substring(0, 50) + "..." : value}
+          </span>
         );
       },
     },

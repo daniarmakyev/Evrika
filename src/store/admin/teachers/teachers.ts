@@ -81,6 +81,10 @@ export const teacherApi = createApi({
         `/user/teachers/?page=${page}&size=${size}&course_id=${course_id}`,
       providesTags: ["teachers"],
     }),
+    getAllTeacherList: builder.query<TeachersResponse, void>({
+      query: () => `/user/teachers`,
+      providesTags: ["teachers"],
+    }),
     getTeacherInfo: builder.query<TeacherData, { user_id: string }>({
       query: ({ user_id }) => `/user/teacher/${user_id}`,
       providesTags: (result, error, { user_id }) => [
@@ -135,5 +139,6 @@ export const {
   useDeleteTeacherMutation,
   useGetTeacherScheduleQuery,
   useUpdateTeacherMutation,
-  useEditLessonScheduleMutation
+  useEditLessonScheduleMutation,
+  useGetAllTeacherListQuery
 } = teacherApi;
