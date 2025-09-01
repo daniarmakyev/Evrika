@@ -284,7 +284,7 @@ export default function TeacherHomework() {
           </div>
         )}
 
-        {loading || !lessons ? (
+        {loading || lessons ? (
           <TableSkeleton />
         ) : (
           <div className={styles.homework__table}>

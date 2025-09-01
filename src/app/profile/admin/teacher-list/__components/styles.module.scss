@@ -53,7 +53,7 @@
 }
 
 .button_container {
-   grid-column: 1 / -1;
+  grid-column: 1 / -1;
   display: flex;
   gap: 50px;
   justify-content: end;
@@ -82,7 +82,7 @@
 
     .dropdown__icon {
       position: absolute;
-      transform: translateY(-50%); 
+      transform: translateY(-50%);
       pointer-events: none;
       right: 10px;
       top: 50%;
@@ -115,32 +115,72 @@
       background-color: #1268e9; // ✅ светлее при открытии
     }
   }
-  &__checkbox{
-    width:18px;
-    height:18px;
-    border:1px solid rgb(142, 138, 138)
-
+  &__checkbox {
+    width: 18px;
+    height: 18px;
+    border: 1px solid rgb(142, 138, 138);
   }
 
   &__input_container {
     display: flex;
     flex-direction: column;
-    gap:10px;
-   
+    gap: 10px;
+
     &_label {
       display: flex;
-      align-items:end;
+      align-items: end;
       justify-content: start;
-      gap:5px;
-      
-      
+      gap: 5px;
+      font-size: 14px;
+      font-weight: 500;
     }
   }
 }
 
-.input_container{
+.input_container {
   display: flex;
   flex-direction: column;
-  gap:5px;
-  width:100%;
+  gap: 5px;
+  width: 100%;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: $black-dark;
+  }
+}
+
+.groups_checkbox_list {
+  max-height: 80px;
+  overflow-y: auto;
+  border: 1px solid $white-ligth;
+  border-radius: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  background-color: $White;
+  box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.groups_checkbox_label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  gap: 8px;
+}
+
+.groups_checkbox_label input[type="checkbox"] {
+  margin-right: 8px;
+  width: 16px;
+}
+
+.groups_checkbox_count {
+  margin-top: 8px;
+  font-size: 14px;
+  color: #666;
 }

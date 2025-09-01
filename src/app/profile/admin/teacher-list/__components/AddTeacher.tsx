@@ -7,17 +7,22 @@ import { useAppSelector } from "src/store/store";
 import {
   useRegisterTeacherMutation,
   useUpdateTeacherMutation,
+  teacherApi,
 } from "src/store/admin/teachers/teachers";
 import type { Course } from "src/consts/types";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import type { AdminTeacher, BackendErrorResponse } from "src/consts/types";
 import TextArea from "@components/Fields/TextAreaField";
 import { useGetTeacherInfoQuery } from "src/store/admin/teachers/teachers";
+import { $apiPrivate } from "src/consts/api";
+import { useDispatch } from "react-redux";
+import { Loader2 } from "lucide-react";
 
 type Props = {
   isOpen: boolean;
   onClose: () => void;
   teacher?: AdminTeacher | null | undefined;
+  onTableLoading?: (loading: boolean) => void;
 };
 
 interface BaseForm {
@@ -33,22 +38,37 @@ interface FormData extends BaseForm {
 }
 type CoursesByLanguage = Record<string, Course[]>;
 
-const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
+type Group = {
+  id: number;
+  name: string;
+  teacher_id?: number;
+};
+
+const AddTeacher: React.FC<Props> = ({
+  isOpen,
+  onClose,
+  teacher,
+  onTableLoading,
+}) => {
   const [openDropdown, setOpenDropdown] = React.useState(false);
   const [openAccordion, setOpenAccordion] = React.useState<string | null>(null);
-  const { courses, groups } = useAppSelector((state) => state.groupsCourses);
-  const user_id=teacher?.id?.toString() ?? ""
-
-  const { data: teacherData } = useGetTeacherInfoQuery(
-    {
-      user_id
-    },
-    {
-      skip: !user_id,
-    }
+  const [groups, setGroups] = React.useState<Group[]>([]);
+  const [selectedGroups, setSelectedGroups] = React.useState<number[]>([]);
+  const { courses, groups: allGroups } = useAppSelector(
+    (state) => state.groupsCourses
   );
-  const [registerTeacher, { isLoading }] = useRegisterTeacherMutation();
-  const [updateTeacher] = useUpdateTeacherMutation();
+  const user_id = teacher?.id?.toString() ?? "";
+
+  const {
+    data: teacherData,
+    refetch,
+    isLoading: isTeacherLoading,
+  } = useGetTeacherInfoQuery({ user_id }, { skip: !user_id });
+  const [registerTeacher, { isLoading: isRegisterLoading }] =
+    useRegisterTeacherMutation();
+  const [updateTeacher, { isLoading: isUpdateLoading }] =
+    useUpdateTeacherMutation();
+  const dispatch = useDispatch();
 
   const {
     control,
@@ -67,6 +87,21 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
       description: "",
     },
   });
+
+  React.useEffect(() => {
+    async function fetchGroups() {
+      try {
+        const res = await $apiPrivate.get("/group/");
+        console.log("GROUPS RESPONSE", res.data);
+        setGroups(res.data.groups || res.data || []);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      } catch (e) {
+        setGroups([]);
+      }
+    }
+    fetchGroups();
+  }, []);
+
   React.useEffect(() => {
     if (teacher?.id) {
       reset({
@@ -76,6 +111,10 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
         role: teacher?.role,
         description: teacherData?.description,
       });
+
+      if (teacherData?.groups && teacherData.groups.length > 0) {
+        setSelectedGroups(teacherData.groups.map((group) => group.id));
+      }
     } else {
       reset({
         full_name: "",
@@ -84,13 +123,26 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
         role: "teacher",
         description: "",
       });
+      setSelectedGroups([]);
     }
-  }, [teacher, reset,teacherData?.description]);
+  }, [teacher, reset, teacherData?.description, teacherData?.groups]);
+
   const selectedCourse = watch("group");
+
+  const handleGroupToggle = (groupId: number) => {
+    setSelectedGroups((prev) =>
+      prev.includes(groupId)
+        ? prev.filter((id) => id !== groupId)
+        : [...prev, groupId]
+    );
+  };
+
   const onSubmit: SubmitHandler<FormData> = async (data) => {
     try {
+      if (onTableLoading) onTableLoading(true);
+
       const selectedGroupId = !teacher
-        ? groups?.find((g) => g.name === data.group)?.id ?? null
+        ? allGroups?.find((g) => g.name === data.group)?.id ?? null
         : null;
 
       if (!teacher && !selectedGroupId) {
@@ -116,18 +168,69 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
             description: data.description,
           },
         }).unwrap();
-        alert("Преподаватель обновлён");
+
+        const currentGroupIds = teacherData?.groups?.map((g) => g.id) || [];
+        const toAdd = selectedGroups.filter(
+          (id) => !currentGroupIds.includes(id)
+        );
+        const toRemove = currentGroupIds.filter(
+          (id) => !selectedGroups.includes(id)
+        );
+
+        for (const groupId of toAdd) {
+          await $apiPrivate.patch(`/group/${groupId}`, {
+            teacher_id: Number(teacher.id),
+          });
+        }
+        for (const groupId of toRemove) {
+          await $apiPrivate.patch(`/group/${groupId}`, {
+            teacher_id: null,
+          });
+        }
+
+        const affectedTeacherIds = [
+          teacher.id,
+          ...currentGroupIds
+            .filter((id) => !selectedGroups.includes(id))
+            .map((groupId) => {
+              const group = groups.find((g) => g.id === groupId);
+              return group?.teacher_id;
+            })
+            .filter(Boolean),
+        ];
+
+        affectedTeacherIds.forEach((id) => {
+          dispatch(
+            teacherApi.util.invalidateTags([
+              { type: "teacher", id: String(id) },
+            ])
+          );
+        });
+
+        dispatch(teacherApi.util.invalidateTags(["teachers"]));
+
+        dispatch(
+          teacherApi.util.invalidateTags([
+            { type: "teacher", id: String(teacher.id) },
+          ])
+        );
+
+        refetch();
       } else {
         await registerTeacher({
           groupId: selectedGroupId,
           teacherData: payload,
         }).unwrap();
-        alert(`Преподаватель ${data.full_name} успешно зарегистрирован`);
+        dispatch(teacherApi.util.invalidateTags(["teachers"]));
       }
 
-      reset();
-      onClose();
+      setTimeout(() => {
+        if (onTableLoading) onTableLoading(false);
+        reset();
+        onClose();
+      }, 1500);
     } catch (err) {
+      if (onTableLoading) onTableLoading(false);
       const backendErr = err as BackendErrorResponse;
       const validationErrors = backendErr.data?.detail;
 
@@ -140,17 +243,20 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
           }
         });
       } else if (validationErrors) {
-        alert(
-          typeof validationErrors === "string"
-            ? validationErrors
-            : "Ошибка валидации, попробуйте снова"
-        );
+        // alert(
+        //   typeof validationErrors === "string"
+        //     ? validationErrors
+        //     : "Ошибка валидации, попробуйте снова"
+        // );
       } else {
         console.error(err);
-        alert("Ошибка, попробуйте позже");
+        // alert("Ошибка, попробуйте позже");
       }
     }
   };
+
+  const isFormLoading =
+    isRegisterLoading || isUpdateLoading || isTeacherLoading;
 
   return (
     <ProfileModal
@@ -163,7 +269,25 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
       }
       size="lg"
     >
-      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      {isFormLoading && (
+        <div className={styles.loader_overlay}>
+          <Loader2 className={styles.loader_spinner} />
+          <span>
+            {isTeacherLoading
+              ? "Загрузка данных..."
+              : isRegisterLoading
+              ? "Создание преподавателя..."
+              : isUpdateLoading
+              ? "Сохранение изменений..."
+              : ""}
+          </span>
+        </div>
+      )}
+      <form
+        className={styles.form}
+        onSubmit={handleSubmit(onSubmit)}
+        style={isFormLoading ? { pointerEvents: "none", opacity: 0.5 } : {}}
+      >
         <div className={styles.input_container}>
           <InputField
             {...register("full_name", {
@@ -172,7 +296,6 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
             })}
             isShadow
             fullWidth
-            // style={{ maxWidth: "45%" }}
             label="Имя и фамилия"
             placeholder="Введите имя и фамилию"
           />
@@ -194,7 +317,6 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
             })}
             isShadow
             fullWidth
-            // style={{ width: "45%" }}
             label="Телефон"
             placeholder="+996707707707"
           />
@@ -216,7 +338,6 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
             })}
             isShadow
             fullWidth
-            // style={{ maxWidth: "45%" }}
             label="Почта"
             type="email"
             placeholder="example@mail.com"
@@ -227,100 +348,123 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
             </span>
           )}
         </div>
-        <div className={styles.dropdown}>
-          {/* Dropdown trigger */}
-          {!teacher?.id && (
+
+        {!teacher?.id && (
+          <div className={styles.dropdown}>
             <button
               type="button"
               className={styles.dropdown__trigger}
               onClick={() => setOpenDropdown(!openDropdown)}
             >
-              {selectedCourse
-                ? selectedCourse // просто строка с названием группы
-                : "Выберите группу"}
+              {selectedCourse ? selectedCourse : "Выберите группу"}
               <ChevronDown className={styles.dropdown__icon} />
             </button>
-          )}
 
-          {/* Dropdown content */}
-          {openDropdown && (
-            <div className={styles.dropdown__content}>
-              {/* Сначала группируем курсы по языку */}
-              {Object.entries(
-                courses?.reduce((acc: CoursesByLanguage, course) => {
-                  if (!acc[course.language_name]) {
-                    acc[course.language_name] = [];
-                  }
-                  acc[course.language_name].push(course);
-                  return acc;
-                }, {}) || {}
-              ).map(([language, languageCourses]) => (
-                <div key={language}>
-                  {/* Accordion header */}
-                  <button
-                    type="button"
-                    className={`${styles.dropdown__accordion_header} ${
-                      openAccordion === language ? styles.open : ""
-                    }`}
-                    onClick={() =>
-                      setOpenAccordion(
-                        openAccordion === language ? null : language
-                      )
+            {openDropdown && (
+              <div className={styles.dropdown__content}>
+                {Object.entries(
+                  courses?.reduce((acc: CoursesByLanguage, course) => {
+                    if (!acc[course.language_name]) {
+                      acc[course.language_name] = [];
                     }
-                  >
-                    {language} язык
-                    <span>{openAccordion === language ? "-" : "+"}</span>
-                  </button>
+                    acc[course.language_name].push(course);
+                    return acc;
+                  }, {}) || {}
+                ).map(([language, languageCourses]) => (
+                  <div key={language}>
+                    <button
+                      type="button"
+                      className={`${styles.dropdown__accordion_header} ${
+                        openAccordion === language ? styles.open : ""
+                      }`}
+                      onClick={() =>
+                        setOpenAccordion(
+                          openAccordion === language ? null : language
+                        )
+                      }
+                    >
+                      {language} язык
+                      <span>{openAccordion === language ? "-" : "+"}</span>
+                    </button>
 
-                  {/* Accordion body */}
-                  {openAccordion === language && (
-                    <div style={{ paddingLeft: "10px", paddingBlock: "10px" }}>
-                      <Controller
-                        name="group"
-                        control={control}
-                        rules={{ required: "Нужно выбрать одну группу" }}
-                        render={({ field }) => (
-                          <div className={styles.dropdown__input_container}>
-                            {groups
-                              ?.filter((group) =>
-                                languageCourses.some(
-                                  (course) => course.id === group.course_id
+                    {openAccordion === language && (
+                      <div
+                        style={{ paddingLeft: "10px", paddingBlock: "10px" }}
+                      >
+                        <Controller
+                          name="group"
+                          control={control}
+                          rules={{ required: "Нужно выбрать одну группу" }}
+                          render={({ field }) => (
+                            <div className={styles.dropdown__input_container}>
+                              {allGroups
+                                ?.filter((group) =>
+                                  languageCourses.some(
+                                    (course) => course.id === group.course_id
+                                  )
                                 )
-                              )
-                              .map((group) => (
-                                <label
-                                  key={group.id}
-                                  className={
-                                    styles.dropdown__input_container_label
-                                  }
-                                >
-                                  <input
-                                    className={styles.dropdown__checkbox}
-                                    type="radio"
-                                    value={group.name}
-                                    checked={field.value === group.name}
-                                    onChange={(e) =>
-                                      field.onChange(e.target.value)
+                                .map((group) => (
+                                  <label
+                                    key={group.id}
+                                    className={
+                                      styles.dropdown__input_container_label
                                     }
-                                  />
-                                  <p>{group.name}</p>
-                                </label>
-                              ))}
-                          </div>
-                        )}
-                      />
-                    </div>
-                  )}
-                </div>
+                                  >
+                                    <input
+                                      className={styles.dropdown__checkbox}
+                                      type="radio"
+                                      value={group.name}
+                                      checked={field.value === group.name}
+                                      onChange={(e) =>
+                                        field.onChange(e.target.value)
+                                      }
+                                    />
+                                    <p>{group.name}</p>
+                                  </label>
+                                ))}
+                            </div>
+                          )}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+            {errors.group && (
+              <span style={{ color: "red", fontSize: "14px" }}>
+                {errors.group.message}
+              </span>
+            )}
+          </div>
+        )}
+
+        {teacher?.id && (
+          <div className={styles.input_container}>
+            <label className={styles.input_container__label}>
+              Группы (можно выбрать несколько)
+            </label>
+            <div className={styles.groups_checkbox_list}>
+              {groups.map((group) => (
+                <label key={group.id} className={styles.groups_checkbox_label}>
+                  <input
+                    type="checkbox"
+                    checked={selectedGroups.includes(group.id)}
+                    onChange={() => handleGroupToggle(group.id)}
+                    style={{ marginRight: "8px" }}
+                  />
+                  <span>{group.name}</span>
+                </label>
               ))}
             </div>
-          )}
-          {errors.group && (
-            <span style={{ color: "red", fontSize: "14px" }}>
-              {errors.group.message}
-            </span>
-          )}
-        </div>
+            {selectedGroups.length > 0 && (
+              <div className={styles.groups_checkbox_count}>
+                Выбрано групп: {selectedGroups.length}
+              </div>
+            )}
+          </div>
+        )}
+
         <div style={{ width: "100%" }} className={styles.textarea_container}>
           <Controller
             name="description"
@@ -344,10 +488,15 @@ const AddTeacher: React.FC<Props> = ({ isOpen, onClose, teacher }) => {
           >
             Отмена
           </button>
-          <button className={styles.save__button} disabled={isLoading}>
-            {" "}
-            {isLoading
-              ? "Сохраняем..."
+          <button className={styles.save__button} disabled={isFormLoading}>
+            {isFormLoading
+              ? isTeacherLoading
+                ? "Загрузка данных..."
+                : isRegisterLoading
+                ? "Создание преподавателя..."
+                : isUpdateLoading
+                ? "Сохранение изменений..."
+                : "Сохраняем..."
               : teacher?.id
               ? "Сохранить"
               : "Добавить"}
