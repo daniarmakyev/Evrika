@@ -1,0 +1,263 @@
+@import "../../../../../../../styles/varibles";
+@import "../../../../../../../styles/mixins/";
+
+.lessonForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.fullWidthFields {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flexFields {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  .timeFields {
+    .fieldGroup {
+      flex: 0 0 calc(20% - 10px);
+      min-width: 200px;
+      div {
+        width: 100%;
+      }
+    }
+  }
+  .rightFields {
+    .fieldGroup {
+      flex: 0 0 calc(20% - 10px);
+      min-width: 200px;
+      div {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.timeFields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 0 0 calc(50% - 10px);
+  min-width: 200px;
+
+  @media (max-width: 768px) {
+    flex: 1;
+  }
+}
+
+.rightFields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 0 0 calc(50% - 10px);
+  min-width: 200px;
+
+  @media (max-width: 768px) {
+    flex: 1;
+  }
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+}
+
+.selectField {
+  padding: 12px 16px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  padding-right: 40px;
+
+  &:focus {
+    outline: none;
+    border-color: $primary;
+    box-shadow: 0 0 0 3px rgba($primary, 0.1);
+  }
+
+  &:hover {
+    border-color: #ccc;
+  }
+
+  option {
+    padding: 10px;
+  }
+}
+
+.errorMessage {
+  color: $danger;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 30px;
+  gap: 20px;
+}
+
+.leftButtons {
+  display: flex;
+  align-items: center;
+}
+
+.rightButtons {
+  display: flex;
+  align-items: center;
+}
+
+.delete__button {
+  background-color: $danger;
+  color: $White;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: darken($danger, 8%);
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.save__button {
+  background-color: $primary;
+  color: $White;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  min-width: 120px;
+
+  &:hover:not(:disabled) {
+    background-color: darken($primary, 8%);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+}
+
+.deleteConfirmation {
+  background-color: #fff5f5;
+  border: 2px solid $danger;
+  border-radius: 8px;
+  padding: 20px;
+  margin: 20px 0;
+  animation: slideDown 0.3s ease-out;
+}
+
+.confirmationMessage {
+  margin-bottom: 20px;
+
+  h4 {
+    color: $danger;
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  p {
+    color: #666;
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.4;
+  }
+}
+
+.confirmationButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancel__button {
+  background-color: transparent;
+  color: #666;
+  border: 2px solid #ddd;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: #f5f5f5;
+    border-color: #bbb;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.delete__confirm__button {
+  background-color: $danger;
+  color: $White;
+  border: 2px solid $danger;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+
+  &:hover:not(:disabled) {
+    background-color: darken($danger, 10%);
+    border-color: darken($danger, 10%);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

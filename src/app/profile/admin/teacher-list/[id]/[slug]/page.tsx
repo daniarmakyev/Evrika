@@ -5,11 +5,11 @@ import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
 import Table from "@components/Table";
 import ProfileModal from "@components/ProfileModal";
 import DaysWeekSelector from "@components/DaysWeekSelector";
-import LessonEditModal from "src/app/profile/schedule/LessonEditModal";
+import LessonEditModal from "./_components/LessonEditModal";
 import LessonCreateModal from "src/app/profile/schedule/SheduleUploadModal";
 import InputField from "@components/Fields/InputField";
 import TextArea from "@components/Fields/TextAreaField";
-import { useGetTeacherScheduleQuery } from "src/store/admin/teachers/teachers";
+import { useGetTeacherScheduleQuery,useGetTeacherInfoQuery } from "src/store/admin/teachers/teachers";
 import { useParams } from "next/navigation";
 import type {
   LessonShedule,
@@ -21,8 +21,8 @@ import Link from "next/link";
 import { formatTimeRangeShedule, getTimeInMinutes } from "src/consts/utilits";
 import classNames from "classnames";
 import { useModal } from "@context/ModalContext";
-import { useAppDispatch } from "src/store/store";
-import { getShedule } from "src/store/shedule/shedule.action";
+// import { useAppDispatch } from "src/store/store";
+// import { getShedule } from "src/store/shedule/shedule.action";
 
 
 const Schedulepage = () => {
@@ -39,7 +39,10 @@ const Schedulepage = () => {
     user_id,
   });
 
-  const dispatch = useAppDispatch();
+  const {data:teacherData}=useGetTeacherInfoQuery({user_id:id})
+
+ 
+  console.log(schedule,'SHEDULE')
 
   const lessonModal = useModal<LessonShedule>("lesson");
   const lessonEditModal = useModal<LessonShedule>("lesson-edit");
@@ -233,15 +236,20 @@ const Schedulepage = () => {
         onClose={lessonEditModal.closeModal}
         lesson={lessonEditModal.data}
         onSuccess={() => {
-          dispatch(getShedule());
+        refetch()
         }}
+        user_id={user_id}
+       
       />
       <LessonCreateModal
         isOpen={createLessonModal.isOpen}
         onClose={createLessonModal.closeModal}
         onSuccess={() => {
-          dispatch(getShedule());
+        refetch()
         }}
+        isAdmin
+        teacherGroups={teacherData?.groups}
+        user_id={user_id}
       />
     </div>
   );

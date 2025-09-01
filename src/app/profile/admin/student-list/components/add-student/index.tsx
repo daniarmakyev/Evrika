@@ -102,6 +102,25 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
       };
 
       if (student?.id) {
+        const updatedFields: Partial<PostForm> = {};
+
+        if (data.full_name !== student.full_name) {
+          updatedFields.full_name = data.full_name;
+        }
+        if (data.email !== student.email) {
+          updatedFields.email = data.email;
+        }
+        if (data.phone_number !== student.phone_number) {
+          updatedFields.phone_number = data.phone_number;
+        }
+        if (data.role !== student.role) {
+          updatedFields.role = data.role;
+        }
+
+        if (Object.keys(updatedFields).length === 0) {
+          alert("Нет изменений для обновления");
+          return;
+        }
         await updateStudent({
           studentId: student.id,
           studentData: {

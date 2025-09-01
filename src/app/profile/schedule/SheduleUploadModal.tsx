@@ -25,6 +25,12 @@ type Props = {
   onClose: () => void;
   onSuccess?: () => void;
   groupId?: number;
+  isAdmin?: boolean;
+  teacherGroups?: {
+    id: number;
+    name: string;
+  }[];
+  user_id?:number|undefined
 };
 
 const LessonCreateModal: React.FC<Props> = ({
@@ -32,8 +38,12 @@ const LessonCreateModal: React.FC<Props> = ({
   onClose,
   onSuccess,
   groupId,
+  isAdmin,
+  teacherGroups,
+  user_id
 }) => {
   const dispatch = useAppDispatch();
+  console.log(teacherGroups, "GROUPS");
 
   // Redux state
   const { error, loading } = useAppSelector((state) => state.lesson);
@@ -50,6 +60,8 @@ const LessonCreateModal: React.FC<Props> = ({
     register,
     handleSubmit,
     reset,
+    watch,
+
     formState: { errors, isSubmitting },
   } = useForm<LessonFormData>({
     defaultValues: {
@@ -104,16 +116,21 @@ const LessonCreateModal: React.FC<Props> = ({
         day: formData.date,
         lesson_start: formData.timeFrom,
         lesson_end: formData.timeTo,
-        teacher_id: user.id,
+        teacher_id:isAdmin? user_id: user.id,
         classroom_id: Number(formData.classrooms),
         passed: false,
       };
-
-      const targetGroupId = groupId || Number(formData.groups);
+      const adminTeacherGroupId = watch("groups");
+      const targetGroupId = isAdmin
+        ? Number(adminTeacherGroupId) || Number(formData.groups)
+        : groupId || Number(formData.groups);
 
       if (!targetGroupId) {
         throw new Error("Выберите группу для урока");
       }
+
+      console.log(adminTeacherGroupId,'GROUPID')
+
 
       await dispatch(
         createLesson({
@@ -133,7 +150,7 @@ const LessonCreateModal: React.FC<Props> = ({
     }
   };
 
-  const availableGroups = groups?.groups || [];
+  const availableGroups = isAdmin ? teacherGroups || [] : groups?.groups || [];
 
   const isDataLoading = userLoading || (!user && isOpen);
 

@@ -46,11 +46,16 @@ export default function TeachersList() {
 
   const course_id = selectedCourse ? Number(selectedCourse) : null;
 
-  const { data, error, isLoading, refetch } = useGetTeacherListQuery({
-    page: currentPage,
-    size,
-    course_id: course_id,
-  });
+  const { data, error, isLoading, refetch } = useGetTeacherListQuery(
+    {
+      page: currentPage,
+      size,
+      course_id: course_id,
+    },
+    {
+      skip: !course_id,
+    }
+  );
 
   console.log(data, "TeacherData");
   const [exportTeachers] = useExportTeachersMutation();
@@ -131,7 +136,7 @@ export default function TeachersList() {
       console.error("Ошибка при экспорте:", err);
       alert("Не удалось скачать файл");
     }
-    setShowExport(false)
+    setShowExport(false);
   };
 
   const homeWorkColumns = [

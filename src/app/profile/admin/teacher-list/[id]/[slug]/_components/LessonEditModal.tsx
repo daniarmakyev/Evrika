@@ -4,10 +4,11 @@ import TextArea from "@components/Fields/TextAreaField";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAppDispatch, useAppSelector } from "src/store/store";
-import { editLesson, getClassrooms, deleteLesson } from "src/store/lesson/lesson.action";
+import { getClassrooms, deleteLesson } from "src/store/lesson/lesson.action";
 import { clearError } from "src/store/lesson/lesson.slice";
-import { getUser, getGroup } from "src/store/user/user.action";
+import {  getGroup } from "src/store/user/user.action";
 import { LessonShedule } from "src/consts/types";
+import { useEditLessonScheduleMutation } from "src/store/admin/teachers/teachers";
 
 interface LessonSheduleExtended extends LessonShedule {
   group_id?: number;
@@ -22,6 +23,7 @@ type LessonFormData = {
   timeTo: string;
   date: string;
   classrooms: string | number;
+  group_id: number | undefined;
 };
 
 type Props = {
@@ -29,7 +31,7 @@ type Props = {
   onClose: () => void;
   onSuccess?: () => void;
   lesson?: LessonSheduleExtended | null;
-  
+  user_id: number;
 };
 
 const LessonEditModal: React.FC<Props> = ({
@@ -37,10 +39,12 @@ const LessonEditModal: React.FC<Props> = ({
   onClose,
   onSuccess,
   lesson,
+  user_id,
 }) => {
   const dispatch = useAppDispatch();
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [editLessonSchedule] = useEditLessonScheduleMutation();
 
   const { error, loading } = useAppSelector((state) => state.lesson);
   const { classrooms, loading: classroomsLoading } = useAppSelector(
@@ -67,8 +71,11 @@ const LessonEditModal: React.FC<Props> = ({
       timeTo: "",
       date: "",
       classrooms: "",
+      group_id: undefined,
     },
   });
+
+  console.log(lesson, "LESSON");
 
   useEffect(() => {
     if (isOpen && lesson) {
@@ -79,14 +86,15 @@ const LessonEditModal: React.FC<Props> = ({
       setValue("timeTo", lesson.lesson_end || "");
       setValue("classrooms", lesson.classroom?.id || "");
       setValue("date", lesson.day || "");
+      setValue("group_id", lesson?.group_id || undefined);
     }
   }, [isOpen, lesson, setValue]);
 
   useEffect(() => {
     if (isOpen) {
-      if (!user) {
-        dispatch(getUser());
-      }
+      // if (!user) {
+      //   dispatch(getUser());
+      // }
 
       if (!classrooms) {
         dispatch(getClassrooms());
@@ -120,27 +128,26 @@ const LessonEditModal: React.FC<Props> = ({
       const lessonData = {
         name: formData.name,
         description: formData.description,
-        link: formData.link || undefined,
+        link: formData.link,
         day: formData.date,
         lesson_start: formData.timeFrom,
         lesson_end: formData.timeTo,
-        teacher_id:user.id,
+        teacher_id: user_id,
         classroom_id: Number(formData.classrooms),
+        group_id: lesson?.group_id,
+        passed: false,
       };
 
-      const groupId = lesson.group_id || groups?.groups?.[0]?.id;
+      // const groupId = lesson.group_id ;
 
-      if (!groupId) {
-        throw new Error("Не удалось определить группу для урока");
-      }
+      // if (!groupId) {
+      //   throw new Error("Не удалось определить группу для урока");
+      // }
 
-      await dispatch(
-        editLesson({
-          lesson: lesson,
-          groupId: groupId,
-          body: lessonData,
-        })
-      ).unwrap();
+      await editLessonSchedule({
+        lesson_id: lesson.id,
+        lessonData,
+      }).unwrap();
 
       if (onSuccess) {
         onSuccess();
@@ -150,6 +157,17 @@ const LessonEditModal: React.FC<Props> = ({
       onClose();
     } catch (error) {
       console.error("Error updating lesson:", error);
+
+      const err = error as { status?: number; data?: unknown };
+      if (err.status === 403) {
+        alert(
+          typeof err.data === "string"
+            ? err.data
+            : "У вас нет прав для изменения этого урока (403 Forbidden)."
+        );
+      } else {
+        alert("Произошла ошибка при обновлении урока.");
+      }
     }
   };
 
@@ -162,7 +180,7 @@ const LessonEditModal: React.FC<Props> = ({
     setIsDeleting(true);
     try {
       await dispatch(deleteLesson(lesson.id)).unwrap();
-      
+
       if (onSuccess) {
         onSuccess();
       }
@@ -305,7 +323,10 @@ const LessonEditModal: React.FC<Props> = ({
             <div className={styles.deleteConfirmation}>
               <div className={styles.confirmationMessage}>
                 <h4>Подтвердите удаление</h4>
-                <p>Вы уверены, что хотите удалить этот урок? Это действие нельзя отменить.</p>
+                <p>
+                  Вы уверены, что хотите удалить этот урок? Это действие нельзя
+                  отменить.
+                </p>
               </div>
               <div className={styles.confirmationButtons}>
                 <button

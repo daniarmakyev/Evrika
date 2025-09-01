@@ -6,6 +6,7 @@ import type {
   TeachersResponse,
   GetTeachersParams,
   WeekSchedule,
+  LessonEdit,
 } from "src/consts/types";
 
 interface Teacher {
@@ -83,14 +84,29 @@ export const teacherApi = createApi({
     getTeacherInfo: builder.query<TeacherData, { user_id: string }>({
       query: ({ user_id }) => `/user/teacher/${user_id}`,
       providesTags: (result, error, { user_id }) => [
-        { type: "teacher", id: user_id }
+        { type: "teacher", id: user_id },
       ],
     }),
     getTeacherSchedule: builder.query<WeekSchedule, { user_id: number | null }>(
       {
         query: ({ user_id }) => `/shedule/teacher/${user_id}`,
+        providesTags: ["teachers"],
       }
     ),
+    editLessonSchedule: builder.mutation<
+      LessonEdit,
+      { lesson_id: number | null; lessonData: LessonEdit }
+    >({
+      query: ({ lessonData, lesson_id }) => ({
+        url: `/lessons/${lesson_id}`,
+        method: "PATCH",
+        body: lessonData,
+      }),
+      invalidatesTags: (result, error, { lesson_id }) => [
+        "teachers",
+        { type: "teacher", id: lesson_id?.toString() },
+      ],
+    }),
     updateTeacher: builder.mutation<UpdateTeacher, UpdateTeacherArgs>({
       query: ({ teacherId, teacherData }) => ({
         url: `/user/teacher/${teacherId}`,
@@ -99,7 +115,7 @@ export const teacherApi = createApi({
       }),
       invalidatesTags: (result, error, { teacherId }) => [
         "teachers",
-        { type: "teacher", id: teacherId?.toString() }
+        { type: "teacher", id: teacherId?.toString() },
       ],
     }),
     deleteTeacher: builder.mutation<void, number>({
@@ -119,4 +135,5 @@ export const {
   useDeleteTeacherMutation,
   useGetTeacherScheduleQuery,
   useUpdateTeacherMutation,
+  useEditLessonScheduleMutation
 } = teacherApi;
