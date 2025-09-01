@@ -13,7 +13,7 @@ import SelectField from "@components/Fields/SelectField";
 import { Download } from "lucide-react";
 import AddTeacher from "./__components/AddTeacher";
 import {
-  useGetTeacherListQuery,
+  useGetAllTeacherListQuery,
   useDeleteTeacherMutation,
 } from "src/store/admin/teachers/teachers";
 import { useAppSelector, useAppDispatch } from "src/store/store";
@@ -36,7 +36,7 @@ export default function TeachersList() {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
-  const size = 20;
+
   const { courses } = useAppSelector((state) => state.groupsCourses);
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -46,22 +46,24 @@ export default function TeachersList() {
 
   const course_id = selectedCourse ? Number(selectedCourse) : null;
 
-  const { data, error, isLoading, refetch } = useGetTeacherListQuery(
-    {
-      page: currentPage,
-      size,
-      course_id: course_id,
-    },
-    {
-      skip: !course_id,
-    }
-  );
+  const {
+    data: allTeachersData,
+    error,
+    isLoading,
+    refetch,
+  } = useGetAllTeacherListQuery();
 
-  console.log(data, "TeacherData");
   const [exportTeachers] = useExportTeachersMutation();
 
-  const filteredTeachers = data?.teachers?.filter((teacher: AdminTeacher) =>
-    teacher.full_name.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTeachers = allTeachersData?.teachers.filter(
+    (teacher: AdminTeacher) =>
+      teacher.full_name?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const displayedTeachers = filteredTeachers?.filter((teacher: AdminTeacher) =>
+    selectedCourse
+      ? teacher.courses.some((course) => course.id === Number(selectedCourse))
+      : true
   );
   const [deleteTeacher] = useDeleteTeacherMutation();
 
@@ -102,23 +104,25 @@ export default function TeachersList() {
     }
     setOpenRowId(null);
   };
-  useEffect(() => {
-    if (courses?.length) {
-      if (!selectedCourse) {
-        const defaultCourse = courses[0];
-        setSelectedCourse(String(defaultCourse.id));
-      }
-    }
-  }, [courses, selectedCourse]);
+  // useEffect(() => {
+  //   if (courses?.length) {
+  //     if (!selectedCourse) {
+  //       const defaultCourse = courses[0];
+  //       setSelectedCourse(String(defaultCourse.id));
+  //     }
+  //   }
+  // }, [courses, selectedCourse]);
 
-  const courseOptions =
-    courses?.map((item) => ({
+  const courseOptions = [
+    { value: "", label: "Все преподаватели" }, // добавили эту опцию
+    ...(courses?.map((item) => ({
       value: String(item.id),
       label: item.name,
-    })) ?? [];
+    })) ?? []),
+  ];
 
   const handleCourseChange = (courseId: string | null) => {
-    setSelectedCourse(courseId);
+    setSelectedCourse(courseId || null);
     setCurrentPage(1);
   };
 
@@ -202,17 +206,12 @@ export default function TeachersList() {
       key: "email",
       title: "Почта",
       width: "220px",
-      isButton: true,
+
       render: (value: string) => {
         return (
-          <button
-            // onClick={() => handleOpenTaskModal(row)}
-            className={styles.table__button}
-          >
-            <span>
-              {value.length > 50 ? value.substring(0, 50) + "..." : value}
-            </span>
-          </button>
+          <span>
+            {value.length > 50 ? value.substring(0, 50) + "..." : value}
+          </span>
         );
       },
     },
@@ -310,18 +309,19 @@ export default function TeachersList() {
           <div className={styles.homework__table}>
             <Table
               columns={homeWorkColumns}
-              data={filteredTeachers}
+              data={displayedTeachers}
               emptyMessage="Данные о преподавателях отсутствуют"
             />
           </div>
 
-          {data?.pagination && data.pagination.total_pages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={data?.pagination.total_pages}
-              handlePageChange={setCurrentPage}
-            />
-          )}
+          {allTeachersData?.pagination &&
+            allTeachersData.pagination.total_pages > 1 && (
+              <Pagination
+                currentPage={currentPage}
+                totalPages={allTeachersData?.pagination.total_pages}
+                handlePageChange={setCurrentPage}
+              />
+            )}
         </div>
       )}
       <AddTeacher
