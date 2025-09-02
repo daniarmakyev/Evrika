@@ -129,7 +129,7 @@ export default function StudentList() {
       render: (value: string, row: Student) => {
         const isMenuOpen = openRowId === row.id;
         return (
-          <div className={styles.noUnderline} style={{ position: "relative" }}>
+          <div className={styles.noUnderline}>
             <button
               className={styles.table__button}
               onClick={() => setOpenRowId(isMenuOpen ? null : row.id)}
