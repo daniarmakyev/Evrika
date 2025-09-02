@@ -286,7 +286,7 @@ export default function TeachersList() {
                 className={styles.white__button}
                 onClick={() => setShowExport((prev) => !prev)}
               >
-                <Download /> Выгрузить
+                <Download /> <span>Выгрузить</span>
               </button>
               {showExport && (
                 <div className={styles.export_content}>

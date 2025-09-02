@@ -261,7 +261,6 @@ export default function ProfileSchedule() {
         columns={scheduleColumns}
         data={transformScheduleData(shedule[activeDay] || [])}
         emptyMessage="Уроков нет"
-        keyField="time"
       />
     );
   };

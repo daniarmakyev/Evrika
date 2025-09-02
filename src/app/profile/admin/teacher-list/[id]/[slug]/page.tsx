@@ -156,7 +156,6 @@ const Schedulepage = () => {
         columns={scheduleColumns}
         data={transformScheduleData(schedule[activeDay] || [])}
         emptyMessage="Уроков нет"
-        keyField="time"
       />
     );
   };

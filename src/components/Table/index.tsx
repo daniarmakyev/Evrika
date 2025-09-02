@@ -18,23 +18,21 @@ interface TableProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data?: any[];
   emptyMessage?: string;
-  keyField?: string;
 }
 
 const Table: React.FC<TableProps> = ({
   columns,
   data,
   emptyMessage = "Данных нет",
-//   keyField = "id",
 }) => {
   return (
     <div className={styles.table}>
       {data && data.length > 0 ? (
         <>
           <div className={styles.table__row}>
-            {columns.map((column,index) => (
+            {columns.map((column, idx) => (
               <div
-                key={index}
+                key={idx}
                 className={classNames(styles.table__cell, styles.table__header)}
                 style={{ width: column.width }}
               >
@@ -42,21 +40,25 @@ const Table: React.FC<TableProps> = ({
               </div>
             ))}
           </div>
-          {data.map((row, index) => (
-            <div key={index} className={styles.table__row}>
-              {columns.map((column,index) => (
+
+          {data.map((row, idx) => (
+            <div key={idx} className={styles.table__row}>
+              {columns.map((column, colIdx) => (
                 <div
-                  key={index}
+                  key={colIdx}
                   className={classNames(styles.table__cell, {
                     [styles["table__cell--link"]]:
                       column.isLink || column.isButton,
                   })}
                   style={{ width: column.width }}
+                  data-label={column.title}
                 >
                   {column.render ? (
                     column.render(row[column.key], row)
                   ) : column.isLink ? (
                     <Link href={row[column.key]}>{row[column.key]}</Link>
+                  ) : column.isButton ? (
+                    <button>{row[column.key]}</button>
                   ) : (
                     <span>{row[column.key]}</span>
                   )}
