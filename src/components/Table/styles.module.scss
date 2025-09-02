@@ -22,13 +22,12 @@
 
   &__row {
     display: grid;
-    grid-template-columns: minmax(120px, 40%) 1fr;
+    grid-template-columns: minmax(100px, 50%) 1fr;
     row-gap: 10px;
     border: 1px solid $white-ligth;
     border-radius: 8px;
     margin-bottom: 12px;
     padding: 12px 15px;
-    overflow-wrap: break-word;
     min-width: 0;
     max-width: 100vw;
     overflow-x: auto;
@@ -42,6 +41,11 @@
     font-size: 14px;
     border-bottom: 1px solid #dcdcdc;
     width: auto !important;
+    min-width: 0;
+    padding-bottom: 20px;
+    max-width: 100%;
+    overflow: auto;
+    white-space: nowrap;
 
     &:nth-child(odd) {
       font-weight: 600;
@@ -76,7 +80,7 @@
       content: attr(data-label);
       font-weight: 600;
       display: block;
-      margin-bottom: 4px;
+      padding-bottom: 10px;
     }
   }
 
@@ -92,6 +96,8 @@
   @include respond-above(sm) {
     &__header {
       display: flex;
+      height: auto;
+      padding: 0;
     }
 
     &__row {
@@ -105,11 +111,8 @@
       padding: 15px 20px;
 
       &:first-child {
-        padding-top: 0px;
         background: $primary;
         color: $White;
-        padding-bottom: 15px;
-        padding-top: 15px;
         position: sticky;
         top: 0;
         display: flex;
@@ -119,11 +122,12 @@
 
     &__cell {
       flex: 1;
-      padding: 0 10px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
       border: none;
+      padding: 0 10px;
+      min-width: 100px !important;
       &:nth-child(odd),
       &:nth-child(even) {
         font-weight: normal;
@@ -134,6 +138,102 @@
       &::before {
         content: none;
       }
+    }
+  }
+}
+
+.table {
+  // md: 0.68
+  @include respond-above(md) {
+    font-size: 9.5px;
+
+    &__cell {
+      font-size: 9.5px;
+      padding: 0 7px;
+    }
+
+    &__row {
+      padding: 10px 14px;
+    }
+  }
+
+  // lg: 0.84
+  @include respond-above(lg) {
+    font-size: 11.8px;
+
+    &__cell {
+      font-size: 11.8px;
+      padding: 0 8px;
+    }
+
+    &__row {
+      padding: 12.6px 16.8px;
+    }
+  }
+
+  // mac: 1
+  @include respond-above(mac) {
+    font-size: 14px;
+
+    &__cell {
+      font-size: 14px;
+      padding: 0 10px;
+    }
+
+    &__row {
+      padding: 15px 20px;
+    }
+  }
+
+  // xlg: 1.11
+  @include respond-above(xlg) {
+    font-size: 15.5px;
+
+    &__cell {
+      font-size: 15.5px;
+      padding: 0 11px;
+    }
+
+    &__row {
+      padding: 16.7px 22.2px;
+    }
+  }
+
+  // fhd: 1.3
+  @include respond-above(fhd) {
+    font-size: 28.2px;
+
+    &__cell {
+      font-size: 20.2px;
+      padding: 0 13px;
+    }
+
+    &__row {
+      padding: 19.5px 26px;
+    }
+  }
+
+  // fhd-plus: 1.625
+  @include respond-above(fhd-plus) {
+    &__cell {
+      font-size: 32.8px;
+      padding: 0 16.3px;
+    }
+
+    &__row {
+      padding: 24.4px 32.5px;
+    }
+  }
+
+  // qhd: 1.77
+  @include respond-above(qhd) {
+    &__cell {
+      font-size: 44.8px;
+      padding: 0 17.7px;
+    }
+
+    &__row {
+      padding: 26.5px 35.4px;
     }
   }
 }

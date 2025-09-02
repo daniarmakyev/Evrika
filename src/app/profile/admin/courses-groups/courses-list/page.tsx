@@ -193,34 +193,36 @@ export default function CoursesList() {
           <div className={styles.contentHeader}>
             <h3 className={styles.title}>Курсы</h3>
 
-            <div className={styles.searchField}>
-              <InputField
-                leftIcon={<SearchIcon />}
-                isShadow
-                placeholder="Поиск курсов..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            {languages && (
-              <div className={styles.selectField}>
-                <SelectField
-                  options={[
-                    { label: "Все языки", value: "" },
-                    ...languages.map((lang) => ({
-                      label: lang.name,
-                      value: lang.id.toString(),
-                    })),
-                  ]}
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
+              <div className={styles.searchField}>
+                <InputField
+                  leftIcon={<SearchIcon />}
                   isShadow
-                  value={selectedLanguageId}
-                  onChange={(e) => {
-                    setSelectedLanguageId(e.target.value);
-                  }}
-                  placeholder="Выберите язык"
+                  placeholder="Поиск курсов..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-            )}
+              {languages && (
+                <div className={styles.selectField}>
+                  <SelectField
+                    options={[
+                      { label: "Все языки", value: "" },
+                      ...languages.map((lang) => ({
+                        label: lang.name,
+                        value: lang.id.toString(),
+                      })),
+                    ]}
+                    isShadow
+                    value={selectedLanguageId}
+                    onChange={(e) => {
+                      setSelectedLanguageId(e.target.value);
+                    }}
+                    placeholder="Выберите язык"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <div className={styles.tableContainer}>

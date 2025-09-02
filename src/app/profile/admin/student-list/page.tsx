@@ -197,9 +197,16 @@ export default function StudentList() {
       key: "phone_number",
       title: "Телефон",
       width: "220px",
+
       render: (value: string) => {
         return (
-          <span>
+          <span
+            style={{
+              whiteSpace: "nowrap",
+              display: "inline-block",
+              maxWidth: "100%",
+            }}
+          >
             {value.length > 50 ? value.substring(0, 50) + "..." : value}
           </span>
         );

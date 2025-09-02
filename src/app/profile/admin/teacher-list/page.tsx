@@ -175,7 +175,7 @@ export default function TeachersList() {
                 textDecoration: "none",
               }}
             >
-              {value.length > 50 ? value.substring(0, 50) + "..." : value}
+              {value}
             </span>
           </div>
         );
@@ -193,12 +193,7 @@ export default function TeachersList() {
         return (
           <span
             style={{
-              display: "inline-block",
-              maxWidth: "220px",
-              overflow: "hidden",
               whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              verticalAlign: "middle",
             }}
             title={joined}
           >
@@ -211,18 +206,8 @@ export default function TeachersList() {
       key: "email",
       title: "Почта",
       width: "220px",
-      // isButton: true,
       render: (value: string) => {
-        return (
-          <button
-            // onClick={() => handleOpenTaskModal(row)}
-            className={styles.table__button}
-          >
-            <span>
-              {value.length > 50 ? value.substring(0, 50) + "..." : value}
-            </span>
-          </button>
-        );
+        return <span>{value}</span>;
       },
     },
     {
@@ -231,8 +216,14 @@ export default function TeachersList() {
       width: "220px",
       render: (value: string) => {
         return (
-          <span>
-            {value.length > 50 ? value.substring(0, 50) + "..." : value}
+          <span
+            style={{
+              whiteSpace: "nowrap",
+              display: "inline-block",
+              maxWidth: "100%",
+            }}
+          >
+            {value}
           </span>
         );
       },

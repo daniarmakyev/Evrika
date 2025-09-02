@@ -1,39 +1,43 @@
 @import "../../../../../styles/varibles";
 @import "../../../../../styles/mixins";
 
-.groups__container {
+.courses__container {
   display: flex;
   flex-direction: column;
   margin-left: auto;
   margin-right: auto;
   width: 100%;
+  margin-bottom: 70px;
 
-  margin-bottom: 100px;
-
-  .groupsHeader {
+  .coursesHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
     align-content: center;
-    .groupSwitch {
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+    gap: 14px;
+
+    .courseGroupSwitch {
       display: flex;
       background-color: $primary;
-      border-radius: 8px;
-      padding: 4px;
-      gap: 4px;
+      border-radius: 5px;
+      padding: 3px;
+      gap: 3px;
       width: fit-content;
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin-top: 14px;
+      margin-bottom: 14px;
 
       .switchItem {
-        padding: 8px 24px;
-        border-radius: 6px;
+        padding: 5px 17px;
+        border-radius: 4px;
         text-decoration: none;
         font-weight: 500;
         transition: all 0.2s ease;
         cursor: pointer;
         color: #ffffff;
         background-color: transparent;
+        font-size: 12px;
 
         &:hover {
           background-color: rgba(255, 255, 255, 0.5);
@@ -45,34 +49,40 @@
         }
       }
     }
-    .addGroup {
+
+    .addCourse {
       background-color: $primary;
       color: $White;
-      padding: 8px 20px;
+      padding: 5px 14px;
       height: fit-content;
       width: auto;
-      border-radius: 8px;
+      border-radius: 5px;
       cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
     }
   }
 
   .content {
-    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
-    padding: 40px;
-    border-radius: 10px;
+    box-shadow: 0 0 21px rgba(219, 219, 219, 1);
+    padding: 28px;
+    border-radius: 7px;
     display: flex;
     justify-content: space-between;
     width: 100%;
     flex-direction: column;
-    gap: 20px;
+    gap: 14px;
 
     .contentHeader {
       display: flex;
       justify-content: space-between;
       align-items: center;
       align-content: center;
+      flex-wrap: wrap;
+      row-gap: 10px;
+
       .title {
-        font-size: 24px;
+        font-size: 17px;
         font-weight: 800;
         line-height: 100%;
       }
@@ -86,7 +96,7 @@
 
 .actionButtons {
   display: flex;
-  gap: 20px;
+  gap: 14px;
   align-items: flex-start;
   justify-content: flex-start;
   color: $black;
@@ -95,7 +105,7 @@
 .actionButton {
   background: $primary-button;
   border: none;
-  border-radius: 8px;
+  border-radius: 5px;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -103,8 +113,8 @@
   transition: all 0.2s ease;
 
   svg {
-    width: 18px;
-    height: 18px;
+    width: 13px;
+    height: 13px;
     fill: white;
   }
 
@@ -113,12 +123,12 @@
   }
 }
 
-.groupDetails {
+.courseDetails {
   .detailRow {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #f0f0f0;
 
     &:last-child {
@@ -128,15 +138,17 @@
     strong {
       color: #333;
       font-weight: 600;
+      font-size: 12px;
     }
 
     span {
       color: #666;
+      font-size: 12px;
     }
   }
 
   .detailColumn {
-    padding: 12px 0;
+    padding: 8px 0;
     border-bottom: 1px solid #f0f0f0;
 
     &:last-child {
@@ -147,14 +159,15 @@
       display: block;
       color: #333;
       font-weight: 600;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
     }
   }
 }
 
 .editForm {
   .formRow {
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 
     &:last-child {
       margin-bottom: 0;
@@ -163,10 +176,10 @@
 
   .formActions {
     display: flex;
-    gap: 12px;
-    justify-content: space-between;
-    margin-top: 24px;
-    padding-top: 20px;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 17px;
+    padding-top: 14px;
     border-top: 1px solid #f0f0f0;
   }
 }
@@ -182,7 +195,7 @@
 
 .tableSkeleton {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 7px;
   border: 1px solid #e0e0e0;
   justify-content: space-between;
 }
@@ -190,27 +203,27 @@
 .tableHeaderSkeleton {
   display: flex;
   background-color: #f5f5f5;
-  padding: 16px 0;
+  padding: 11px 0;
   border-bottom: 1px solid #e0e0e0;
   justify-content: space-between;
 }
 
 .skeletonHeaderCell {
-  height: 20px;
+  height: 14px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
-  border-radius: 4px;
-  margin: 0 8px;
+  border-radius: 3px;
+  margin: 0 6px;
 
   &:nth-child(1) {
-    width: 150px;
+    width: 105px;
   }
   &:nth-child(2) {
-    width: 180px;
+    width: 126px;
   }
   &:nth-child(3) {
-    width: 150px;
+    width: 105px;
   }
 }
 
@@ -220,54 +233,55 @@
 
 .tableRowSkeletonDiv {
   display: flex;
-  padding: 16px 0;
+  padding: 11px 0;
   border-bottom: 1px solid #f0f0f0;
   justify-content: space-between;
+
   &:last-child {
     border-bottom: none;
   }
 }
 
 .skeletonCell {
-  height: 30px;
+  height: 21px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
-  border-radius: 4px;
-  margin: 0 8px;
+  border-radius: 3px;
+  margin: 0 6px;
 
   &:nth-child(1) {
-    width: 150px;
+    width: 105px;
   }
   &:nth-child(2) {
-    width: 180px;
+    width: 126px;
   }
   &:nth-child(3) {
-    width: 150px;
+    width: 105px;
   }
 }
 
 .skeletonButtonCell {
-  height: 40px;
-  width: 150px;
+  height: 28px;
+  width: 105px;
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: skeleton-loading 1.5s infinite;
-  border-radius: 8px;
-  margin: 0 8px;
+  border-radius: 5px;
+  margin: 0 6px;
 }
 
 .errorNotification {
   color: #d32f2f;
   background-color: #ffebee;
-  padding: 15px;
-  border-radius: 4px;
+  padding: 10px;
+  border-radius: 3px;
   border: 1px solid #ffcdd2;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 14px;
+  font-size: 10px;
   line-height: 1.4;
 
   .dismissButton {
@@ -275,12 +289,12 @@
     border: none;
     color: #d32f2f;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 13px;
     font-weight: bold;
     padding: 0;
-    margin-left: 10px;
-    min-width: 20px;
-    height: 20px;
+    margin-left: 7px;
+    min-width: 14px;
+    height: 14px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -296,41 +310,42 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 20px;
+  padding: 42px 14px;
   text-align: center;
-  border-radius: 10px;
+  border-radius: 7px;
   background-color: #fafafa;
   border: 1px solid #e0e0e0;
 }
 
 .errorIcon {
-  font-size: 48px;
-  margin-bottom: 16px;
+  font-size: 34px;
+  margin-bottom: 11px;
 }
 
 .errorTitle {
-  font-size: 24px;
+  font-size: 17px;
   font-weight: 700;
   color: #d32f2f;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 
 .errorMessage {
   color: red;
   background-color: #ffebee;
-  padding: 10px;
-  border-radius: 4px;
+  padding: 7px;
+  border-radius: 3px;
   border: 1px solid #ffcdd2;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
+  font-size: 12px;
 }
 
 .retryButton {
   background: $primary-button;
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
+  padding: 8px 17px;
+  border-radius: 5px;
+  font-size: 11px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -344,24 +359,27 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 40px 20px;
-  min-height: 200px;
+  padding: 28px 14px;
+  min-height: 140px;
 }
 
 .modal__form {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 14px;
   justify-content: space-between;
+
   .formRow {
     width: auto;
   }
+
   .formRowTextArea {
     width: 100%;
   }
+
   .formActions {
     display: flex;
-    gap: 20px;
+    gap: 14px;
     justify-content: space-between;
     width: 100%;
   }
@@ -371,10 +389,10 @@
   background: $primary-button;
   color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 8px 17px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 500;
   transition: all 0.2s ease;
 
@@ -388,10 +406,10 @@
   background: #f5f5f5;
   color: #666;
   border: 1px solid #ddd;
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 8px 17px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 10px;
   font-weight: 500;
   transition: all 0.2s ease;
 
@@ -401,74 +419,46 @@
   }
 }
 
-.status {
-  padding: 8px 15px;
-  border-radius: 10px;
-  color: $White;
-}
-
-.inactive {
-  background: $danger;
-  color: $White;
-}
-
-.active {
-  background: $success;
-  color: $White;
-}
-
-.archived {
-  background: $warning;
-  color: $White;
-}
-
-.errorMessage {
-  color: red;
-  background-color: #ffebee;
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ffcdd2;
-  margin-bottom: 20px;
-}
-
 .validationError {
   color: red;
-  font-size: 14px;
+  font-size: 10px;
 }
 
 .deleteConfirmContainer {
   background-color: #ffebee;
-  padding: 15px;
-  border-radius: 4px;
-  width: 100%;
+  padding: 10px;
+  border-radius: 3px;
   border: 1px solid #ffcdd2;
+  margin-bottom: 10px;
+  width: 100%;
 }
 
 .deleteConfirmTitle {
   color: #d32f2f;
-  margin: 0 0 10px 0;
+  margin: 0 0 7px 0;
   font-weight: bold;
+  font-size: 12px;
 }
 
 .deleteConfirmText {
   color: #666;
-  margin: 0 0 15px 0;
-  font-size: 14px;
+  margin: 0 0 10px 0;
+  font-size: 10px;
 }
 
 .deleteConfirmActions {
   display: flex;
-  gap: 10px;
+  gap: 7px;
 }
 
 .deleteConfirmButton {
   background-color: $danger;
   color: white;
   border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
+  padding: 6px 11px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 10px;
 
   &:disabled {
     cursor: not-allowed;
@@ -479,25 +469,25 @@
   background-color: #f5f5f5;
   color: #333;
   border: 1px solid #ddd;
-  padding: 8px 16px;
-  border-radius: 4px;
+  padding: 6px 11px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 10px;
 
   &:disabled {
     cursor: not-allowed;
   }
 }
 
-.deleteGroupButton {
-  background-color: #d32f2f;
+.deleteCourseButton {
+  background-color: $danger;
   color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 7px 14px;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
-  margin-left: 10px;
+  font-size: 10px;
+  margin-left: 7px;
 
   &:disabled {
     cursor: not-allowed;
@@ -506,7 +496,7 @@
 }
 
 .formRow {
-  margin-bottom: 20px;
+  margin-bottom: 14px;
 
   &:last-child {
     margin-bottom: 0;
@@ -515,13 +505,1810 @@
 
 .formActions {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   justify-content: space-between;
-  margin-top: 24px;
-  padding-top: 20px;
+  margin-top: 17px;
+  padding-top: 14px;
   border-top: 1px solid #f0f0f0;
+
   .formActionsInner {
     display: flex;
+    gap: 8px;
+  }
+}
+
+@include respond-above(xs) {
+  .courses__container {
+    margin-bottom: 75px;
+
+    .coursesHeader {
+      margin-bottom: 30px;
+      gap: 15px;
+
+      .courseGroupSwitch {
+        border-radius: 6px;
+        padding: 3px;
+        gap: 3px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+
+        .switchItem {
+          padding: 6px 18px;
+          border-radius: 4px;
+          font-size: 13px;
+        }
+      }
+
+      .addCourse {
+        padding: 6px 15px;
+        border-radius: 6px;
+        font-size: 13px;
+      }
+    }
+
+    .content {
+      box-shadow: 0 0 23px rgba(219, 219, 219, 1);
+      padding: 30px;
+      border-radius: 8px;
+      gap: 15px;
+
+      .contentHeader {
+        .title {
+          font-size: 18px;
+        }
+      }
+    }
+  }
+
+  .actionButtons {
+    gap: 15px;
+  }
+
+  .actionButton {
+    border-radius: 6px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .courseDetails {
+    .detailRow {
+      padding: 9px 0;
+
+      strong {
+        font-size: 13px;
+      }
+
+      span {
+        font-size: 13px;
+      }
+    }
+
+    .detailColumn {
+      padding: 9px 0;
+
+      strong {
+        margin-bottom: 7px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .editForm {
+    .formRow {
+      margin-bottom: 15px;
+    }
+
+    .formActions {
+      gap: 9px;
+      margin-top: 18px;
+      padding-top: 15px;
+    }
+  }
+
+  .tableSkeleton {
+    border-radius: 8px;
+  }
+
+  .tableHeaderSkeleton {
+    padding: 12px 0;
+  }
+
+  .skeletonHeaderCell {
+    height: 15px;
+    border-radius: 4px;
+    margin: 0 7px;
+
+    &:nth-child(1) {
+      width: 113px;
+    }
+    &:nth-child(2) {
+      width: 135px;
+    }
+    &:nth-child(3) {
+      width: 113px;
+    }
+  }
+
+  .tableRowSkeletonDiv {
+    padding: 12px 0;
+  }
+
+  .skeletonCell {
+    height: 23px;
+    border-radius: 4px;
+    margin: 0 7px;
+
+    &:nth-child(1) {
+      width: 113px;
+    }
+    &:nth-child(2) {
+      width: 135px;
+    }
+    &:nth-child(3) {
+      width: 113px;
+    }
+  }
+
+  .skeletonButtonCell {
+    height: 30px;
+    width: 113px;
+    border-radius: 6px;
+    margin: 0 7px;
+  }
+
+  .errorNotification {
+    padding: 11px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 11px;
+
+    .dismissButton {
+      font-size: 14px;
+      margin-left: 8px;
+      min-width: 15px;
+      height: 15px;
+    }
+  }
+
+  .errorContainer {
+    padding: 45px 15px;
+    border-radius: 8px;
+  }
+
+  .errorIcon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+
+  .errorTitle {
+    font-size: 18px;
+    margin-bottom: 9px;
+  }
+
+  .errorMessage {
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    font-size: 13px;
+  }
+
+  .retryButton {
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 12px;
+  }
+
+  .loadingContainer {
+    padding: 30px 15px;
+    min-height: 150px;
+  }
+
+  .modal__form {
+    gap: 15px;
+
+    .formActions {
+      gap: 15px;
+    }
+  }
+
+  .saveButton,
+  .cancelButton {
+    padding: 9px 18px;
+    border-radius: 6px;
+    font-size: 11px;
+  }
+
+  .validationError {
+    font-size: 11px;
+  }
+
+  .deleteConfirmContainer {
+    padding: 11px;
+    border-radius: 4px;
+    margin-bottom: 11px;
+  }
+
+  .deleteConfirmTitle {
+    margin: 0 0 7px 0;
+    font-size: 12px;
+  }
+
+  .deleteConfirmText {
+    margin: 0 0 10px 0;
+    font-size: 10px;
+  }
+
+  .deleteConfirmActions {
+    gap: 7px;
+  }
+
+  .deleteConfirmButton,
+  .deleteCancelButton {
+    padding: 5px 11px;
+    border-radius: 5px;
+    font-size: 10px;
+  }
+
+  .deleteCourseButton {
+    padding: 7px 14px;
+    border-radius: 5px;
+    font-size: 10px;
+    margin-left: 7px;
+  }
+
+  .formRow {
+    margin-bottom: 14px;
+  }
+
+  .formActions {
+    gap: 8px;
+    margin-top: 16px;
+    padding-top: 14px;
+
+    .formActionsInner {
+      gap: 8px;
+    }
+  }
+}
+
+@include respond-above(lg) {
+  .courses__container {
+    margin-bottom: 84px;
+
+    .coursesHeader {
+      margin-bottom: 34px;
+      gap: 17px;
+      flex-wrap: nowrap;
+      .courseGroupSwitch {
+        border-radius: 7px;
+        padding: 3px;
+        gap: 3px;
+        margin-top: 17px;
+        margin-bottom: 17px;
+
+        .switchItem {
+          padding: 7px 20px;
+          border-radius: 5px;
+          font-size: 13px;
+        }
+      }
+
+      .addCourse {
+        padding: 7px 17px;
+        border-radius: 7px;
+        font-size: 13px;
+      }
+    }
+
+    .content {
+      box-shadow: 0 0 25px rgba(219, 219, 219, 1);
+      padding: 34px;
+      border-radius: 8px;
+      gap: 17px;
+
+      .contentHeader {
+        .title {
+          font-size: 20px;
+        }
+      }
+    }
+  }
+
+  .actionButtons {
+    gap: 17px;
+  }
+
+  .actionButton {
+    border-radius: 7px;
+
+    svg {
+      width: 15px;
+      height: 15px;
+    }
+  }
+
+  .courseDetails {
+    .detailRow {
+      padding: 10px 0;
+
+      strong {
+        font-size: 13px;
+      }
+
+      span {
+        font-size: 13px;
+      }
+    }
+
+    .detailColumn {
+      padding: 10px 0;
+
+      strong {
+        margin-bottom: 7px;
+        font-size: 13px;
+      }
+    }
+  }
+
+  .editForm {
+    .formRow {
+      margin-bottom: 17px;
+    }
+
+    .formActions {
+      gap: 10px;
+      margin-top: 20px;
+      padding-top: 17px;
+    }
+  }
+
+  .tableSkeleton {
+    border-radius: 8px;
+  }
+
+  .tableHeaderSkeleton {
+    padding: 13px 0;
+  }
+
+  .skeletonHeaderCell {
+    height: 17px;
+    border-radius: 3px;
+    margin: 0 7px;
+
+    &:nth-child(1) {
+      width: 126px;
+    }
+    &:nth-child(2) {
+      width: 151px;
+    }
+    &:nth-child(3) {
+      width: 126px;
+    }
+  }
+
+  .tableRowSkeletonDiv {
+    padding: 13px 0;
+  }
+
+  .skeletonCell {
+    height: 25px;
+    border-radius: 3px;
+    margin: 0 7px;
+
+    &:nth-child(1) {
+      width: 126px;
+    }
+    &:nth-child(2) {
+      width: 151px;
+    }
+    &:nth-child(3) {
+      width: 126px;
+    }
+  }
+
+  .skeletonButtonCell {
+    height: 34px;
+    width: 126px;
+    border-radius: 7px;
+    margin: 0 7px;
+  }
+
+  .errorNotification {
+    padding: 13px;
+    border-radius: 3px;
+    margin-bottom: 17px;
+    font-size: 12px;
+
+    .dismissButton {
+      font-size: 15px;
+      margin-left: 8px;
+      min-width: 17px;
+      height: 17px;
+    }
+  }
+
+  .errorContainer {
+    padding: 50px 17px;
+    border-radius: 8px;
+  }
+
+  .errorIcon {
+    font-size: 40px;
+    margin-bottom: 13px;
+  }
+
+  .errorTitle {
+    font-size: 20px;
+    margin-bottom: 10px;
+  }
+
+  .errorMessage {
+    padding: 8px;
+    border-radius: 4px;
+    margin-bottom: 17px;
+    font-size: 13px;
+  }
+
+  .retryButton {
+    padding: 10px 20px;
+    border-radius: 7px;
+    font-size: 13px;
+  }
+
+  .loadingContainer {
+    padding: 34px 17px;
+    min-height: 168px;
+  }
+
+  .modal__form {
+    gap: 17px;
+
+    .formActions {
+      gap: 17px;
+    }
+  }
+
+  .saveButton,
+  .cancelButton {
+    padding: 10px 20px;
+    border-radius: 7px;
+    font-size: 12px;
+  }
+
+  .validationError {
+    font-size: 12px;
+  }
+
+  .deleteConfirmContainer {
+    padding: 13px;
+    border-radius: 3px;
+    margin-bottom: 13px;
+  }
+
+  .deleteConfirmTitle {
+    margin: 0 0 7px 0;
+    font-size: 12px;
+  }
+
+  .deleteConfirmText {
+    margin: 0 0 10px 0;
+    font-size: 10px;
+  }
+
+  .deleteConfirmActions {
+    gap: 8px;
+  }
+
+  .deleteConfirmButton,
+  .deleteCancelButton {
+    padding: 7px 13px;
+    border-radius: 7px;
+    font-size: 12px;
+  }
+
+  .deleteCourseButton {
+    padding: 8px 17px;
+    border-radius: 7px;
+    font-size: 12px;
+    margin-left: 7px;
+  }
+
+  .formRow {
+    margin-bottom: 17px;
+  }
+
+  .formActions {
+    gap: 10px;
+    margin-top: 20px;
+    padding-top: 17px;
+
+    .formActionsInner {
+      gap: 10px;
+    }
+  }
+}
+
+@include respond-above(mac) {
+  .courses__container {
+    margin-bottom: 100px;
+
+    .coursesHeader {
+      margin-bottom: 40px;
+      gap: 20px;
+
+      .courseGroupSwitch {
+        border-radius: 8px;
+        padding: 4px;
+        gap: 4px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+
+        .switchItem {
+          padding: 8px 24px;
+          border-radius: 6px;
+          font-size: 14px;
+        }
+      }
+
+      .addCourse {
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+    }
+
+    .content {
+      box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+      padding: 40px;
+      border-radius: 10px;
+      gap: 20px;
+
+      .contentHeader {
+        .title {
+          font-size: 24px;
+        }
+      }
+    }
+  }
+
+  .actionButtons {
+    gap: 20px;
+  }
+
+  .actionButton {
+    border-radius: 8px;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .courseDetails {
+    .detailRow {
+      padding: 12px 0;
+
+      strong {
+        font-size: 14px;
+      }
+
+      span {
+        font-size: 14px;
+      }
+    }
+
+    .detailColumn {
+      padding: 12px 0;
+
+      strong {
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .editForm {
+    .formRow {
+      margin-bottom: 20px;
+    }
+
+    .formActions {
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 20px;
+    }
+  }
+
+  .tableSkeleton {
+    border-radius: 10px;
+  }
+
+  .tableHeaderSkeleton {
+    padding: 16px 0;
+  }
+
+  .skeletonHeaderCell {
+    height: 20px;
+    border-radius: 4px;
+    margin: 0 8px;
+
+    &:nth-child(1) {
+      width: 150px;
+    }
+    &:nth-child(2) {
+      width: 180px;
+    }
+    &:nth-child(3) {
+      width: 150px;
+    }
+  }
+
+  .tableRowSkeletonDiv {
+    padding: 16px 0;
+  }
+
+  .skeletonCell {
+    height: 30px;
+    border-radius: 4px;
+    margin: 0 8px;
+
+    &:nth-child(1) {
+      width: 150px;
+    }
+    &:nth-child(2) {
+      width: 180px;
+    }
+    &:nth-child(3) {
+      width: 150px;
+    }
+  }
+
+  .skeletonButtonCell {
+    height: 40px;
+    width: 150px;
+    border-radius: 8px;
+    margin: 0 8px;
+  }
+
+  .errorNotification {
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+
+    .dismissButton {
+      font-size: 18px;
+      margin-left: 10px;
+      min-width: 20px;
+      height: 20px;
+    }
+  }
+
+  .errorContainer {
+    padding: 60px 20px;
+    border-radius: 10px;
+  }
+
+  .errorIcon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+
+  .errorTitle {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  .errorMessage {
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .retryButton {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
+  }
+
+  .loadingContainer {
+    padding: 40px 20px;
+    min-height: 200px;
+  }
+
+  .modal__form {
+    gap: 20px;
+
+    .formActions {
+      gap: 20px;
+    }
+  }
+
+  .saveButton,
+  .cancelButton {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .validationError {
+    font-size: 14px;
+  }
+
+  .deleteConfirmContainer {
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+  }
+
+  .deleteConfirmTitle {
+    margin: 0 0 10px 0;
+    font-size: 14px;
+  }
+
+  .deleteConfirmText {
+    margin: 0 0 15px 0;
+    font-size: 14px;
+  }
+
+  .deleteConfirmActions {
+    gap: 10px;
+  }
+
+  .deleteConfirmButton,
+  .deleteCancelButton {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .deleteCourseButton {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-left: 10px;
+  }
+
+  .formRow {
+    margin-bottom: 20px;
+  }
+
+  .formActions {
     gap: 12px;
+    margin-top: 24px;
+    padding-top: 20px;
+
+    .formActionsInner {
+      gap: 12px;
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .courses__container {
+    margin-bottom: 111px;
+
+    .coursesHeader {
+      margin-bottom: 44px;
+      gap: 22px;
+
+      .courseGroupSwitch {
+        border-radius: 9px;
+        padding: 4px;
+        gap: 4px;
+        margin-top: 22px;
+        margin-bottom: 22px;
+
+        .switchItem {
+          padding: 9px 27px;
+          border-radius: 7px;
+          font-size: 16px;
+        }
+      }
+
+      .addCourse {
+        padding: 9px 22px;
+        border-radius: 9px;
+        font-size: 16px;
+      }
+    }
+
+    .content {
+      box-shadow: 0 0 33px rgba(219, 219, 219, 1);
+      padding: 44px;
+      border-radius: 11px;
+      gap: 22px;
+
+      .contentHeader {
+        .title {
+          font-size: 27px;
+        }
+      }
+    }
+  }
+
+  .actionButtons {
+    gap: 22px;
+  }
+
+  .actionButton {
+    border-radius: 9px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .courseDetails {
+    .detailRow {
+      padding: 13px 0;
+
+      strong {
+        font-size: 16px;
+      }
+
+      span {
+        font-size: 16px;
+      }
+    }
+
+    .detailColumn {
+      padding: 13px 0;
+
+      strong {
+        margin-bottom: 9px;
+        font-size: 16px;
+      }
+    }
+  }
+
+  .editForm {
+    .formRow {
+      margin-bottom: 22px;
+    }
+
+    .formActions {
+      gap: 13px;
+      margin-top: 27px;
+      padding-top: 22px;
+    }
+  }
+
+  .tableSkeleton {
+    border-radius: 11px;
+  }
+
+  .tableHeaderSkeleton {
+    padding: 18px 0;
+  }
+
+  .skeletonHeaderCell {
+    height: 22px;
+    border-radius: 4px;
+    margin: 0 9px;
+
+    &:nth-child(1) {
+      width: 167px;
+    }
+    &:nth-child(2) {
+      width: 200px;
+    }
+    &:nth-child(3) {
+      width: 167px;
+    }
+  }
+
+  .tableRowSkeletonDiv {
+    padding: 18px 0;
+  }
+
+  .skeletonCell {
+    height: 33px;
+    border-radius: 4px;
+    margin: 0 9px;
+
+    &:nth-child(1) {
+      width: 167px;
+    }
+    &:nth-child(2) {
+      width: 200px;
+    }
+    &:nth-child(3) {
+      width: 167px;
+    }
+  }
+
+  .skeletonButtonCell {
+    height: 44px;
+    width: 167px;
+    border-radius: 9px;
+    margin: 0 9px;
+  }
+
+  .errorNotification {
+    padding: 17px;
+    border-radius: 4px;
+    margin-bottom: 22px;
+    font-size: 16px;
+
+    .dismissButton {
+      font-size: 20px;
+      margin-left: 11px;
+      min-width: 22px;
+      height: 22px;
+    }
+  }
+
+  .errorContainer {
+    padding: 67px 22px;
+    border-radius: 11px;
+  }
+
+  .errorIcon {
+    font-size: 53px;
+    margin-bottom: 18px;
+  }
+
+  .errorTitle {
+    font-size: 27px;
+    margin-bottom: 13px;
+  }
+
+  .errorMessage {
+    padding: 11px;
+    border-radius: 4px;
+    margin-bottom: 22px;
+    font-size: 16px;
+  }
+
+  .retryButton {
+    padding: 13px 27px;
+    border-radius: 9px;
+    font-size: 18px;
+  }
+
+  .loadingContainer {
+    padding: 44px 22px;
+    min-height: 222px;
+  }
+
+  .modal__form {
+    gap: 22px;
+
+    .formActions {
+      gap: 22px;
+    }
+  }
+
+  .saveButton,
+  .cancelButton {
+    padding: 13px 27px;
+    border-radius: 9px;
+    font-size: 16px;
+  }
+
+  .validationError {
+    font-size: 16px;
+  }
+
+  .deleteConfirmContainer {
+    padding: 17px;
+    border-radius: 4px;
+    margin-bottom: 17px;
+  }
+
+  .deleteConfirmTitle {
+    margin: 0 0 11px 0;
+    font-size: 16px;
+  }
+
+  .deleteConfirmText {
+    margin: 0 0 17px 0;
+    font-size: 16px;
+  }
+
+  .deleteConfirmActions {
+    gap: 8px;
+  }
+
+  .deleteConfirmButton,
+  .deleteCancelButton {
+    padding: 9px 18px;
+    border-radius: 9px;
+    font-size: 16px;
+  }
+
+  .deleteCourseButton {
+    padding: 11px 22px;
+    border-radius: 9px;
+    font-size: 16px;
+    margin-left: 11px;
+  }
+
+  .formRow {
+    margin-bottom: 22px;
+  }
+
+  .formActions {
+    gap: 13px;
+    margin-top: 27px;
+    padding-top: 22px;
+
+    .formActionsInner {
+      gap: 13px;
+    }
+  }
+}
+
+@include respond-above(fhd) {
+  .courses__container {
+    margin-bottom: 130px;
+
+    .coursesHeader {
+      margin-bottom: 52px;
+      gap: 26px;
+
+      .courseGroupSwitch {
+        border-radius: 10px;
+        padding: 5px;
+        gap: 5px;
+        margin-top: 26px;
+        margin-bottom: 26px;
+
+        .switchItem {
+          padding: 10px 31px;
+          border-radius: 8px;
+          font-size: 18px;
+        }
+      }
+
+      .addCourse {
+        padding: 10px 26px;
+        border-radius: 10px;
+        font-size: 18px;
+      }
+    }
+
+    .content {
+      box-shadow: 0 0 39px rgba(219, 219, 219, 1);
+      padding: 52px;
+      border-radius: 13px;
+      gap: 26px;
+
+      .contentHeader {
+        .title {
+          font-size: 31px;
+        }
+      }
+    }
+  }
+
+  .actionButtons {
+    gap: 26px;
+  }
+
+  .actionButton {
+    border-radius: 10px;
+
+    svg {
+      width: 23px;
+      height: 23px;
+    }
+  }
+
+  .courseDetails {
+    .detailRow {
+      padding: 16px 0;
+
+      strong {
+        font-size: 18px;
+      }
+
+      span {
+        font-size: 18px;
+      }
+    }
+
+    .detailColumn {
+      padding: 16px 0;
+
+      strong {
+        margin-bottom: 10px;
+        font-size: 18px;
+      }
+    }
+  }
+
+  .editForm {
+    .formRow {
+      margin-bottom: 26px;
+    }
+
+    .formActions {
+      gap: 16px;
+      margin-top: 31px;
+      padding-top: 26px;
+    }
+  }
+
+  .tableSkeleton {
+    border-radius: 13px;
+  }
+
+  .tableHeaderSkeleton {
+    padding: 21px 0;
+  }
+
+  .skeletonHeaderCell {
+    height: 26px;
+    border-radius: 5px;
+    margin: 0 10px;
+
+    &:nth-child(1) {
+      width: 195px;
+    }
+    &:nth-child(2) {
+      width: 234px;
+    }
+    &:nth-child(3) {
+      width: 195px;
+    }
+  }
+
+  .tableRowSkeletonDiv {
+    padding: 21px 0;
+  }
+
+  .skeletonCell {
+    height: 39px;
+    border-radius: 5px;
+    margin: 0 10px;
+
+    &:nth-child(1) {
+      width: 195px;
+    }
+    &:nth-child(2) {
+      width: 234px;
+    }
+    &:nth-child(3) {
+      width: 195px;
+    }
+  }
+
+  .skeletonButtonCell {
+    height: 52px;
+    width: 195px;
+    border-radius: 10px;
+    margin: 0 10px;
+  }
+
+  .errorNotification {
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 26px;
+    font-size: 18px;
+
+    .dismissButton {
+      font-size: 23px;
+      margin-left: 13px;
+      min-width: 26px;
+      height: 26px;
+    }
+  }
+
+  .errorContainer {
+    padding: 78px 26px;
+    border-radius: 13px;
+  }
+
+  .errorIcon {
+    font-size: 62px;
+    margin-bottom: 21px;
+  }
+
+  .errorTitle {
+    font-size: 31px;
+    margin-bottom: 16px;
+  }
+
+  .errorMessage {
+    padding: 13px;
+    border-radius: 5px;
+    margin-bottom: 26px;
+    font-size: 18px;
+  }
+
+  .retryButton {
+    padding: 16px 31px;
+    border-radius: 10px;
+    font-size: 21px;
+  }
+
+  .loadingContainer {
+    padding: 52px 26px;
+    min-height: 260px;
+  }
+
+  .modal__form {
+    gap: 26px;
+
+    .formActions {
+      gap: 26px;
+    }
+  }
+
+  .saveButton,
+  .cancelButton {
+    padding: 16px 31px;
+    border-radius: 10px;
+    font-size: 18px;
+  }
+
+  .validationError {
+    font-size: 18px;
+  }
+
+  .deleteConfirmContainer {
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+  }
+
+  .deleteConfirmTitle {
+    margin: 0 0 13px 0;
+    font-size: 18px;
+  }
+
+  .deleteConfirmText {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+  }
+
+  .deleteConfirmActions {
+    gap: 13px;
+  }
+
+  .deleteConfirmButton,
+  .deleteCancelButton {
+    padding: 10px 21px;
+    border-radius: 10px;
+    font-size: 18px;
+  }
+
+  .deleteCourseButton {
+    padding: 13px 26px;
+    border-radius: 10px;
+    font-size: 18px;
+    margin-left: 13px;
+  }
+
+  .formRow {
+    margin-bottom: 26px;
+  }
+
+  .formActions {
+    gap: 13px;
+    margin-top: 31px;
+    padding-top: 26px;
+
+    .formActionsInner {
+      gap: 13px;
+    }
+  }
+}
+
+@include respond-above(fhd-plus) {
+  .courses__container {
+    margin-bottom: 180px;
+
+    .coursesHeader {
+      margin-bottom: 68px;
+      gap: 34px;
+
+      .courseGroupSwitch {
+        border-radius: 12px;
+        padding: 6px;
+        gap: 6px;
+        margin-top: 34px;
+        margin-bottom: 34px;
+
+        .switchItem {
+          padding: 14px 38px;
+          border-radius: 10px;
+          font-size: 24px;
+        }
+      }
+
+      .addCourse {
+        padding: 14px 34px;
+        border-radius: 10px;
+        font-size: 24px;
+      }
+    }
+
+    .content {
+      box-shadow: 0 0 48px rgba(219, 219, 219, 1);
+      padding: 65px;
+      border-radius: 18px;
+      gap: 34px;
+
+      .contentHeader {
+        .title {
+          font-size: 39px;
+        }
+      }
+    }
+  }
+
+  .actionButtons {
+    gap: 34px;
+  }
+
+  .actionButton {
+    border-radius: 12px;
+
+    svg {
+      width: 34px;
+      height: 34px;
+    }
+  }
+
+  .courseDetails {
+    .detailRow {
+      padding: 24px 0;
+
+      strong {
+        font-size: 26px;
+      }
+
+      span {
+        font-size: 26px;
+      }
+    }
+
+    .detailColumn {
+      padding: 24px 0;
+
+      strong {
+        margin-bottom: 14px;
+        font-size: 26px;
+      }
+    }
+  }
+
+  .editForm {
+    .formRow {
+      margin-bottom: 34px;
+    }
+
+    .formActions {
+      gap: 24px;
+      margin-top: 40px;
+      padding-top: 34px;
+    }
+  }
+
+  .tableSkeleton {
+    border-radius: 18px;
+  }
+
+  .tableHeaderSkeleton {
+    padding: 30px 0;
+  }
+
+  .skeletonHeaderCell {
+    height: 36px;
+    border-radius: 8px;
+    margin: 0 14px;
+
+    &:nth-child(1) {
+      width: 260px;
+    }
+    &:nth-child(2) {
+      width: 312px;
+    }
+    &:nth-child(3) {
+      width: 260px;
+    }
+  }
+
+  .tableRowSkeletonDiv {
+    padding: 30px 0;
+  }
+
+  .skeletonCell {
+    height: 54px;
+    border-radius: 8px;
+    margin: 0 14px;
+
+    &:nth-child(1) {
+      width: 260px;
+    }
+    &:nth-child(2) {
+      width: 312px;
+    }
+    &:nth-child(3) {
+      width: 260px;
+    }
+  }
+
+  .skeletonButtonCell {
+    height: 72px;
+    width: 260px;
+    border-radius: 12px;
+    margin: 0 14px;
+  }
+
+  .errorNotification {
+    padding: 28px;
+    border-radius: 8px;
+    margin-bottom: 34px;
+    font-size: 28px;
+
+    .dismissButton {
+      font-size: 36px;
+      margin-left: 18px;
+      min-width: 34px;
+      height: 34px;
+    }
+  }
+
+  .errorContainer {
+    padding: 110px 34px;
+    border-radius: 18px;
+  }
+
+  .errorIcon {
+    font-size: 86px;
+    margin-bottom: 28px;
+  }
+
+  .errorTitle {
+    font-size: 39px;
+    margin-bottom: 20px;
+  }
+
+  .errorMessage {
+    padding: 22px;
+    border-radius: 8px;
+    margin-bottom: 34px;
+    font-size: 28px;
+  }
+
+  .retryButton {
+    padding: 22px 40px;
+    border-radius: 12px;
+    font-size: 28px;
+  }
+
+  .loadingContainer {
+    padding: 72px 34px;
+    min-height: 420px;
+  }
+
+  .modal__form {
+    gap: 34px;
+
+    .formActions {
+      gap: 34px;
+    }
+  }
+
+  .saveButton,
+  .cancelButton {
+    padding: 22px 40px;
+    border-radius: 12px;
+    font-size: 26px;
+  }
+
+  .validationError {
+    font-size: 26px;
+  }
+
+  .deleteConfirmContainer {
+    padding: 28px;
+    border-radius: 8px;
+    margin-bottom: 28px;
+  }
+
+  .deleteConfirmTitle {
+    margin: 0 0 20px 0;
+    font-size: 26px;
+  }
+
+  .deleteConfirmText {
+    margin: 0 0 28px 0;
+    font-size: 24px;
+  }
+
+  .deleteConfirmActions {
+    gap: 22px;
+  }
+
+  .deleteConfirmButton,
+  .deleteCancelButton {
+    padding: 18px 34px;
+    border-radius: 12px;
+    font-size: 24px;
+  }
+
+  .deleteCourseButton {
+    padding: 20px 44px;
+    border-radius: 12px;
+    font-size: 26px;
+    margin-left: 24px;
+  }
+
+  .formRow {
+    margin-bottom: 34px;
+  }
+
+  .formActions {
+    gap: 24px;
+    margin-top: 40px;
+    padding-top: 34px;
+
+    .formActionsInner {
+      gap: 24px;
+    }
+  }
+}
+
+@include respond-above(qhd) {
+  .courses__container {
+    margin-bottom: 220px;
+
+    .coursesHeader {
+      margin-bottom: 78px;
+      gap: 40px;
+
+      .courseGroupSwitch {
+        border-radius: 14px;
+        padding: 8px;
+        gap: 8px;
+        margin-top: 40px;
+        margin-bottom: 40px;
+
+        .switchItem {
+          padding: 18px 48px;
+          border-radius: 12px;
+          font-size: 30px;
+        }
+      }
+
+      .addCourse {
+        padding: 18px 44px;
+        border-radius: 12px;
+        font-size: 30px;
+      }
+    }
+
+    .content {
+      box-shadow: 0 0 64px rgba(219, 219, 219, 1);
+      padding: 80px;
+      border-radius: 20px;
+      gap: 40px;
+
+      .contentHeader {
+        .title {
+          font-size: 42px;
+        }
+      }
+    }
+  }
+
+  .actionButtons {
+    gap: 40px;
+  }
+
+  .actionButton {
+    border-radius: 14px;
+
+    svg {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .courseDetails {
+    .detailRow {
+      padding: 28px 0;
+
+      strong {
+        font-size: 30px;
+      }
+
+      span {
+        font-size: 30px;
+      }
+    }
+
+    .detailColumn {
+      padding: 28px 0;
+
+      strong {
+        margin-bottom: 16px;
+        font-size: 30px;
+      }
+    }
+  }
+
+  .tableSkeleton {
+    border-radius: 20px;
+  }
+  .skeletonHeaderCell {
+    height: 40px;
+    &:nth-child(1) {
+      width: 300px;
+    }
+    &:nth-child(2) {
+      width: 360px;
+    }
+    &:nth-child(3) {
+      width: 300px;
+    }
+  }
+  .skeletonCell {
+    height: 60px;
+  }
+  .skeletonButtonCell {
+    height: 84px;
+    width: 300px;
+    border-radius: 14px;
+  }
+
+  .retryButton {
+    padding: 26px 48px;
+    font-size: 34px;
+    border-radius: 14px;
+  }
+  .errorIcon {
+    font-size: 100px;
+  }
+  .loadingContainer {
+    padding: 96px 40px;
+    min-height: 520px;
+  }
+
+  .saveButton,
+  .cancelButton {
+    padding: 26px 48px;
+    font-size: 30px;
+    border-radius: 14px;
+  }
+  .deleteCourseButton {
+    padding: 28px 56px;
+    font-size: 30px;
+  }
+}
+
+@include respond-above(uhd) {
+  .courses__container {
+    margin-bottom: 320px;
+
+    .coursesHeader {
+      margin-bottom: 120px;
+      gap: 60px;
+
+      .courseGroupSwitch {
+        border-radius: 20px;
+        padding: 12px;
+        gap: 12px;
+        margin-top: 60px;
+        margin-bottom: 60px;
+
+        .switchItem {
+          padding: 28px 68px;
+          border-radius: 18px;
+          font-size: 48px;
+        }
+      }
+
+      .addCourse {
+        padding: 28px 64px;
+        border-radius: 18px;
+        font-size: 48px;
+      }
+    }
+
+    .content {
+      box-shadow: 0 0 110px rgba(219, 219, 219, 1);
+      padding: 120px;
+      border-radius: 28px;
+      gap: 60px;
+
+      .contentHeader {
+        .title {
+          font-size: 62px;
+        }
+      }
+    }
+  }
+
+  .actionButtons {
+    gap: 60px;
+  }
+
+  .actionButton {
+    border-radius: 20px;
+
+    svg {
+      width: 64px;
+      height: 64px;
+    }
+  }
+
+  .courseDetails {
+    .detailRow {
+      padding: 48px 0;
+
+      strong {
+        font-size: 48px;
+      }
+
+      span {
+        font-size: 48px;
+      }
+    }
+
+    .detailColumn {
+      padding: 48px 0;
+
+      strong {
+        margin-bottom: 22px;
+        font-size: 48px;
+      }
+    }
+  }
+
+  .skeletonHeaderCell {
+    height: 64px;
+    &:nth-child(1) {
+      width: 420px;
+    }
+    &:nth-child(2) {
+      width: 504px;
+    }
+    &:nth-child(3) {
+      width: 420px;
+    }
+  }
+  .skeletonCell {
+    height: 92px;
+  }
+  .skeletonButtonCell {
+    height: 128px;
+    width: 420px;
+    border-radius: 20px;
+  }
+
+  .retryButton {
+    padding: 36px 84px;
+    font-size: 56px;
+    border-radius: 20px;
+  }
+  .errorIcon {
+    font-size: 160px;
+  }
+  .loadingContainer {
+    padding: 160px 60px;
+    min-height: 900px;
+  }
+
+  .saveButton,
+  .cancelButton {
+    padding: 36px 84px;
+    font-size: 48px;
+    border-radius: 20px;
+  }
+  .deleteCourseButton {
+    padding: 40px 96px;
+    font-size: 48px;
+    margin-left: 40px;
   }
 }

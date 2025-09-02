@@ -224,9 +224,9 @@ export default function GroupsList() {
 
   return (
     <div>
-      <div className={classNames(styles.groups__container, "container")}>
-        <div className={styles.groupsHeader}>
-          <div className={styles.groupSwitch}>
+      <div className={classNames(styles.courses__container, "container")}>
+        <div className={styles.coursesHeader}>
+          <div className={styles.courseGroupSwitch}>
             <Link
               href={"/profile/admin/courses-groups/courses-list"}
               className={classNames(styles.switchItem, {
@@ -244,7 +244,7 @@ export default function GroupsList() {
               Группы
             </Link>
           </div>
-          <button className={styles.addGroup} onClick={handleCreateGroup}>
+          <button className={styles.addCourse} onClick={handleCreateGroup}>
             Добавить
           </button>
         </div>
