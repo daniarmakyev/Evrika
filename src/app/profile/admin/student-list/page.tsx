@@ -208,7 +208,7 @@ export default function StudentList() {
     {
       key: "is_active",
       title: "Статус",
-      width: "100px",
+      width: "50px",
       render: (value: boolean) => {
         return (
           <div
@@ -328,25 +328,23 @@ export default function StudentList() {
               )}
             </div>
 
-            <div className={styles.filter_container}>
-              <div style={{ width: "210px", position: "relative" }}>
-                <SelectField
-                  isShadow
-                  value={selectedCourse ?? ""}
-                  onChange={(e) => handleCourseChange(e.target.value || null)}
-                  options={courseOptions}
-                  placeholder="Выбрать курс"
-                />
-              </div>
-              <div style={{ width: "210px", position: "relative" }}>
-                <SelectField
-                  isShadow
-                  value={selectedGroup ?? ""}
-                  onChange={(e) => handleGroupChange(e.target.value || null)}
-                  options={groupOptions}
-                  placeholder="Выбрать группу"
-                />
-              </div>
+            <div style={{ width: "210px", position: "relative" }}>
+              <SelectField
+                isShadow
+                value={selectedCourse ?? ""}
+                onChange={(e) => handleCourseChange(e.target.value || null)}
+                options={courseOptions}
+                placeholder="Выбрать курс"
+              />
+            </div>
+            <div style={{ width: "210px", position: "relative" }}>
+              <SelectField
+                isShadow
+                value={selectedGroup ?? ""}
+                onChange={(e) => handleGroupChange(e.target.value || null)}
+                options={groupOptions}
+                placeholder="Выбрать группу"
+              />
             </div>
           </div>
 
