@@ -113,7 +113,7 @@ export default function GroupsList() {
         name: group.name,
         course_name: group.name,
         status: getStatusText(group),
-        teacher_name: `${group.teacher.first_name} ${group.teacher.last_name}`,
+        teacher_name: `${group.teacher?.first_name} ${group.teacher?.last_name}`,
         start_date: group.start_date,
       }));
 
