@@ -73,6 +73,7 @@ export default function TeacherHomework() {
   const [lessonState, setLessonState] = useState<LessonListItem[]>([]);
   const [tableData, setTableData] = useState<TeacherHomeworkTableItem[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const viewModal = useModal<{
     homework: TeacherHomeworkTableItem;
@@ -143,18 +144,26 @@ export default function TeacherHomework() {
       } catch (error) {
         console.error("Ошибка вставки груп с локал стореджа:", error);
         setErrorMessage("Ошибка при загрузке групп");
+        setIsInitialLoad(false);
       }
+    } else {
+      // Если нет групп в localStorage, сразу завершаем загрузку
+      setIsInitialLoad(false);
     }
   }, [dispatch]);
 
   useEffect(() => {
-    if (lessons && lessons.length > 0) {
-      setLessonState((prev) => {
-        const newLessons = lessons.filter(
-          (lesson) => !prev.some((item) => item.id === lesson.id)
-        );
-        return [...prev, ...newLessons];
-      });
+    if (lessons !== null) {
+      setIsInitialLoad(false);
+
+      if (lessons.length > 0) {
+        setLessonState((prev) => {
+          const newLessons = lessons.filter(
+            (lesson) => !prev.some((item) => item.id === lesson.id)
+          );
+          return [...prev, ...newLessons];
+        });
+      }
     }
   }, [lessons]);
 
@@ -202,11 +211,6 @@ export default function TeacherHomework() {
     createModal.closeModal();
     reloadLessons();
   };
-
-  // const handleEditSuccess = () => {
-  //   editModal.closeModal();
-  //   reloadLessons();
-  // };
 
   const teacherHomeworkColumns = [
     {
@@ -262,7 +266,9 @@ export default function TeacherHomework() {
       <div className={styles.homework__content}>
         <div className={styles.homework__header}>
           <div className={styles.homework__title}>
-            <h3 style={{fontWeight:800, fontSize:"24px"}}>Домашнее задание</h3>
+            <h3 style={{ fontWeight: 800, fontSize: "24px" }}>
+              Домашнее задание
+            </h3>
           </div>
           <button
             onClick={handleOpenCreateModal}
@@ -284,7 +290,7 @@ export default function TeacherHomework() {
           </div>
         )}
 
-        {loading || lessons ? (
+        {loading && isInitialLoad ? (
           <TableSkeleton />
         ) : (
           <div className={styles.homework__table}>

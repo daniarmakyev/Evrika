@@ -42,7 +42,7 @@ interface HomeWorkTableItem {
   homeworkData: HomeworkTask;
 }
 
- const TableSkeleton = () => (
+const TableSkeleton = () => (
   <div className={styles.tableSkeleton}>
     <div className={styles.tableHeaderSkeleton}>
       <div className={styles.skeletonHeaderCell}></div>
@@ -51,7 +51,6 @@ interface HomeWorkTableItem {
       <div className={styles.skeletonHeaderCell}></div>
       <div className={styles.skeletonHeaderCell}></div>
       <div className={styles.skeletonHeaderCell}></div>
-
       <div className={styles.skeletonHeaderCell}></div>
     </div>
     <div className={styles.tableBodySkeleton}>
@@ -78,6 +77,7 @@ export default function ProfileHomeWork() {
   const [lessonState, setLessonState] = useState<LessonListItem[]>([]);
   const [tableData, setTableData] = useState<HomeWorkTableItem[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
   const [, setUploadForm] = useState({
     answer: "",
@@ -181,17 +181,24 @@ export default function ProfileHomeWork() {
       } catch (error) {
         console.error("Ошибка вставки груп с локал стореджа:", error);
         setErrorMessage("Ошибка при загрузке групп");
+        setIsInitialLoad(false);
       }
+    } else {
+      setIsInitialLoad(false);
     }
   }, [dispatch]);
 
   useEffect(() => {
-    if (lessons && lessons.length > 0) {
-      lessons.forEach((lesson) => {
-        if (lesson && lesson.homework && lesson.homework.id) {
-          dispatch(getHomeworkSubmissions(lesson.homework.id));
-        }
-      });
+    if (lessons !== null) {
+      setIsInitialLoad(false);
+
+      if (lessons && lessons.length > 0) {
+        lessons.forEach((lesson) => {
+          if (lesson && lesson.homework && lesson.homework.id) {
+            dispatch(getHomeworkSubmissions(lesson.homework.id));
+          }
+        });
+      }
     }
   }, [lessons, dispatch]);
 
@@ -460,11 +467,15 @@ export default function ProfileHomeWork() {
           </div>
         )}
 
-        {loading || !lessons ? (
+        {loading && isInitialLoad ? (
           <TableSkeleton />
         ) : (
           <div className={styles.homework__table}>
-            <Table columns={homeWorkColumns} data={tableData} emptyMessage="Нету домашнего задания" />
+            <Table
+              columns={homeWorkColumns}
+              data={tableData}
+              emptyMessage="Нету домашнего задания"
+            />
           </div>
         )}
 
