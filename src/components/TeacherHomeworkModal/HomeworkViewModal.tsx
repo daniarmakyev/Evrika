@@ -140,7 +140,7 @@ const HomeworkViewModal: React.FC<Props> = ({
                       ? `${students[submission.student_id].first_name} ${
                           students[submission.student_id].last_name
                         } `
-                      : submission.student_id}
+                      : students[submission.student_id] === undefined}
                   </div>
                   <div style={{ marginBottom: 8 }}>
                     <b>Ответ:</b>

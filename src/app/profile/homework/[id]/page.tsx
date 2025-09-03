@@ -310,6 +310,15 @@ export default function StudentProfileByTeacher() {
             onClick={() => handleOpenViewModal(row)}
             className={styles.upload__button}
             title="Просмотреть домашнее задание"
+            style={{
+              width: "15px",
+              height: "15px",
+              border: "none",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: "8px",
+              cursor: "pointer",
+            }}
           >
             <ViewIcon />
           </button>
