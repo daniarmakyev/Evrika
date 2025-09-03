@@ -22,7 +22,7 @@ export default function Groups() {
   const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    dispatch(getGroupsTeacher({ page: currentPage, size: 1 }));
+    dispatch(getGroupsTeacher({ page: currentPage, size: 10 }));
   }, [dispatch, currentPage]);
 
   useEffect(() => {
