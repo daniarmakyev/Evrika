@@ -1,5 +1,4 @@
 "use client";
-
 import TabBar from "@components/TabBar";
 import UserIcon from "public/assets/icons/user-outline.svg";
 import CalendarIcon from "public/assets/icons/calendar-outline.svg";
@@ -45,21 +44,23 @@ export default function StudentTabBar({
 }: {
   role: string | null;
   isProfileStudent?: boolean;
-  studentId?: string | number | null;
+  studentId?: string | number | null | number[] | string[];
 }) {
   if (!role) return null;
 
-  const studentProfileWithId = studentId
+  const validStudentId = studentId ? String(studentId).trim() : null;
+
+  const studentProfileWithId = validStudentId
     ? [
         {
           tab: "Домашнее задание",
           icon: <HomeIcon />,
-          link: `/homework/${studentId}`,
+          link: `/homework/${validStudentId}`,
         },
         {
           tab: "Посещаемость",
           icon: <UserIcon />,
-          link: `/attendance/${studentId}`,
+          link: `/attendance/${validStudentId}`,
         },
       ]
     : [];

@@ -147,7 +147,6 @@ export default function TeacherHomework() {
         setIsInitialLoad(false);
       }
     } else {
-      // Если нет групп в localStorage, сразу завершаем загрузку
       setIsInitialLoad(false);
     }
   }, [dispatch]);

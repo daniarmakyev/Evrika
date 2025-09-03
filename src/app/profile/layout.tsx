@@ -24,7 +24,7 @@ export default function ProfileLayout({
     const isAttendance = pathname?.startsWith("/profile/attendance/");
 
     if ((isHomework || isAttendance) && params?.id) {
-      return params.id[0] || null;
+      return params.id || null;
     }
 
     return null;

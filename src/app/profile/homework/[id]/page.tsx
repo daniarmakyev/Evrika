@@ -91,7 +91,8 @@ export default function StudentProfileByTeacher() {
 
   const [currentPage, setCurrentPage] = useState(1);
 
-  const studentId = String(useParams().id);
+  const params = useParams();
+  const studentId = params.id ? Number(params.id) : null;
 
   const taskModal = useModal<HomeworkTask>("task");
   const viewModal = useModal<{
