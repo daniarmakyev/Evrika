@@ -8,6 +8,7 @@ import { useAppDispatch } from "src/store/store";
 import { useModal } from "@context/ModalContext";
 import TeacherReviewModal from "src/app/profile/homework/teacher/TeacherReviewModal";
 import InputField from "@components/Fields/InputField";
+import { $apiPrivate } from "src/consts/api";
 
 type Props = {
   isOpen: boolean;
@@ -29,6 +30,10 @@ const HomeworkViewModal: React.FC<Props> = ({
   const [students, setStudents] = useState<
     Record<number, { first_name: string; last_name: string }>
   >({});
+  const [downloadingFiles, setDownloadingFiles] = useState<Set<number>>(
+    new Set()
+  );
+  const [downloadingHomeworkFile, setDownloadingHomeworkFile] = useState(false);
 
   const reviewModal = useModal<{ submission: HomeworkSubmission }>("review");
 
@@ -62,13 +67,69 @@ const HomeworkViewModal: React.FC<Props> = ({
     }
   }, [isOpen, submissions, dispatch]);
 
-  const handleDownloadFile = (filePath: string, fileName: string) => {
-    const link = document.createElement("a");
-    link.href = filePath;
-    link.download = fileName;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownloadFile = async (submissionId: number, fileName: string) => {
+    try {
+      setDownloadingFiles((prev) => new Set(prev).add(submissionId));
+
+      const response = await $apiPrivate.get(
+        `/submissions/${submissionId}/download`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Ошибка при скачивании файла:", error);
+    } finally {
+      setDownloadingFiles((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(submissionId);
+        return newSet;
+      });
+    }
+  };
+
+  const handleDownloadHomeworkFile = async (
+    homeworkId: number,
+    fileName: string
+  ) => {
+    try {
+      setDownloadingHomeworkFile(true);
+
+      const response = await $apiPrivate.get(
+        `/homeworks/${homeworkId}/download`,
+        {
+          responseType: "blob",
+        }
+      );
+
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Ошибка при скачивании файла домашнего задания:", error);
+    } finally {
+      setDownloadingHomeworkFile(false);
+    }
   };
 
   const handleOpenReviewModal = (submission: HomeworkSubmission) => {
@@ -98,6 +159,37 @@ const HomeworkViewModal: React.FC<Props> = ({
             fullWidth
           />
         </div>
+
+        {(homework?.homeworkData?.file_path || homework?.file_path) && (
+          <div>
+            <h4>Файл задания</h4>
+            <div className={styles.info__field}>
+              <InputField
+                value={homework?.homeworkData?.file_path || homework?.file_path}
+                readOnly
+                isShadow
+                fullWidth
+              />
+              <button
+                onClick={() =>
+                  handleDownloadHomeworkFile(
+                    homework?.homeworkData?.id ||
+                      homework?.homeworkId ||
+                      homework?.id,
+                    (homework?.homeworkData?.file_path || homework?.file_path)
+                      ?.split("/")
+                      .pop() || "homework_file"
+                  )
+                }
+                className={styles.download__button}
+                style={{ marginLeft: 8 }}
+                disabled={downloadingHomeworkFile}
+              >
+                {downloadingHomeworkFile ? "Скачивается..." : "Скачать"}
+              </button>
+            </div>
+          </div>
+        )}
 
         <div>
           <h4>Группа</h4>
@@ -130,17 +222,14 @@ const HomeworkViewModal: React.FC<Props> = ({
           ) : submissions && submissions.length > 0 ? (
             <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
               {submissions.map((submission) => (
-                <div
-                  key={submission.id}
-                  className={styles.submission__card}
-                >
+                <div key={submission.id} className={styles.submission__card}>
                   <div style={{ marginBottom: 8 }}>
                     <b>Студент:</b>{" "}
                     {students[submission.student_id]
                       ? `${students[submission.student_id].first_name} ${
                           students[submission.student_id].last_name
                         } `
-                      : students[submission.student_id] === undefined}
+                      : "Загрузка..."}
                   </div>
                   <div style={{ marginBottom: 8 }}>
                     <b>Ответ:</b>
@@ -160,15 +249,17 @@ const HomeworkViewModal: React.FC<Props> = ({
                       <button
                         onClick={() =>
                           handleDownloadFile(
-                            submission.file_path as string,
-                            (submission.file_path as string).split("/").pop() ||
-                              "file"
+                            submission.id,
+                            submission.file_path?.split("/").pop() || "file"
                           )
                         }
                         className={styles.download__button}
                         style={{ marginLeft: 8 }}
+                        disabled={downloadingFiles.has(submission.id)}
                       >
-                        Скачать
+                        {downloadingFiles.has(submission.id)
+                          ? "Скачивается..."
+                          : "Скачать"}
                       </button>
                     </div>
                   )}
