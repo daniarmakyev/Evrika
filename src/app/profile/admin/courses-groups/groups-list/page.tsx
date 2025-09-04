@@ -310,19 +310,19 @@ export default function GroupsList() {
           <div className={styles.groupDetails}>
             <div className={styles.detailRow}>
               <strong>Название группы:</strong>
-              <span>{viewModal.data.name}</span>
+              <span>{viewModal?.data.name}</span>
             </div>
             <div className={styles.detailRow}>
               <strong>Преподаватель:</strong>
-              <span>{`${viewModal.data.teacher.first_name} ${viewModal.data.teacher.last_name}`}</span>
+              <span>{`${viewModal?.data?.teacher?.first_name} ${viewModal?.data?.teacher?.last_name}`}</span>
             </div>
             <div className={styles.detailRow}>
               <strong>Email преподавателя:</strong>
-              <span>{viewModal.data.teacher.email}</span>
+              <span>{viewModal?.data?.teacher?.email}</span>
             </div>
             <div className={styles.detailRow}>
               <strong>Телефон преподавателя:</strong>
-              <span>{viewModal.data.teacher.phone_number}</span>
+              <span>{viewModal?.data?.teacher?.phone_number}</span>
             </div>
             <div className={styles.detailRow}>
               <strong>Дата начала:</strong>
@@ -333,23 +333,23 @@ export default function GroupsList() {
             <div className={styles.detailRow}>
               <strong>Дата окончания:</strong>
               <span>
-                {new Date(viewModal.data.end_date).toLocaleDateString()}
+                {new Date(viewModal?.data?.end_date).toLocaleDateString()}
               </span>
             </div>
             <div className={styles.detailRow}>
               <strong>Время занятий:</strong>
-              <span>{viewModal.data.approximate_lesson_start}</span>
+              <span>{viewModal?.data?.approximate_lesson_start}</span>
             </div>
             <div className={styles.detailRow}>
               <strong>Статус:</strong>
               <span
                 className={classNames(styles.status, {
-                  [styles.active]: viewModal.data.is_active,
-                  [styles.inactive]: !viewModal.data.is_active,
+                  [styles.active]: viewModal?.data?.is_active,
+                  [styles.inactive]: !viewModal?.data?.is_active,
                 })}
                 style={{ color: "#ffff" }}
               >
-                {getStatusText(viewModal.data)}
+                {getStatusText(viewModal?.data)}
               </span>
             </div>
             <div className={styles.detailRow}>
