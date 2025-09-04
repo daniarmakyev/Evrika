@@ -118,6 +118,9 @@
         display: flex;
         border: none;
       }
+      &:last-child {
+        margin-bottom: 70px;
+      }
     }
 
     &__cell {
