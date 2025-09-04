@@ -2,6 +2,7 @@ import React from "react";
 import Table from "@components/Table";
 import TableSkeleton from "@components/TableSkeleton/TableSkeleton";
 import classNames from "classnames";
+import { formatTimeShedule } from "src/consts/utilits";
 import styles from "./styles.module.scss";
 import ProfileModal from "@components/ProfileModal";
 import { useGetAttendanceStudentQuery } from "src/store/attendance/attendance";
@@ -9,7 +10,23 @@ interface AttendanceProps {
   isOpen: boolean;
   onClose: () => void;
   groupId: number | null;
-  userId: number | null|undefined;
+  userId: number | null | undefined;
+}
+
+interface Lesson {
+  id: number;
+  day: string;
+  lesson_start: string;
+  lesson_end: string;
+  name: string;
+}
+
+interface AttendanceRecord {
+  id: number;
+  created_at: string;
+  student_id: number;
+  status: "attended" | "absent" | string;
+  lesson: Lesson;
 }
 const Attendance: React.FC<AttendanceProps> = ({
   isOpen,
@@ -24,59 +41,53 @@ const Attendance: React.FC<AttendanceProps> = ({
   const attendanceForGroup =
     data?.attendance_groups.find((g) => g.group.id === groupId)?.attendance ??
     [];
-  const attendanceColumns = [
+  console.log(attendanceForGroup, "GROUP", data);
+  const attendanceColumns: {
+    key: string;
+    title: string;
+    width: string;
+    render?: (value: string, row: AttendanceRecord) => React.ReactNode;
+  }[] = [
     {
-      key: "group",
-      title: "Группа",
-      width: "230px",
-    },
-    {
-      key: "date",
+      key: "lesson.day",
       title: "Дата",
       width: "220px",
-      isButton: false,
-      render: (value: string) => {
-        return (
-          <span>
-            {value.length > 50 ? value.substring(0, 50) + "..." : value}
-          </span>
-        );
+      render: (_: string, row: AttendanceRecord) => {
+        const date = row.lesson?.day ?? "—";
+        return <span>{date}</span>;
       },
     },
     {
       key: "time",
       title: "Время",
       width: "220px",
-      isButton: false,
-      render: (value: string) => {
-        return (
-          <span>
-            {value.length > 50 ? value.substring(0, 50) + "..." : value}
-          </span>
-        );
+      render: (_: string, row: AttendanceRecord) => {
+        const start = row.lesson?.lesson_start
+          ? formatTimeShedule(row.lesson.lesson_start)
+          : "";
+        const end = row.lesson?.lesson_end
+          ? formatTimeShedule(row.lesson.lesson_end)
+          : "";
+        return <span>{start && end ? `${start} - ${end}` : "—"}</span>;
       },
     },
     {
-      key: "lesson",
+      key: "lesson.name",
       title: "Урок",
       width: "180px",
-      render: (value: string) => {
-        return (
-          <span>
-            {value.length > 50 ? value.substring(0, 50) + "..." : value}
-          </span>
-        );
+      render: (_: string, row: AttendanceRecord) => {
+        const lessonName = row.lesson?.name ?? "—";
+        return <span>{lessonName}</span>;
       },
     },
-
     {
       key: "status",
       title: "Статус",
       width: "140px",
-      render: (value: string) => {
+      render: (value: AttendanceRecord["status"]) => {
         const translatedStatus =
           value === "attended"
-            ? "Присутсвовал"
+            ? "Присутствовал"
             : value === "absent"
             ? "Не присутствовал"
             : "—";

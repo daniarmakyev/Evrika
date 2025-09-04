@@ -243,14 +243,14 @@ const AddTeacher: React.FC<Props> = ({
           }
         });
       } else if (validationErrors) {
-        // alert(
-        //   typeof validationErrors === "string"
-        //     ? validationErrors
-        //     : "Ошибка валидации, попробуйте снова"
-        // );
+        alert(
+          typeof validationErrors === "string"
+            ? validationErrors
+            : "Ошибка валидации, попробуйте снова"
+        );
       } else {
         console.error(err);
-        // alert("Ошибка, попробуйте позже");
+        alert("Ошибка, попробуйте позже");
       }
     }
   };
