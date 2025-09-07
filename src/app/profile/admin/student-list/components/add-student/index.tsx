@@ -8,7 +8,7 @@ import {
   useRegisterStudentMutation,
   useUpdateStudentMutation,
 } from "src/store/admin/students/students";
-import type { Course } from "src/consts/types";
+import type { Course,BackendErrorResponse } from "src/consts/types";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 // import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
 import type { Student } from "src/consts/types";
@@ -51,7 +51,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
     reset,
     watch,
     register,
-    // setError,
+    setError,
     formState: { errors },
     handleSubmit,
   } = useForm<FormData>({
@@ -135,7 +135,7 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
         await registerStudent({
           groupIds: selectedGroupIds,
           studentData: payload,
-        });
+        }).unwrap();
         alert(`Студент ${data.full_name} успешно зарегистрирован`);
       }
 
@@ -143,7 +143,28 @@ const AddStudent: React.FC<Props> = ({ isOpen, onClose, student }) => {
       onClose();
     } catch (err) {
       console.error(err);
-      alert("Ошибка, попробуйте позже");
+      const backendErr = err as BackendErrorResponse;
+            const validationErrors = backendErr.data?.detail;
+      
+            if (Array.isArray(validationErrors)) {
+              validationErrors.forEach((e) => {
+                const field = e.loc[e.loc.length - 1] as keyof PostForm;
+      
+                if (field in data) {
+                  setError(field, { message: e.msg });
+                }
+              });
+            } else if (validationErrors) {
+              alert(
+                typeof validationErrors === "string"
+                  ? validationErrors
+                  : "Ошибка валидации, попробуйте снова"
+              );
+            } else {
+              console.error(err);
+              alert("Ошибка, попробуйте позже");
+            }
+      
     }
   };
 
