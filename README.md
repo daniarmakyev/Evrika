@@ -2,7 +2,6 @@
 
 - Ключевые технологии
 - Быстрый старт
-- Скрипты
 - Структура проекта
 - State (store) — RTK Query vs Redux Toolkit slices
 - SCSS и адаптивность (mixins, media multipliers)
@@ -56,13 +55,7 @@ npm run start
 
 ---
 
-Скрипты (из package.json)
-
-- dev, build, start, lint, server (json-server).
-
----
-
-Структура проекта (важное)
+Структура проекта
 
 - src/app — страницы и маршруты
 - src/components — UI и модули
