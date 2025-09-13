@@ -15,8 +15,8 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    padding-top: 50px;
-    padding-bottom: 100px;
+    padding-top: 14px;
+    padding-bottom: 28px;
   }
 
   &__text {
@@ -34,11 +34,11 @@
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    margin-bottom: 20px;
+    margin-bottom: 6px;
 
     h1 {
       font-weight: bold;
-      font-size: 50px;
+      font-size: 12px;
       line-height: 100%;
       color: $White;
     }
@@ -54,7 +54,7 @@
     p {
       width: 45%;
       font-weight: bold;
-      font-size: 24px;
+      font-size: 10px;
       line-height: 140%;
       color: $steel-blue;
     }
@@ -76,7 +76,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    margin-bottom: 20px;
+    margin-bottom: 3px;
 
     &:last-child {
       margin-bottom: 0;
@@ -84,23 +84,23 @@
 
     span {
       font-weight: bold;
-      font-size: 24px;
+      font-size: 12px;
       line-height: 100%;
       color: $White;
-      margin-bottom: 10px;
+      margin-bottom: 2px;
     }
 
     p {
       width: 70%;
       font-weight: bold;
-      font-size: 32px;
+      font-size: 12px;
       line-height: 100%;
       color: $steel-blue;
     }
 
     a {
       font-weight: bold;
-      font-size: 32px;
+      font-size: 12px;
       line-height: 100%;
       color: $steel-blue;
       transition: all 0.3s ease-in-out;
@@ -112,114 +112,121 @@
   }
 }
 
-@include respond-above(md) {
+@include respond-above(xs) {
   .contacts {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: $bg-gradient-secondary;
-
     &__container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding-top: 34px;
-      padding-bottom: 68px;
-    }
-
-    &__text {
-      width: 60%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
+      padding-top: 20px;
+      padding-bottom: 38px;
     }
 
     &__title {
-      width: auto;
-      height: 100%;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      margin-bottom: 14px;
+      margin-bottom: 7px;
 
       h1 {
-        font-weight: bold;
-        font-size: 34px;
-        line-height: 100%;
-        color: $White;
+        font-size: 20px;
       }
     }
 
     &__description {
-      width: auto;
-      height: 100%;
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-
       p {
-        width: 45%;
-        font-weight: bold;
-        font-size: 16px;
-        line-height: 140%;
-        color: $steel-blue;
+        font-size: 10px;
       }
-    }
-
-    &__infoBlock {
-      width: 40%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
     }
 
     &__info {
-      width: auto;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
-      margin-bottom: 14px;
-
-      &:last-child {
-        margin-bottom: 0;
-      }
+      margin-bottom: 3px;
 
       span {
-        font-weight: bold;
+        font-size: 10px;
+        margin-bottom: 2px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      a {
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@include respond-above(sm) {
+  .contacts {
+    &__container {
+      padding-top: 26px;
+      padding-bottom: 58px;
+    }
+
+    &__title {
+      margin-bottom: 10px;
+
+      h1 {
+        font-size: 27px;
+      }
+    }
+
+    &__description {
+      p {
+        font-size: 13px;
+      }
+    }
+
+    &__info {
+      margin-bottom: 10px;
+
+      span {
+        font-size: 12px;
+        margin-bottom: 4px;
+      }
+
+      p {
+        font-size: 18px;
+      }
+
+      a {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+@include respond-above(md) {
+  .contacts {
+    &__container {
+      padding-top: 34px;
+      padding-bottom: 68px;
+    }
+
+    &__title {
+      margin-bottom: 14px;
+
+      h1 {
+        font-size: 34px;
+      }
+    }
+
+    &__description {
+      p {
         font-size: 16px;
-        line-height: 100%;
-        color: $White;
+      }
+    }
+
+    &__info {
+      margin-bottom: 14px;
+
+      span {
+        font-size: 16px;
         margin-bottom: 7px;
       }
 
       p {
-        width: 70%;
-        font-weight: bold;
         font-size: 22px;
-        line-height: 100%;
-        color: $steel-blue;
       }
 
       a {
-        font-weight: bold;
         font-size: 22px;
-        line-height: 100%;
-        color: $steel-blue;
-        transition: all 0.3s ease-in-out;
-
-        &:hover {
-          color: $primary;
-        }
       }
     }
   }
@@ -247,7 +254,7 @@
     }
 
     &__info {
-      margin-bottom: 20px;
+      margin-bottom: 17px;
 
       span {
         font-size: 20px;

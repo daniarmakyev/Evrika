@@ -2,7 +2,7 @@
 @import "../../styles/mixins/";
 
 .signup {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -16,9 +16,9 @@
     align-items: center;
     justify-content: space-between;
     box-shadow: 0 0 30px rgba(219, 219, 219, 1);
-    border-radius: 10px;
+    border-radius: 6px;
     overflow: hidden;
-    padding: 50px;
+    padding: 20px;
   }
 
   &__info {
@@ -38,18 +38,18 @@
       align-content: flex-start;
       align-items: flex-start;
       background: $primary-button;
-      border-radius: 10px;
+      border-radius: 6px;
       transition: all 0.3s ease-in-out;
       cursor: pointer;
-      padding: 14px 30px;
-      margin-top: 32px;
+      padding: 8px 16px;
+      margin-top: 16px;
 
       &:hover {
         background: $primary;
       }
 
       span {
-        font-size: 16px;
+        font-size: 12px;
         line-height: 100%;
         color: $White;
       }
@@ -63,12 +63,12 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
 
     h3 {
-      width: 65%;
+      width: 100%;
       font-weight: bold;
-      font-size: 36px;
+      font-size: 18px;
       line-height: 100%;
       color: $black;
     }
@@ -83,8 +83,8 @@
     justify-content: flex-start;
 
     p {
-      width: 58%;
-      font-size: 18px;
+      width: 100%;
+      font-size: 12px;
       line-height: 140%;
       color: $placeholder;
     }
@@ -106,7 +106,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: flex-start;
-    margin-bottom: 30px;
+    margin-bottom: 16px;
 
     input {
       box-shadow: 0 0 30px rgba(219, 219, 219, 1);
@@ -118,61 +118,123 @@
   }
 }
 
-@include respond-above(md) {
+@include respond-above(xs) {
   .signup {
-    margin-bottom: 30px;
+    margin-bottom: 18px;
 
     &__container {
       height: fit-content;
-      padding: 34px;
+      padding: 22px;
+      border-radius: 7px;
     }
 
     &__info {
       button {
-        margin-top: 20px;
-        padding: 10px 20px;
+        margin-top: 18px;
+        padding: 9px 18px;
+        border-radius: 7px;
 
         span {
-          font-size: 11px;
+          font-size: 13px;
         }
       }
     }
 
     &__title {
-      margin-bottom: 27px;
+      margin-bottom: 22px;
 
       h3 {
-        font-size: 24px;
+        font-size: 20px;
       }
     }
 
     &__description {
       p {
-        font-size: 12px;
+        font-size: 13px;
       }
     }
 
     &__form {
-      height: 230px;
+      height: 200px;
       align-content: flex-end;
     }
 
     &__wrapper {
-      margin-bottom: 20px;
+      margin-bottom: 18px;
     }
   }
 }
 
-@include respond-above(lg) {
+@include respond-above(sm) {
   .signup {
-    margin-bottom: 35px;
+    margin-bottom: 22px;
 
     &__container {
-      padding: 42px;
+      padding: 26px;
+      border-radius: 8px;
+    }
+
+    &__info {
+      button {
+        margin-top: 22px;
+        padding: 10px 22px;
+        border-radius: 8px;
+
+        span {
+          font-size: 15px;
+        }
+      }
     }
 
     &__title {
-      margin-bottom: 33px;
+      margin-bottom: 26px;
+
+      h3 {
+        font-size: 24px;
+        width: 50%;
+      }
+    }
+
+    &__description {
+      p {
+        width: 60%;
+        font-size: 15px;
+      }
+    }
+
+    &__form {
+      height: 220px;
+    }
+
+    &__wrapper {
+      margin-bottom: 22px;
+    }
+  }
+}
+
+@include respond-above(md) {
+  .signup {
+    margin-bottom: 28px;
+
+    &__container {
+      padding: 34px;
+      border-radius: 9px;
+    }
+
+    &__info {
+      button {
+        margin-top: 28px;
+        padding: 12px 26px;
+        border-radius: 9px;
+
+        span {
+          font-size: 17px;
+        }
+      }
+    }
+
+    &__title {
+      margin-bottom: 34px;
 
       h3 {
         font-size: 30px;
@@ -181,22 +243,61 @@
 
     &__description {
       p {
-        font-size: 15px;
+        font-size: 17px;
       }
+    }
+
+    &__form {
+      height: 240px;
+    }
+
+    &__wrapper {
+      margin-bottom: 28px;
+    }
+  }
+}
+
+@include respond-above(lg) {
+  .signup {
+    margin-bottom: 32px;
+
+    &__container {
+      padding: 38px;
+      border-radius: 10px;
     }
 
     &__info {
       button {
-        padding: 12px 25px;
+        margin-top: 32px;
+        padding: 13px 28px;
+        border-radius: 10px;
 
         span {
-          font-size: 13px;
+          font-size: 18px;
         }
       }
     }
 
+    &__title {
+      margin-bottom: 38px;
+
+      h3 {
+        font-size: 34px;
+      }
+    }
+
+    &__description {
+      p {
+        font-size: 19px;
+      }
+    }
+
+    &__form {
+      height: 260px;
+    }
+
     &__wrapper {
-      margin-bottom: 25px;
+      margin-bottom: 32px;
     }
   }
 }
@@ -207,34 +308,41 @@
 
     &__container {
       padding: 50px;
+      border-radius: 12px;
+    }
+
+    &__info {
+      button {
+        margin-top: 40px;
+        padding: 16px 35px;
+        border-radius: 12px;
+
+        span {
+          font-size: 20px;
+        }
+      }
     }
 
     &__title {
-      margin-bottom: 40px;
+      margin-bottom: 50px;
 
       h3 {
-        font-size: 36px;
+        font-size: 42px;
       }
     }
 
     &__description {
       p {
-        font-size: 18px;
+        font-size: 22px;
       }
     }
 
-    &__info {
-      button {
-        padding: 14px 30px;
-
-        span {
-          font-size: 16px;
-        }
-      }
+    &__form {
+      height: 300px;
     }
 
     &__wrapper {
-      margin-bottom: 30px;
+      margin-bottom: 40px;
     }
   }
 }
@@ -245,34 +353,41 @@
 
     &__container {
       padding: 56px;
+      border-radius: 13px;
+    }
+
+    &__info {
+      button {
+        margin-top: 44px;
+        padding: 17px 38px;
+        border-radius: 13px;
+
+        span {
+          font-size: 22px;
+        }
+      }
     }
 
     &__title {
-      margin-bottom: 44px;
+      margin-bottom: 56px;
 
       h3 {
-        font-size: 40px;
+        font-size: 48px;
       }
     }
 
     &__description {
       p {
-        font-size: 20px;
+        font-size: 25px;
       }
     }
 
-    &__info {
-      button {
-        padding: 16px 33px;
-
-        span {
-          font-size: 18px;
-        }
-      }
+    &__form {
+      height: 330px;
     }
 
     &__wrapper {
-      margin-bottom: 33px;
+      margin-bottom: 44px;
     }
   }
 }
@@ -283,34 +398,41 @@
 
     &__container {
       padding: 67px;
+      border-radius: 15px;
+    }
+
+    &__info {
+      button {
+        margin-top: 53px;
+        padding: 20px 45px;
+        border-radius: 15px;
+
+        span {
+          font-size: 26px;
+        }
+      }
     }
 
     &__title {
-      margin-bottom: 53px;
+      margin-bottom: 67px;
 
       h3 {
-        font-size: 48px;
+        font-size: 58px;
       }
     }
 
     &__description {
       p {
-        font-size: 24px;
+        font-size: 30px;
       }
     }
 
-    &__info {
-      button {
-        padding: 19px 40px;
-
-        span {
-          font-size: 21px;
-        }
-      }
+    &__form {
+      height: 380px;
     }
 
     &__wrapper {
-      margin-bottom: 40px;
+      margin-bottom: 53px;
     }
   }
 }
@@ -320,37 +442,42 @@
     margin-bottom: 62px;
 
     &__container {
-      border-radius: 20px;
+      border-radius: 18px;
       padding: 70px;
     }
 
+    &__info {
+      button {
+        margin-top: 62px;
+        border-radius: 18px;
+        padding: 22px 50px;
+
+        span {
+          font-size: 30px;
+        }
+      }
+    }
+
     &__title {
-      margin-bottom: 56px;
+      margin-bottom: 70px;
 
       h3 {
-        font-size: 50px;
+        font-size: 65px;
       }
     }
 
     &__description {
       p {
-        font-size: 25px;
+        font-size: 34px;
       }
     }
 
-    &__info {
-      button {
-        border-radius: 20px;
-        padding: 20px 42px;
-
-        span {
-          font-size: 22px;
-        }
-      }
+    &__form {
+      height: 420px;
     }
 
     &__wrapper {
-      margin-bottom: 42px;
+      margin-bottom: 62px;
     }
   }
 }
@@ -361,34 +488,41 @@
 
     &__container {
       padding: 78px;
+      border-radius: 20px;
+    }
+
+    &__info {
+      button {
+        margin-top: 71px;
+        padding: 25px 56px;
+        border-radius: 20px;
+
+        span {
+          font-size: 34px;
+        }
+      }
     }
 
     &__title {
-      margin-bottom: 62px;
+      margin-bottom: 78px;
 
       h3 {
-        font-size: 56px;
+        font-size: 74px;
       }
     }
 
     &__description {
       p {
-        font-size: 28px;
+        font-size: 38px;
       }
     }
 
-    &__info {
-      button {
-        padding: 22px 47px;
-
-        span {
-          font-size: 25px;
-        }
-      }
+    &__form {
+      height: 480px;
     }
 
     &__wrapper {
-      margin-bottom: 47px;
+      margin-bottom: 71px;
     }
   }
 }
@@ -402,33 +536,38 @@
       padding: 118px;
     }
 
+    &__info {
+      button {
+        margin-top: 94px;
+        border-radius: 30px;
+        padding: 38px 85px;
+
+        span {
+          font-size: 52px;
+        }
+      }
+    }
+
     &__title {
-      margin-bottom: 94px;
+      margin-bottom: 118px;
 
       h3 {
-        font-size: 85px;
+        font-size: 112px;
       }
     }
 
     &__description {
       p {
-        font-size: 42px;
+        font-size: 58px;
       }
     }
 
-    &__info {
-      button {
-        border-radius: 30px;
-        padding: 33px 71px;
-
-        span {
-          font-size: 38px;
-        }
-      }
+    &__form {
+      height: 720px;
     }
 
     &__wrapper {
-      margin-bottom: 71px;
+      margin-bottom: 94px;
     }
   }
 }

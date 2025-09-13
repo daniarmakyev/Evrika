@@ -4,7 +4,7 @@
 .header {
   width: 100%;
   height: var(--header-height);
-  padding: 0 8px;
+  padding: 0 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -20,20 +20,19 @@
     align-items: center;
     justify-content: space-between;
     flex-direction: row;
-    padding: 0 4px;
+    padding: 0 2px;
   }
 
   &__logo {
-    width: auto;
-    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-
+    width: fit-content;
     svg {
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
+      fill: white;
+      color: white;
+      width: 16px;
+      height: 16px;
     }
   }
 
@@ -47,13 +46,13 @@
     ul {
       display: flex;
       align-items: center;
-      top: 38px;
+      top: 19px;
       background: $primary;
-      padding: 8px 0;
+      padding: 4px 0;
 
       li {
-        font-size: 11px;
-        margin: 0 0 0 12px;
+        font-size: 6px;
+        margin: 0 0 0 6px;
         line-height: 100%;
         cursor: pointer;
         transition: all 0.3s ease-in-out;
@@ -76,9 +75,7 @@
   }
 
   &__profile {
-    width: 18px;
-    height: 18px;
-    padding: 4px;
+    padding: 2px;
     position: relative;
     display: flex;
     align-items: center;
@@ -87,18 +84,19 @@
     border-radius: 50%;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    a {
-      font-size: 12px;
-    }
     z-index: 9;
+
+    a {
+      font-size: 6px;
+    }
 
     &:hover {
       background: $white-ligth;
     }
 
     svg {
-      width: auto;
-      height: auto;
+      width: 16px;
+      height: 16px;
     }
   }
 
@@ -110,7 +108,7 @@
     justify-content: center;
 
     a {
-      font-size: 18px;
+      font-size: 9px;
       line-height: 100%;
       color: $White;
       transition: all 0.3s ease-in-out;
@@ -123,58 +121,39 @@
   }
 }
 
-@include respond-below(sm) {
-  .header {
-    padding: 0 8px;
+.buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  margin-right: 20px;
 
-    &__container {
-      flex-direction: row;
-      padding: 0 4px;
+  button {
+    a {
+      color: #fff;
     }
+    background-color: $primary-button;
+    color: $White;
+    padding: 3px 6px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 7px;
+    border: none;
 
-    &__logo {
-      svg {
-        width: 22px;
-        height: 22px;
-      }
-    }
-
-    &__menu {
-      ul {
-        align-items: center;
-        top: 38px;
-        left: 0;
-        background: $primary;
-        padding: 8px 0;
-
-        li {
-          font-size: 11px;
-          margin: 0 0 0 12px;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
-      }
-    }
-
-    &__profile {
-      width: 20px;
-      height: 20px;
-      padding: 4px;
-    }
-
-    &__login {
-      a {
-        font-size: 11px;
-        padding: 2px 6px;
-      }
+    &:hover {
+      background-color: darken($primary-button, 10%);
     }
   }
 }
 
-@include respond-below(sm) {
+@include respond-above(xs) {
   .header {
+    padding: 0 5px;
+
+    &__container {
+      padding: 0 2px;
+    }
+
     &__logo {
       svg {
         width: 18px;
@@ -182,78 +161,132 @@
       }
     }
 
+    &__menu {
+      ul {
+        top: 23px;
+        padding: 5px 0;
+
+        li {
+          font-size: 7px;
+          margin: 0 0 0 7px;
+        }
+      }
+    }
+
     &__profile {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       padding: 2px;
+      svg {
+        width: 18px;
+        height: 18px;
+      }
+      a {
+        font-size: 7px;
+      }
+    }
+
+    &__login {
+      a {
+        font-size: 11px;
+      }
+    }
+  }
+
+  .buttons {
+    gap: 6px;
+    margin-right: 24px;
+
+    button {
+      padding: 4px 7px;
+      border-radius: 3px;
+      font-size: 8px;
     }
   }
 }
 
-@include respond-above(md) {
+@include respond-above(sm) {
   .header {
-    width: 100%;
-
-    position: fixed;
-    top: 0;
-    background: $primary;
-    z-index: 99999;
+    padding: 0 6px;
 
     &__container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 0 3px;
     }
 
     &__logo {
-      width: auto;
-      height: auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
       svg {
-        width: 24px;
-        height: 24px;
-        border-radius: 50%;
+        width: 20px;
+        height: 20px;
       }
     }
 
     &__menu {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
       ul {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        top: 28px;
+        padding: 6px 0;
 
         li {
-          font-size: 12px;
-          line-height: 100%;
-          cursor: pointer;
-          transition: all 0.3s ease-in-out;
-          margin-right: 10px;
+          font-size: 9px;
+          margin: 0 0 0 9px;
+        }
+      }
+    }
 
-          a {
-            transition: all 0.3s ease-in-out;
-            color: $White;
+    &__profile {
+      width: 20px;
+      height: 20px;
+      padding: 3px;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+      a {
+        font-size: 9px;
+      }
+    }
 
-            &:hover {
-              color: $steel-blue;
-            }
-          }
+    &__login {
+      a {
+        font-size: 13px;
+      }
+    }
+  }
 
-          &:last-child {
-            margin-right: 0;
-          }
+  .buttons {
+    gap: 7px;
+    margin-right: 30px;
+
+    button {
+      padding: 5px 9px;
+      border-radius: 4px;
+      font-size: 10px;
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .header {
+    padding: 0 7px;
+
+    &__container {
+      padding: 0 3px;
+    }
+
+    &__logo {
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    &__menu {
+      ul {
+        top: 32px;
+        padding: 7px 0;
+
+        li {
+          font-size: 10px;
+          margin: 0 0 0 10px;
         }
       }
     }
@@ -261,71 +294,14 @@
     &__profile {
       width: 24px;
       height: 24px;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: $White;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.3s ease-in-out;
-      padding: 6px;
-      z-index: 9;
-
-      &:hover {
-        background: $white-ligth;
-      }
-
+      padding: 3px;
       svg {
-        width: auto;
-        height: auto;
+        width: 24px;
+        height: 24px;
       }
-    }
-
-    &__login {
-      width: auto;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
       a {
-        font-size: 12px;
-        line-height: 100%;
-        color: $White;
-        transition: all 0.3s ease-in-out;
-        cursor: pointer;
-
-        &:hover {
-          color: $steel-blue;
-        }
+        font-size: 10px;
       }
-    }
-  }
-}
-
-@include respond-above(lg) {
-  .header {
-    &__logo {
-      svg {
-        width: 30px;
-        height: 30px;
-      }
-    }
-
-    &__menu {
-      ul {
-        li {
-          font-size: 15px;
-          margin-right: 13px;
-        }
-      }
-    }
-
-    &__profile {
-      width: 30px;
-      height: 30px;
-      padding: 8px;
     }
 
     &__login {
@@ -334,30 +310,57 @@
       }
     }
   }
+
+  .buttons {
+    gap: 8px;
+    margin-right: 34px;
+
+    button {
+      padding: 6px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  }
 }
 
-@include respond-above(mac) {
+@include respond-above(fhd) {
   .header {
+    padding: 0 8px;
+
+    &__container {
+      padding: 0 4px;
+    }
+
     &__logo {
       svg {
-        width: 36px;
-        height: 36px;
+        width: 28px;
+        height: 28px;
       }
     }
 
     &__menu {
       ul {
+        top: 38px;
+        padding: 8px 0;
+
         li {
-          font-size: 18px;
-          margin-right: 15px;
+          font-size: 12px;
+          margin: 0 0 0 12px;
         }
       }
     }
 
     &__profile {
-      width: 36px;
-      height: 36px;
-      padding: 9px;
+      width: 28px;
+      height: 28px;
+      padding: 4px;
+      svg {
+        width: 28px;
+        height: 28px;
+      }
+      a {
+        font-size: 12px;
+      }
     }
 
     &__login {
@@ -366,42 +369,145 @@
       }
     }
   }
+
+  .buttons {
+    gap: 10px;
+    margin-right: 40px;
+
+    button {
+      padding: 6px 12px;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+  }
 }
 
-@include respond-above(xlg) {
+@include respond-above(fhd-plus) {
   .header {
+    padding: 0 10px;
+
+    &__container {
+      padding: 0 5px;
+    }
+
     &__logo {
       svg {
-        width: 40px;
-        height: 40px;
+        width: 34px;
+        height: 34px;
       }
     }
 
     &__menu {
       ul {
+        top: 47px;
+        padding: 10px 0;
+
         li {
-          font-size: 20px;
-          margin-right: 17px;
+          font-size: 15px;
+          margin: 0 0 0 15px;
         }
       }
     }
 
     &__profile {
-      width: 40px;
-      height: 40px;
-      padding: 10px;
+      width: 34px;
+      height: 34px;
+      padding: 5px;
+      svg {
+        width: 34px;
+        height: 34px;
+      }
+      a {
+        font-size: 15px;
+      }
     }
 
     &__login {
       a {
-        font-size: 20px;
+        font-size: 22px;
       }
+    }
+  }
+
+  .buttons {
+    gap: 12px;
+    margin-right: 50px;
+
+    button {
+      padding: 7px 15px;
+      border-radius: 6px;
+      font-size: 17px;
     }
   }
 }
 
-@include respond-above(fhd) {
+@include respond-above(qhd) {
   .header {
+    padding: 0 11px;
+
+    &__container {
+      padding: 0 5px;
+    }
+
+    &__logo {
+      svg {
+        width: 38px;
+        height: 38px;
+      }
+    }
+
+    &__menu {
+      ul {
+        top: 52px;
+        padding: 11px 0;
+
+        li {
+          font-size: 17px;
+          margin: 0 0 0 17px;
+        }
+      }
+    }
+
+    &__profile {
+      width: 38px;
+      height: 38px;
+      padding: 6px;
+      svg {
+        width: 38px;
+        height: 38px;
+      }
+      a {
+        font-size: 17px;
+      }
+    }
+
+    &__login {
+      a {
+        font-size: 25px;
+      }
+    }
+  }
+
+  .buttons {
+    gap: 13px;
+    margin-right: 55px;
+
+    button {
+      padding: 8px 16px;
+      border-radius: 7px;
+      font-size: 19px;
+    }
+  }
+}
+
+@include respond-above(uhd) {
+  .header {
+    padding: 0 15px;
+
+    &__container {
+      padding: 0 7px;
+    }
+
     &__logo {
       svg {
         width: 48px;
@@ -411,9 +517,12 @@
 
     &__menu {
       ul {
+        top: 71px;
+        padding: 15px 0;
+
         li {
-          font-size: 24px;
-          margin-right: 20px;
+          font-size: 23px;
+          margin: 0 0 0 23px;
         }
       }
     }
@@ -421,132 +530,31 @@
     &__profile {
       width: 48px;
       height: 48px;
-      padding: 12px;
-    }
-
-    &__login {
-      a {
-        font-size: 24px;
-      }
-    }
-  }
-}
-
-@include respond-above(fhd-plus) {
-  .header {
-    &__logo {
+      padding: 8px;
       svg {
-        width: 50px;
-        height: 50px;
+        width: 48px;
+        height: 48px;
       }
-    }
-
-    &__menu {
-      ul {
-        li {
-          font-size: 25px;
-          margin-right: 21px;
-        }
+      a {
+        font-size: 23px;
       }
-    }
-
-    &__profile {
-      width: 50px;
-      height: 50px;
-      padding: 13px;
     }
 
     &__login {
       a {
-        font-size: 25px;
+        font-size: 34px;
       }
     }
   }
-}
 
-@include respond-above(qhd) {
-  .header {
-    &__logo {
-      svg {
-        width: 56px;
-        height: 56px;
-      }
-    }
+  .buttons {
+    gap: 18px;
+    margin-right: 75px;
 
-    &__menu {
-      ul {
-        li {
-          font-size: 28px;
-          margin-right: 23px;
-        }
-      }
-    }
-
-    &__profile {
-      width: 56px;
-      height: 56px;
-      padding: 14px;
-    }
-
-    &__login {
-      a {
-        font-size: 28px;
-      }
-    }
-  }
-}
-
-@include respond-above(uhd) {
-  .header {
-    &__logo {
-      svg {
-        width: 85px;
-        height: 85px;
-      }
-    }
-
-    &__menu {
-      ul {
-        li {
-          font-size: 42px;
-          margin-right: 35px;
-        }
-      }
-    }
-
-    &__profile {
-      width: 85px;
-      height: 85px;
-      padding: 21px;
-    }
-
-    &__login {
-      a {
-        font-size: 42px;
-      }
-    }
-  }
-}
-
-.buttons {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  margin-right: 40px;
-  button {
-    a {
-      color: #fff;
-    }
-    background-color: $primary-button;
-    color: $White;
-    padding: 6px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-
-    &:hover {
-      background-color: darken($primary-button, 10%);
+    button {
+      padding: 11px 22px;
+      border-radius: 9px;
+      font-size: 26px;
     }
   }
 }

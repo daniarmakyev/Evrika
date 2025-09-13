@@ -177,8 +177,6 @@ main {
   z-index: 1;
   pointer-events: auto;
   padding-top: var(--header-height);
-  padding-left: 20px;
-  padding-right: 20px;
   margin: 0 auto;
 
   @include respond-above(md) {

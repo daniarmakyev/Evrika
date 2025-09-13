@@ -8,7 +8,7 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
 
   &_isPagination {
     margin-bottom: 0 !important;
@@ -21,11 +21,11 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 
     h3 {
       font-weight: bold;
-      font-size: 36px;
+      font-size: 18px;
       line-height: 100%;
       color: $black;
     }
@@ -40,14 +40,14 @@
   }
 
   &__description {
-    width: 35%;
+    width: 60%;
     height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 
     p {
-      font-size: 18px;
+      font-size: 9px;
       line-height: 140%;
       color: $placeholder;
     }
@@ -62,167 +62,98 @@
 
     a {
       font-weight: bold;
-      font-size: 16px;
+      font-size: 8px;
       line-height: 100%;
       color: $black;
-      transition: all .3s ease-in-out;
+      transition: all 0.3s ease-in-out;
 
       &:hover {
         color: $placeholder;
 
         &::after {
-          transform: translateX(5px);
+          transform: translateX(2px);
         }
       }
 
       &::after {
         content: ">";
-        margin-left: 5px;
+        margin-left: 2px;
         display: inline-block;
-        transition: transform .3s ease-in-out;
+        transition: transform 0.3s ease-in-out;
       }
     }
   }
 }
 
-@include respond-above(md) {
+@include respond-above(xs) {
   .info {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    margin-bottom: 27px;
-  
+    margin-bottom: 24px;
+
     &__title {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      margin-bottom: 14px;
-  
+      margin-bottom: 12px;
+
       h3 {
-        font-weight: bold;
-        font-size: 24px;
-        line-height: 100%;
-        color: $black;
+        font-size: 22px;
       }
     }
-  
-    &__details {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-    }
-  
+
     &__description {
-      width: 30%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  
+      width: 40%;
       p {
-        font-size: 12px;
-        line-height: 140%;
-        color: $placeholder;
+        font-size: 11px;
       }
     }
-  
+
     &__allSee {
-      width: auto;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  
       a {
-        font-weight: bold;
-        font-size: 11px;
-        line-height: 100%;
-        color: $black;
-        transition: all .3s ease-in-out;
-  
+        font-size: 10px;
+
         &:hover {
-          color: $placeholder;
-  
           &::after {
-            transform: translateX(3.4px);
+            transform: translateX(2px);
           }
         }
-  
+
         &::after {
-          content: ">";
-          margin-left: 3px;
-          display: inline-block;
-          transition: transform .3s ease-in-out;
+          margin-left: 2px;
         }
       }
     }
   }
 }
 
-@include respond-above(lg) {
+@include respond-above(sm) {
   .info {
-    margin-bottom: 33px;
-  
+    margin-bottom: 30px;
+
     &__title {
-      margin-bottom: 17px;
-  
+      margin-bottom: 15px;
+
       h3 {
-        font-size: 30px;
+        font-size: 27px;
       }
     }
-  
+
     &__description {
-      width: 35%;
-      
+      width: 30%;
+
       p {
-        font-size: 15px;
-      }
-    }
-  
-    &__allSee {
-      a {
         font-size: 13px;
-  
-        &::after {
-          margin-left: 4px;
-        }
       }
     }
-  }
-}
 
-@include respond-above(mac) {
-  .info {
-    margin-bottom: 40px;
-  
-    &__title {
-      margin-bottom: 20px;
-  
-      h3 {
-        font-size: 36px;
-      }
-    }
-  
-    &__description {
-      p {
-        font-size: 18px;
-      }
-    }
-  
     &__allSee {
       a {
-        font-size: 16px;
-  
+        font-size: 12px;
+
+        &:hover {
+          &::after {
+            transform: translateX(3px);
+          }
+        }
+
         &::after {
-          margin-left: 5px;
+          margin-left: 3px;
         }
       }
     }
@@ -231,28 +162,36 @@
 
 @include respond-above(xlg) {
   .info {
-    margin-bottom: 44px;
-  
+    margin-bottom: 34px;
+
     &__title {
-      margin-bottom: 22px;
-  
+      margin-bottom: 17px;
+
       h3 {
-        font-size: 40px;
+        font-size: 31px;
       }
     }
-  
+
     &__description {
+      width: 35%;
+
       p {
-        font-size: 20px;
+        font-size: 15px;
       }
     }
-  
+
     &__allSee {
       a {
-        font-size: 18px;
-  
+        font-size: 14px;
+
+        &:hover {
+          &::after {
+            transform: translateX(4px);
+          }
+        }
+
         &::after {
-          margin-left: 6px;
+          margin-left: 4px;
         }
       }
     }
@@ -261,28 +200,34 @@
 
 @include respond-above(fhd) {
   .info {
-    margin-bottom: 53px;
-  
+    margin-bottom: 40px;
+
     &__title {
-      margin-bottom: 27px;
-  
+      margin-bottom: 20px;
+
       h3 {
-        font-size: 48px;
+        font-size: 36px;
       }
     }
-  
+
     &__description {
       p {
-        font-size: 24px;
+        font-size: 18px;
       }
     }
-  
+
     &__allSee {
       a {
-        font-size: 21px;
-  
+        font-size: 16px;
+
+        &:hover {
+          &::after {
+            transform: translateX(5px);
+          }
+        }
+
         &::after {
-          margin-left: 7px;
+          margin-left: 5px;
         }
       }
     }
@@ -291,34 +236,34 @@
 
 @include respond-above(fhd-plus) {
   .info {
-    margin-bottom: 56px;
-  
+    margin-bottom: 50px;
+
     &__title {
-      margin-bottom: 28px;
-  
+      margin-bottom: 25px;
+
       h3 {
-        font-size: 50px;
+        font-size: 45px;
       }
     }
-  
+
     &__description {
       p {
-        font-size: 25px;
+        font-size: 22px;
       }
     }
-  
+
     &__allSee {
       a {
-        font-size: 22px;
-  
+        font-size: 20px;
+
         &:hover {
           &::after {
-            transform: translateX(10px);
+            transform: translateX(6px);
           }
         }
-  
+
         &::after {
-          margin-left: 7px;
+          margin-left: 6px;
         }
       }
     }
@@ -327,28 +272,34 @@
 
 @include respond-above(qhd) {
   .info {
-    margin-bottom: 62px;
-  
+    margin-bottom: 55px;
+
     &__title {
-      margin-bottom: 31px;
-  
+      margin-bottom: 27px;
+
       h3 {
-        font-size: 56px;
+        font-size: 50px;
       }
     }
-  
+
     &__description {
       p {
-        font-size: 28px;
+        font-size: 25px;
       }
     }
-  
+
     &__allSee {
       a {
-        font-size: 25px;
-  
+        font-size: 22px;
+
+        &:hover {
+          &::after {
+            transform: translateX(7px);
+          }
+        }
+
         &::after {
-          margin-left: 8px;
+          margin-left: 7px;
         }
       }
     }
@@ -357,34 +308,34 @@
 
 @include respond-above(uhd) {
   .info {
-    margin-bottom: 94px;
-  
+    margin-bottom: 75px;
+
     &__title {
-      margin-bottom: 47px;
-  
+      margin-bottom: 37px;
+
       h3 {
-        font-size: 85px;
+        font-size: 68px;
       }
     }
-  
+
     &__description {
       p {
-        font-size: 42px;
+        font-size: 34px;
       }
     }
-  
+
     &__allSee {
       a {
-        font-size: 38px;
-  
+        font-size: 30px;
+
         &:hover {
           &::after {
-            transform: translateX(15px);
+            transform: translateX(10px);
           }
         }
-  
+
         &::after {
-          margin-left: 12px;
+          margin-left: 10px;
         }
       }
     }

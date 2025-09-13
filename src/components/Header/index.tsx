@@ -67,14 +67,12 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={classNames(styles.header__container, "container")}>
-        <div className={styles.header__logo}>
-          <Link href="/">
-            <Logo />
-          </Link>
-        </div>
+        <Link href="/" className={styles.header__logo}>
+          <Logo />
+        </Link>
 
-        <nav className={styles.header__menu}>
-          {/* <ul>
+        {/* <nav className={styles.header__menu}>
+          <ul>
             {menu.map((item) => (
               <li key={item.id}>
                 <Link
@@ -87,8 +85,8 @@ const Header = () => {
                 </Link>
               </li>
             ))}
-          </ul> */}
-        </nav>
+          </ul> 
+        </nav> */}
         {/* 
         <div className={styles.buttons}>
           <button

@@ -1,0 +1,12 @@
+{
+    "version": 3,
+    "mappings": "",
+    "sources": [
+        "index.scss",
+        "../_varibles.scss",
+        "_media-queries.scss",
+        "flex.scss"
+    ],
+    "names": [],
+    "file": "index.css"
+}

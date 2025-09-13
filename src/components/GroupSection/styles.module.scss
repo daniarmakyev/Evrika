@@ -2,7 +2,7 @@
 @import "../../styles/mixins/";
 
 .group {
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   width: 100%;
   height: 100%;
   display: flex;
@@ -21,34 +21,41 @@
   &__cards {
     display: flex;
     flex-wrap: wrap;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    gap: 40px;
+    gap: 20px;
   }
 
   &__wrapper {
-    flex: 1 1 calc(33.333% - 40px);
-    width: auto;
-    height: 300px;
+    flex: 1 2 calc(43.333% - 20px);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     background: white;
-    border-radius: 10px;
-    box-shadow: 0 0 30px rgba(219, 219, 219, 1);
+    border-radius: 5px;
+    box-shadow: 0 0 15px rgba(219, 219, 219, 0.5);
     text-align: center;
     transition: transform 0.3s ease-in-out;
-    overflow: hidden;
-    padding: 30px;
-
+    padding: 10px;
+    padding-bottom: 25px;
+    height: 220px;
+    &:nth-child(1) {
+      height: 170px;
+    }
+    &:nth-child(2) {
+      height: 170px;
+    }
+    &:last-child {
+      max-width: 300px;
+    }
     &_grow1 {
       flex: 1 1 100%;
       width: 100%;
-      height: 400px;
-
+      height: 220px;
       img {
-        width: 200px !important;
+        width: 100px !important;
       }
 
       p {
@@ -57,11 +64,10 @@
     }
 
     &_grow2 {
-      flex: 1 1 calc(50% - 40px);
-      height: 400px;
-
+      flex: 1 1 calc(50% - 20px);
+      height: 220px;
       img {
-        width: 200px !important;
+        width: 100px !important;
       }
 
       p {
@@ -70,12 +76,12 @@
     }
 
     &:hover {
-      transform: translateY(-5px);
+      transform: translateY(-2px);
     }
 
     img {
-      width: 100px;
-      margin-bottom: 30px;
+      width: 50px;
+      margin-bottom: 15px;
     }
 
     &__title {
@@ -85,11 +91,11 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
 
       h3 {
         font-weight: bold;
-        font-size: 28px;
+        font-size: 14px;
         line-height: 100%;
         color: $black;
       }
@@ -104,7 +110,7 @@
       text-align: center;
 
       p {
-        font-size: 16px;
+        font-size: 8px;
         line-height: 140%;
         color: $placeholder;
       }
@@ -112,153 +118,180 @@
   }
 }
 
-@include respond-above(md) {
+@include respond-above(xs) {
   .group {
-    margin-bottom: 30px;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: flex-start;
-    justify-content: flex-start;
-
-    &__container {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: flex-start;
-    }
+    margin-bottom: 14px;
 
     &__cards {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: center;
-      gap: 27px;
+      gap: 24px;
     }
 
     &__wrapper {
-      flex: 1 1 calc(33.333% - 27px);
-      width: auto;
-      height: 204px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 0 30px rgba(219, 219, 219, 1);
-      text-align: center;
-      transition: transform 0.3s ease-in-out;
-      overflow: hidden;
-      padding: 20px;
-
+      flex: 1 1 calc(33.333% - 24px);
+      height: max-content;
+      border-radius: 6px;
+      padding: 18px;
+      &:nth-child(1) {
+        height: initial;
+      }
+      &:nth-child(2) {
+        height: initial;
+      }
+      &:last-child {
+        max-width: fit-content;
+      }
       &_grow1 {
-        flex: 1 1 100%;
-        width: 100%;
-        height: 272px;
-
         img {
-          width: 136px !important;
-        }
-
-        p {
-          width: 50%;
+          width: 120px !important;
         }
       }
 
       &_grow2 {
-        flex: 1 1 calc(50% - 27px);
-        height: 272px;
+        flex: 1 1 calc(50% - 24px);
 
         img {
-          width: 136px !important;
+          width: 120px !important;
         }
-
-        p {
-          width: 85%;
-        }
-      }
-
-      &:hover {
-        transform: translateY(-5px);
       }
 
       img {
-        width: 68px;
-        margin-bottom: 20px;
+        width: 60px;
+        margin-bottom: 18px;
       }
 
       &__title {
-        width: 100%;
-        height: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        margin-bottom: 14px;
+        margin-bottom: 12px;
 
         h3 {
-          font-weight: bold;
-          font-size: 19px;
-          line-height: 100%;
-          color: $black;
+          font-size: 17px;
         }
       }
 
       &__description {
-        width: 100%;
-        height: auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-
         p {
-          font-size: 11px;
-          line-height: 140%;
-          color: $placeholder;
+          font-size: 10px;
         }
       }
     }
   }
 }
 
-@include respond-above(lg) {
+@include respond-above(sm) {
   .group {
-    margin-bottom: 35px;
+    margin-bottom: 18px;
+
     &__cards {
-      gap: 33px;
+      gap: 30px;
     }
 
     &__wrapper {
-      height: 250px;
-      padding: 25px;
-
+      flex: 1 1 calc(33.333% - 30px);
+      height: max-content;
+      border-radius: 7px;
+      padding: 22px;
+      height: 220px;
+      &:nth-child(1) {
+        height: 220px;
+      }
+      &:nth-child(2) {
+        height: 220px;
+      }
+      &:nth-child(4) {
+        height: 300px;
+      }
+      &:nth-child(5) {
+        height: 300px;
+      }
       &_grow1 {
-        height: 333px;
-
+        height: 220px;
         img {
-          width: 167px !important;
-        }
-
-        p {
-          width: 50%;
+          width: 150px !important;
         }
       }
 
       &_grow2 {
-        flex: 1 1 calc(50% - 33px);
-        height: 333px;
+        height: 220px;
+        flex: 1 1 calc(50% - 30px);
 
         img {
-          width: 167px !important;
+          width: 150px !important;
         }
       }
 
+      &:hover {
+        transform: translateY(-3px);
+      }
+
       img {
-        width: 83px;
+        width: 75px;
+        margin-bottom: 22px;
+      }
+
+      &__title {
+        margin-bottom: 15px;
+
+        h3 {
+          font-size: 21px;
+        }
+      }
+
+      &__description {
+        p {
+          font-size: 10px;
+        }
+      }
+    }
+  }
+}
+
+@include respond-above(xlg) {
+  .group {
+    margin-bottom: 20px;
+
+    &__cards {
+      gap: 34px;
+    }
+
+    &__wrapper {
+      flex: 1 1 calc(33.333% - 34px);
+      height: 255px;
+      border-radius: 8px;
+      padding: 25px;
+      &:nth-child(1) {
+        height: auto;
+      }
+      &:nth-child(2) {
+        height: auto;
+      }
+      &:nth-child(4) {
+        height: auto;
+      }
+      &:nth-child(5) {
+        height: auto;
+      }
+      &_grow1 {
+        height: 340px;
+
+        img {
+          width: 170px !important;
+        }
+      }
+
+      &_grow2 {
+        flex: 1 1 calc(50% - 34px);
+        height: 340px;
+
+        img {
+          width: 170px !important;
+        }
+      }
+
+      &:hover {
+        transform: translateY(-4px);
+      }
+
+      img {
+        width: 85px;
         margin-bottom: 25px;
       }
 
@@ -266,22 +299,23 @@
         margin-bottom: 17px;
 
         h3 {
-          font-size: 23px;
+          font-size: 24px;
         }
       }
 
       &__description {
         p {
-          font-size: 13px;
+          font-size: 14px;
         }
       }
     }
   }
 }
 
-@include respond-above(mac) {
+@include respond-above(fhd) {
   .group {
-    margin-bottom: 40px;
+    margin-bottom: 24px;
+
     &__cards {
       gap: 40px;
     }
@@ -289,6 +323,7 @@
     &__wrapper {
       flex: 1 1 calc(33.333% - 40px);
       height: 300px;
+      border-radius: 10px;
       padding: 30px;
 
       &_grow1 {
@@ -310,6 +345,14 @@
         img {
           width: 200px !important;
         }
+
+        p {
+          width: 80%;
+        }
+      }
+
+      &:hover {
+        transform: translateY(-5px);
       }
 
       img {
@@ -334,169 +377,57 @@
   }
 }
 
-@include respond-above(xlg) {
-  .group {
-    margin-bottom: 44px;
-    &__cards {
-      gap: 44px;
-    }
-
-    &__wrapper {
-      flex: 1 1 calc(33.333% - 44px);
-      height: 333px;
-      padding: 33px;
-
-      &_grow1 {
-        height: 444px;
-
-        img {
-          width: 222px !important;
-        }
-
-        p {
-          width: 50%;
-        }
-      }
-
-      &_grow2 {
-        flex: 1 1 calc(50% - 44px);
-        height: 444px;
-
-        img {
-          width: 222px !important;
-        }
-      }
-
-      img {
-        width: 111px;
-        margin-bottom: 33px;
-      }
-
-      &__title {
-        margin-bottom: 22px;
-
-        h3 {
-          font-size: 31px;
-        }
-      }
-
-      &__description {
-        p {
-          font-size: 18px;
-        }
-      }
-    }
-  }
-}
-
-@include respond-above(fhd) {
-  .group {
-    margin-bottom: 53px;
-    &__cards {
-      gap: 53px;
-    }
-
-    &__wrapper {
-      flex: 1 1 calc(33.333% - 53px);
-      height: 399px;
-      padding: 40px;
-
-      &_grow1 {
-        height: 532px;
-
-        img {
-          width: 266px !important;
-        }
-
-        p {
-          width: 50%;
-        }
-      }
-
-      &_grow2 {
-        flex: 1 1 calc(50% - 53.2px);
-        height: 532px;
-
-        img {
-          width: 266px !important;
-        }
-
-        p {
-          width: 90%;
-        }
-      }
-
-      img {
-        width: 133px;
-        margin-bottom: 40px;
-      }
-
-      &__title {
-        margin-bottom: 27px;
-
-        h3 {
-          font-size: 37px;
-        }
-      }
-
-      &__description {
-        p {
-          font-size: 21px;
-        }
-      }
-    }
-  }
-}
-
 @include respond-above(fhd-plus) {
   .group {
-    margin-bottom: 62px;
+    margin-bottom: 30px;
+
     &__cards {
-      gap: 56px;
+      gap: 50px;
     }
 
     &__wrapper {
-      flex: 1 1 calc(33.333% - 56px);
-      height: 420px;
-      padding: 42px;
+      flex: 1 1 calc(33.333% - 50px);
+      height: 375px;
+      border-radius: 12px;
+      padding: 37px;
 
       &_grow1 {
-        height: 560px;
+        height: 500px;
 
         img {
-          width: 280px !important;
-        }
-
-        p {
-          width: 50%;
+          width: 250px !important;
         }
       }
 
       &_grow2 {
-        flex: 1 1 calc(50% - 56px);
-        height: 560px;
+        flex: 1 1 calc(50% - 50px);
+        height: 500px;
 
         img {
-          width: 280px !important;
+          width: 250px !important;
         }
       }
 
+      &:hover {
+        transform: translateY(-6px);
+      }
+
       img {
-        width: 140px;
-        margin-bottom: 42px;
+        width: 125px;
+        margin-bottom: 37px;
       }
 
       &__title {
-        margin-bottom: 28px;
+        margin-bottom: 25px;
 
         h3 {
-          font-size: 39px;
+          font-size: 35px;
         }
       }
 
       &__description {
         p {
-          font-size: 22px;
+          font-size: 20px;
         }
       }
     }
@@ -505,22 +436,23 @@
 
 @include respond-above(qhd) {
   .group {
-    margin-bottom: 71px;
+    margin-bottom: 33px;
+
     &__cards {
-      gap: 62px;
+      gap: 55px;
     }
 
     &__wrapper {
-      flex: 1 1 calc(33.333% - 62px);
-      height: 465px;
-      border-radius: 20px;
-      padding: 46.5px;
+      flex: 1 1 calc(33.333% - 55px);
+      height: 415px;
+      border-radius: 13px;
+      padding: 41px;
 
       &_grow1 {
-        height: 620px;
+        height: 553px;
 
         img {
-          width: 310px !important;
+          width: 277px !important;
         }
 
         p {
@@ -529,11 +461,11 @@
       }
 
       &_grow2 {
-        flex: 1 1 calc(50% - 62px);
-        height: 620px;
+        flex: 1 1 calc(50% - 55px);
+        height: 553px;
 
         img {
-          width: 310px !important;
+          width: 277px !important;
         }
 
         p {
@@ -542,26 +474,26 @@
       }
 
       &:hover {
-        transform: translateY(-10px);
+        transform: translateY(-7px);
       }
 
       img {
-        width: 155px;
-        margin-bottom: 46.5px;
+        width: 138px;
+        margin-bottom: 41px;
       }
 
       &__title {
-        margin-bottom: 31px;
+        margin-bottom: 27px;
 
         h3 {
-          font-size: 43px;
+          font-size: 39px;
         }
       }
 
       &__description {
         p {
           width: 70%;
-          font-size: 25px;
+          font-size: 22px;
         }
       }
     }
@@ -570,22 +502,23 @@
 
 @include respond-above(uhd) {
   .group {
-    margin-bottom: 94px;
+    margin-bottom: 44px;
+
     &__cards {
-      gap: 94px;
+      gap: 75px;
     }
 
     &__wrapper {
-      flex: 1 1 calc(33.333% - 94px);
-      height: 705px;
-      border-radius: 30px;
-      padding: 71px;
+      flex: 1 1 calc(33.333% - 75px);
+      height: 565px;
+      border-radius: 18px;
+      padding: 56px;
 
       &_grow1 {
-        height: 940px;
+        height: 753px;
 
         img {
-          width: 470px !important;
+          width: 377px !important;
         }
 
         p {
@@ -594,11 +527,11 @@
       }
 
       &_grow2 {
-        flex: 1 1 calc(50% - 94px);
-        height: 940px;
+        flex: 1 1 calc(50% - 75px);
+        height: 753px;
 
         img {
-          width: 470px !important;
+          width: 377px !important;
         }
 
         p {
@@ -607,26 +540,26 @@
       }
 
       &:hover {
-        transform: translateY(-15px);
+        transform: translateY(-10px);
       }
 
       img {
-        width: 235px;
-        margin-bottom: 71px;
+        width: 188px;
+        margin-bottom: 56px;
       }
 
       &__title {
-        margin-bottom: 47px;
+        margin-bottom: 37px;
 
         h3 {
-          font-size: 66px;
+          font-size: 53px;
         }
       }
 
       &__description {
         p {
           width: 90%;
-          font-size: 38px;
+          font-size: 30px;
         }
       }
     }
